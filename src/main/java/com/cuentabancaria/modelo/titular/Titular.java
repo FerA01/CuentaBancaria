@@ -8,5 +8,6 @@ public abstract class Titular {
     public String getNumeroCuit() { return numeroCuit; }
     public void setNumeroCuit(String numeroCuit) { this.numeroCuit = numeroCuit; }
 
+    public abstract String tipoTitular();
     public abstract String toString();
 }

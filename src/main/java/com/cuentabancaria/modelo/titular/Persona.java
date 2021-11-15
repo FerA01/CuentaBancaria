@@ -43,6 +43,8 @@ public class Persona extends Titular{
         return obtenerDiaFechaNacimiento() + "/" + obtenerMesFechaNacimiento() + "/" + obtenerAnioFechaNacimiento();
     }
     @Override
+    public String tipoTitular() { return "Persona"; }
+    @Override
     public String toString() {
         return "Nombre: " + getNombre() + " " + getSegundoNombre() + " " + getApellido() + ", dni: " + getDni()
                 + ", número de cuit: " + getNumeroCuit() + ", fecha de nacimiento: " + obtenerFechaCreacion();

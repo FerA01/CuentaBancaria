@@ -26,6 +26,8 @@ public class Organizacion extends Titular{
         return obtenerDiaFechaCreacion() + "/" + obtenerMesFechaCreacion() + "/" + obtenerAnioFechaCreacion();
     }
     @Override
+    public String tipoTitular() { return "Organización"; }
+    @Override
     public String toString(){
         return "Nombre de la organización: " + getNombreOrganizacion() + ", tipo de organización: "
                 + getTipoOrganizacion() + ", fecha de creación: " + obtenerFechaCreacion()

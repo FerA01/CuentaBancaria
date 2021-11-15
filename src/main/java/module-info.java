@@ -1,10 +1,11 @@
-module com.cuentabancaria.cuentabancaria {
+module com.cuentabancaria {
     requires javafx.controls;
     requires javafx.fxml;
+    requires junit;
+    requires org.testng;
 
-
-    opens com.cuentabancaria to javafx.fxml;
-    exports com.cuentabancaria;
     exports com.cuentabancaria.controlador;
+    exports com.cuentabancaria.vista;
     opens com.cuentabancaria.controlador to javafx.fxml;
+    opens com.cuentabancaria.vista to javafx.fxml;
 }
