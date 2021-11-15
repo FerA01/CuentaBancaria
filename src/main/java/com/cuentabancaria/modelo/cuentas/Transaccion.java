@@ -18,7 +18,7 @@ public class Transaccion {
     public String getTipoTransaccion() { return tipoTransaccion; }
     public void setTipoTransaccion(String tipoTransaccion) { this.tipoTransaccion = tipoTransaccion; }
     public int obtenerDiaFechaTransaccion(){ return getFechaTransaccion().get(Calendar.DAY_OF_MONTH); }
-    public int obtenerMesFechaTransaccion(){ return getFechaTransaccion().get(Calendar.MONTH); }
+    public int obtenerMesFechaTransaccion(){ return getFechaTransaccion().get(Calendar.MONTH) + 1; }
     public int obtenerAnioFechaTransaccion(){ return getFechaTransaccion().get(Calendar.YEAR); }
     public String obtenerFechaTransaccion(){ return obtenerDiaFechaTransaccion() + "/" + obtenerMesFechaTransaccion()
                                              + "/" + obtenerAnioFechaTransaccion(); }

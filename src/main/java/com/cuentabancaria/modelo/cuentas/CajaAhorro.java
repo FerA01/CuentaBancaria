@@ -27,20 +27,21 @@ public class CajaAhorro extends CuentaBancaria{
     public boolean depositar(float monto) {
         if(monto > 0) {
             super.ingresarMonto(monto);
+            agregarTransaccion(new Transaccion(monto, Calendar.getInstance(), "Deposito"));
             return true;
         }
         return false;
     }
     @Override
     public boolean retirar(float monto){
-        if (monto > 0){
+        if (monto > 0 && getCantidadExtraccionesPorMes() > 0){
             if(puedeRetirar(monto)) {
                 super.sacarMonto(monto);
+                agregarTransaccion(new Transaccion(monto, Calendar.getInstance(), "Extracción"));
                 return true;
             }
             return false;
         }
         return false;
     }
-    private boolean puedeRetirar(float monto){ return (getSaldo() - monto) > getLimiteMinimoCuenta(); }
 }

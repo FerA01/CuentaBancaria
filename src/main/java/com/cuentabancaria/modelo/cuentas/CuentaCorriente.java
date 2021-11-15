@@ -4,13 +4,13 @@ import java.util.Calendar;
 import java.util.Collection;
 public class CuentaCorriente extends CuentaBancaria{
     public CuentaCorriente(){
-        setSaldo(-150);
-        setLimiteMinimoCuenta(10f);
+        setSaldo(0);
+        setLimiteMinimoCuenta(-150f);
         setCantidadExtraccionesPorMes(-1);
     }
     public CuentaCorriente(Titular titular, Calendar fechaApertura){
-        setSaldo(-150);
-        setLimiteMinimoCuenta(10f);
+        setSaldo(0);
+        setLimiteMinimoCuenta(-150f);
         setCantidadExtraccionesPorMes(-1);
         setTitular(titular);
         setFechaApertura(fechaApertura);
@@ -26,10 +26,21 @@ public class CuentaCorriente extends CuentaBancaria{
 
     @Override
     public boolean depositar(float monto) {
+        if(monto > 0) {
+            super.ingresarMonto(monto);
+            agregarTransaccion(new Transaccion(monto, Calendar.getInstance(), "Deposito"));
+            return true;
+        }
         return false;
     }
     @Override
     public boolean retirar(float monto) {
+        if (monto > 0 && puedeRetirar(monto)){
+            super.sacarMonto(monto);
+            agregarTransaccion(new Transaccion(monto, Calendar.getInstance(), "Extracción"));
+            setCantidadExtraccionesPorMes(-1);
+            return true;
+        }
         return false;
     }
 }

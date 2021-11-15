@@ -37,7 +37,7 @@ public class Persona extends Titular{
     public void setFechaNacimiento(Calendar fechaNacimiento) { this.fechaNacimiento = fechaNacimiento; }
 
     public int obtenerDiaFechaNacimiento(){ return getFechaNacimiento().get(Calendar.DAY_OF_MONTH);}
-    public int obtenerMesFechaNacimiento(){ return getFechaNacimiento().get(Calendar.MONTH); }
+    public int obtenerMesFechaNacimiento(){ return getFechaNacimiento().get(Calendar.MONTH) + 1; }
     public int obtenerAnioFechaNacimiento(){ return getFechaNacimiento().get(Calendar.YEAR); }
     public String obtenerFechaCreacion(){
         return obtenerDiaFechaNacimiento() + "/" + obtenerMesFechaNacimiento() + "/" + obtenerAnioFechaNacimiento();

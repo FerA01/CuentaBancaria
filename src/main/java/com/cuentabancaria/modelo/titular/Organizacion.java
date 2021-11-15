@@ -20,7 +20,7 @@ public class Organizacion extends Titular{
     public void setFechaCreacion(Calendar fechaCreacion) { this.fechaCreacion = fechaCreacion; }
 
     public int obtenerDiaFechaCreacion(){ return getFechaCreacion().get(Calendar.DAY_OF_MONTH);}
-    public int obtenerMesFechaCreacion(){ return getFechaCreacion().get(Calendar.MONTH); }
+    public int obtenerMesFechaCreacion(){ return getFechaCreacion().get(Calendar.MONTH) + 1; }
     public int obtenerAnioFechaCreacion(){ return getFechaCreacion().get(Calendar.YEAR); }
     public String obtenerFechaCreacion(){
         return obtenerDiaFechaCreacion() + "/" + obtenerMesFechaCreacion() + "/" + obtenerAnioFechaCreacion();

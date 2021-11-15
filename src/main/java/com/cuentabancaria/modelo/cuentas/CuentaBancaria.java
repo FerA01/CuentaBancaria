@@ -45,14 +45,21 @@ public abstract class CuentaBancaria implements Accion{
     public Collection<Transaccion> getTransacciones() { return transacciones; }
     public void setTransacciones(Collection<Transaccion> transacciones) { this.transacciones = transacciones; }
 
-
     public boolean agregarTransaccion(Transaccion transaccion){ return getTransacciones().add(transaccion); }
     public boolean eliminarTransaccion(Transaccion transaccion){ return getTransacciones().removeIf(trans -> trans.equals(transaccion)); }
+    public int obtenerDiaFechaApertura(){ return getFechaApertura().get(Calendar.DAY_OF_MONTH); }
+    public int obtenerMesFechaApertura(){ return getFechaApertura().get(Calendar.MONTH) + 1; }
+    public int obtenerAnioFechaApertura(){ return getFechaApertura().get(Calendar.YEAR); }
+    public String obtenerFechaApertura(){ return obtenerDiaFechaApertura() + "/" + obtenerMesFechaApertura() + "/" + obtenerAnioFechaApertura(); }
     public int cantidadTransacciones(){ return getTransacciones().size(); }
+    protected boolean puedeRetirar(float monto){ return (getSaldo() - monto) > getLimiteMinimoCuenta(); }
     @Override
     public abstract boolean depositar(float monto);
     @Override
     public abstract boolean retirar(float monto);
     protected void ingresarMonto(float monto){ setSaldo(getSaldo() + monto); }
-    protected void sacarMonto(float monto){ setSaldo(getSaldo() - monto); }
+    protected void sacarMonto(float monto){
+        setSaldo(getSaldo() - monto);
+        setCantidadExtraccionesPorMes(getCantidadExtraccionesPorMes() - 1);
+    }
 }
