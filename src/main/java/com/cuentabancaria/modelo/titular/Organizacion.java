@@ -1,11 +1,17 @@
 package com.cuentabancaria.modelo.titular;
+import javafx.scene.layout.AnchorPane;
+
 import java.util.Calendar;
 public class Organizacion extends Titular{
     private String nombreOrganizacion;
     private String tipoOrganizacion;
     private Calendar fechaCreacion;
 
-    public Organizacion(){}
+    public Organizacion(){
+        setNombreOrganizacion("");
+        setTipoOrganizacion("");
+        setFechaCreacion(Calendar.getInstance());
+    }
     public Organizacion(String numeroCuit,String nombreOrganizacion, String tipoOrganizacion, Calendar fechaCreacion){
         setNombreOrganizacion(nombreOrganizacion);
         setTipoOrganizacion(tipoOrganizacion);
@@ -32,5 +38,10 @@ public class Organizacion extends Titular{
         return "Nombre de la organización: " + getNombreOrganizacion() + ", tipo de organización: "
                 + getTipoOrganizacion() + ", fecha de creación: " + obtenerFechaCreacion()
                 + ", número de cuit: " + getNumeroCuit();
+    }
+
+    @Override
+    public AnchorPane panelTitular() {
+        return null;
     }
 }

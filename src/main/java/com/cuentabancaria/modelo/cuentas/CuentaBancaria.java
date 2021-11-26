@@ -54,6 +54,8 @@ public abstract class CuentaBancaria implements Accion{
     public int cantidadTransacciones(){ return getTransacciones().size(); }
     protected boolean puedeRetirar(float monto){ return (getSaldo() - monto) > getLimiteMinimoCuenta(); }
     @Override
+    public abstract String toString();
+    @Override
     public abstract boolean depositar(float monto);
     @Override
     public abstract boolean retirar(float monto);

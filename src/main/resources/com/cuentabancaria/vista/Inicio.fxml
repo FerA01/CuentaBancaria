@@ -22,7 +22,7 @@
       </AnchorPane>
       <AnchorPane layoutY="50.0" prefHeight="160.0" prefWidth="300.0" style="-fx-background-color: gray;">
          <children>
-            <Button fx:id="botonCrearCuenta" layoutX="95.0" layoutY="14.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="110.0" text="Crear cuenta" />
+            <Button fx:id="botonCrearCuenta" layoutX="95.0" layoutY="14.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="110.0" text="Crear cuenta" onAction="#accionBotonCrearCuenta"/>
             <Button fx:id="botonBuscarCuenta" layoutX="95.0" layoutY="60.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="110.0" text="Buscar cuenta" />
             <Button fx:id="botonEliminarCuenta" layoutX="95.0" layoutY="106.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="110.0" text="Eliminar cuenta" />
          </children>

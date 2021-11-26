@@ -25,6 +25,9 @@ public class CuentaCorriente extends CuentaBancaria{
     }
 
     @Override
+    public String toString() { return "Cuenta corriente"; }
+
+    @Override
     public boolean depositar(float monto) {
         if(monto > 0) {
             super.ingresarMonto(monto);

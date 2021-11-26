@@ -5,11 +5,12 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import java.io.IOException;
-public class Inicio extends Application {
+
+public class TitularOrganizacion extends Application {
     @Override
     public void start(Stage stage) throws IOException {
         try {
-            FXMLLoader loader =  new FXMLLoader(getClass().getResource("Inicio.fxml"));
+            FXMLLoader loader =  new FXMLLoader(getClass().getResource("/com/cuentabancaria/vista/TitularOrganizacion.fxml"));
             Parent root = loader.load();
             Scene scene = new Scene(root);
             stage.setTitle("Cuenta bancaria");
@@ -19,7 +20,6 @@ public class Inicio extends Application {
             System.out.println(e.getMessage());
         }
     }
-    public static void main(String[] args) {
-        launch();
-    }
+
+    public static void main(String[] args) { launch(); }
 }

@@ -23,6 +23,10 @@ public class CajaAhorro extends CuentaBancaria{
             ,Calendar fechaApertura, Collection<Transaccion> transacciones){
         super(saldo, limiteMinimoCuenta, cantidadExtraccionesPorMes, titular, fechaApertura, transacciones);
     }
+
+    @Override
+    public String toString() { return "Caja de ahorro"; }
+
     @Override
     public boolean depositar(float monto) {
         if(monto > 0) {

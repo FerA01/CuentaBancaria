@@ -1,13 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
 <?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
-
-
-<AnchorPane fx:id="panelTitularOrganizacion" prefHeight="230.0" prefWidth="570.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.cuentabancaria.vista.TitularOrganizacion">
+<AnchorPane prefHeight="230.0" prefWidth="570.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.cuentabancaria.controlador.ControladorCrearTitular">
    <children>
       <Label alignment="CENTER_RIGHT" layoutX="25.0" layoutY="28.0" prefHeight="35.0" prefWidth="125.0" text="Nombre: " textAlignment="CENTER">
          <font>
