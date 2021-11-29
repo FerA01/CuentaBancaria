@@ -1,18 +1,17 @@
 package com.cuentabancaria.modelo.titular;
-import javafx.scene.layout.AnchorPane;
-
-import java.util.Calendar;
+import com.cuentabancaria.modelo.CambiarFecha;
+import java.time.LocalDate;
 public class Organizacion extends Titular{
     private String nombreOrganizacion;
     private String tipoOrganizacion;
-    private Calendar fechaCreacion;
+    private LocalDate fechaCreacion;
 
     public Organizacion(){
         setNombreOrganizacion("");
         setTipoOrganizacion("");
-        setFechaCreacion(Calendar.getInstance());
+        setFechaCreacion(LocalDate.now());
     }
-    public Organizacion(String numeroCuit,String nombreOrganizacion, String tipoOrganizacion, Calendar fechaCreacion){
+    public Organizacion(String numeroCuit,String nombreOrganizacion, String tipoOrganizacion, LocalDate fechaCreacion){
         setNombreOrganizacion(nombreOrganizacion);
         setTipoOrganizacion(tipoOrganizacion);
         setFechaCreacion(fechaCreacion);
@@ -22,26 +21,29 @@ public class Organizacion extends Titular{
     public void setNombreOrganizacion(String nombreOrganizacion) { this.nombreOrganizacion = nombreOrganizacion; }
     public String getTipoOrganizacion() { return tipoOrganizacion; }
     public void setTipoOrganizacion(String tipoOrganizacion) { this.tipoOrganizacion = tipoOrganizacion; }
-    public Calendar getFechaCreacion() { return fechaCreacion; }
-    public void setFechaCreacion(Calendar fechaCreacion) { this.fechaCreacion = fechaCreacion; }
+    public LocalDate getFechaCreacion() { return fechaCreacion; }
+    public void setFechaCreacion(LocalDate fechaCreacion) { this.fechaCreacion = fechaCreacion; }
 
+    /*
     public int obtenerDiaFechaCreacion(){ return getFechaCreacion().get(Calendar.DAY_OF_MONTH);}
     public int obtenerMesFechaCreacion(){ return getFechaCreacion().get(Calendar.MONTH) + 1; }
     public int obtenerAnioFechaCreacion(){ return getFechaCreacion().get(Calendar.YEAR); }
     public String obtenerFechaCreacion(){
         return obtenerDiaFechaCreacion() + "/" + obtenerMesFechaCreacion() + "/" + obtenerAnioFechaCreacion();
     }
+     */
     @Override
-    public String tipoTitular() { return "Organización"; }
+    public String toString() { return "Organización"; }
     @Override
-    public String toString(){
+    public String tipoTitular(){
         return "Nombre de la organización: " + getNombreOrganizacion() + ", tipo de organización: "
                 + getTipoOrganizacion() + ", fecha de creación: " + obtenerFechaCreacion()
                 + ", número de cuit: " + getNumeroCuit();
     }
-
     @Override
-    public AnchorPane panelTitular() {
-        return null;
+    public String obtenerFxml(){ return "TitularOrganizacion.fxml"; }
+    public String obtenerFechaCreacion(){
+        CambiarFecha cambiarFecha = new CambiarFecha(getFechaCreacion());
+        return cambiarFecha.cambiar();
     }
 }

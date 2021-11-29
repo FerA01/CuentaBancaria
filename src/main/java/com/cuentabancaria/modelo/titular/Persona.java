@@ -1,16 +1,16 @@
 package com.cuentabancaria.modelo.titular;
-import javafx.scene.layout.AnchorPane;
+import com.cuentabancaria.modelo.CambiarFecha;
 
-import java.util.Calendar;
+import java.time.LocalDate;
 public class Persona extends Titular{
     private String nombre;
     private String segundoNombre;
     private String apellido;
     private int dni;
-    private Calendar fechaNacimiento;
+    private LocalDate fechaNacimiento;
 
     public Persona(){}
-    public Persona(String nombre, String apellido, int dni, String numeroCuit, Calendar fechaNacimiento){
+    public Persona(String nombre, String apellido, int dni, String numeroCuit, LocalDate fechaNacimiento){
         setNombre(nombre);
         setSegundoNombre("");
         setApellido(apellido);
@@ -19,7 +19,7 @@ public class Persona extends Titular{
         setFechaNacimiento(fechaNacimiento);
     }
     public Persona(String nombre, String segundoNombre, String apellido, int dni, String numeroCuit
-                  , Calendar fechaNacimiento){
+                  , LocalDate fechaNacimiento){
         setNombre(nombre);
         setSegundoNombre(segundoNombre);
         setApellido(apellido);
@@ -35,30 +35,28 @@ public class Persona extends Titular{
     public void setApellido(String apellido) { this.apellido = apellido; }
     public int getDni() { return dni; }
     public void setDni(int dni) { this.dni = dni; }
-    public Calendar getFechaNacimiento() { return fechaNacimiento; }
-    public void setFechaNacimiento(Calendar fechaNacimiento) { this.fechaNacimiento = fechaNacimiento; }
+    public LocalDate getFechaNacimiento() { return fechaNacimiento; }
+    public void setFechaNacimiento(LocalDate fechaNacimiento) { this.fechaNacimiento = fechaNacimiento; }
 
-    public int obtenerDiaFechaNacimiento(){ return getFechaNacimiento().get(Calendar.DAY_OF_MONTH);}
-    public int obtenerMesFechaNacimiento(){ return getFechaNacimiento().get(Calendar.MONTH) + 1; }
-    public int obtenerAnioFechaNacimiento(){ return getFechaNacimiento().get(Calendar.YEAR); }
+    /*
+    public int obtenerDiaFechaNacimiento(){ return getFechaNacimiento().get(LocalDate.DAY_OF_MONTH);}
+    public int obtenerMesFechaNacimiento(){ return getFechaNacimiento().get(LocalDate.MONTH) + 1; }
+    public int obtenerAnioFechaNacimiento(){ return getFechaNacimiento().get(LocalDate.YEAR); }
     public String obtenerFechaCreacion(){ return obtenerDiaFechaNacimiento()
                                           + "/" + obtenerMesFechaNacimiento()
                                           + "/" + obtenerAnioFechaNacimiento();
-    }
+    }*/
     @Override
-    public String tipoTitular() { return "Personal"; }
+    public String toString() { return "Personal"; }
     @Override
-    public String toString() {
+    public String tipoTitular() {
         return "Nombre: " + getNombre() + " " + getSegundoNombre() + " " + getApellido() + ", dni: " + getDni()
-                + ", número de cuit: " + getNumeroCuit() + ", fecha de nacimiento: " + obtenerFechaCreacion();
+                + ", número de cuit: " + getNumeroCuit() + ", fecha de nacimiento: " + obtenerFechaNacimiento();
     }
-
     @Override
-    public AnchorPane panelTitular() {
-
-        AnchorPane panel = new AnchorPane();
-        panel.setPrefHeight(230);
-        panel.setPrefWidth(570);
-        return panel;
+    public String obtenerFxml(){ return "TitularPersona.fxml"; }
+    public String obtenerFechaNacimiento(){
+        CambiarFecha cambiarFecha = new CambiarFecha(getFechaNacimiento());
+        return cambiarFecha.cambiar();
     }
 }

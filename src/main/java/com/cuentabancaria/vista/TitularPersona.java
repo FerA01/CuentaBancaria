@@ -11,17 +11,15 @@ public class TitularPersona extends Application {
     @Override
     public void start(Stage stage){
         FXMLLoader loader =  new FXMLLoader(getClass().getResource("/com/cuentabancaria/vista/TitularPersona.fxml"));
-        Parent root = null;
         try {
-            root = loader.load();
+            Parent root = loader.load();
+            Scene scene = new Scene(root);
+            stage.setTitle("Cuenta bancaria");
+            stage.setScene(scene);
+            stage.show();
         } catch (IOException e) {
             e.printStackTrace();
         }
-        assert root != null;
-        Scene scene = new Scene(root);
-        stage.setTitle("Cuenta bancaria");
-        stage.setScene(scene);
-        stage.show();
     }
     public static void main(String[] args) { launch(); }
 }

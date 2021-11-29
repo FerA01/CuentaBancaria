@@ -5,7 +5,6 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import java.io.IOException;
-
 public class TitularOrganizacion extends Application {
     @Override
     public void start(Stage stage) throws IOException {
@@ -20,6 +19,5 @@ public class TitularOrganizacion extends Application {
             System.out.println(e.getMessage());
         }
     }
-
     public static void main(String[] args) { launch(); }
 }

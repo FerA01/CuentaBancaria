@@ -53,8 +53,6 @@ public class Controlador {
             alert.showAndWait();
         }
     }
-    private void obtenerDatosTitular(Persona titular){}
-    private void obtenerDatosTitular(Organizacion titular){}
     @FXML
     public void accionBotonCrearCuenta(){
         try{
