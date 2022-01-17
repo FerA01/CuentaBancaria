@@ -11,14 +11,14 @@
             <Font size="20.0" />
          </font>
       </Label>
-      <ComboBox fx:id="comboBoxTipoCuenta" layoutX="288.0" layoutY="29.0" prefHeight="25.0" prefWidth="150.0" />
+      <ComboBox fx:id="comboBoxTipoCuenta" layoutX="288.0" layoutY="29.0" prefHeight="25.0" prefWidth="150.0" onAction="#accionObtenerCuentaBancaria"/>
       <Label layoutX="143.0" layoutY="75.0" prefHeight="25.0" prefWidth="145.0" text="Tipo de titular: ">
          <font>
             <Font size="20.0" />
          </font>
       </Label>
       <ComboBox fx:id="comboBoxTipoTitular" layoutX="288.0" layoutY="78.0" prefHeight="25.0" prefWidth="150.0" onAction="#combo"/>
-      <Button fx:id="botonCrearTitular" layoutX="210.0" layoutY="386.0" mnemonicParsing="false" onAction="#accionBoton" prefHeight="30.0" prefWidth="170.0" text="Crear Titular" />
+      <Button fx:id="botonCrearTitular" layoutX="210.0" layoutY="386.0" mnemonicParsing="false" onAction="#accionBotonCrearTitular" prefHeight="30.0" prefWidth="170.0" text="Crear Titular" />
       <AnchorPane fx:id="panelTitular" layoutX="10.0" layoutY="142.0" prefHeight="230.0" prefWidth="570.0" />
    </children>
 </AnchorPane>

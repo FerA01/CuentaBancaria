@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.image.Image?>
@@ -17,7 +16,7 @@
       </AnchorPane>
       <ImageView fitHeight="63.0" fitWidth="337.0" layoutX="132.0" layoutY="32.0" pickOnBounds="true" preserveRatio="true">
          <image>
-            <Image url="@../../../logoBancoPcia.png" />
+            <Image url="@../../../../logoBancoPcia.png" />
          </image>
       </ImageView>
    </children>

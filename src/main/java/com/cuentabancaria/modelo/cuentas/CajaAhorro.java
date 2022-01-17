@@ -1,5 +1,7 @@
 package com.cuentabancaria.modelo.cuentas;
 import com.cuentabancaria.modelo.titular.Titular;
+
+import java.time.LocalDate;
 import java.util.Calendar;
 import java.util.Collection;
 public class CajaAhorro extends CuentaBancaria{
@@ -8,7 +10,7 @@ public class CajaAhorro extends CuentaBancaria{
         setLimiteMinimoCuenta(10f);
         setCantidadExtraccionesPorMes(5);
     }
-    public CajaAhorro(Titular titular, Calendar fechaApertura){
+    public CajaAhorro(Titular titular, LocalDate fechaApertura){
         setSaldo(0);
         setLimiteMinimoCuenta(10f);
         setCantidadExtraccionesPorMes(5);
@@ -16,11 +18,11 @@ public class CajaAhorro extends CuentaBancaria{
         setFechaApertura(fechaApertura);
     }
     public CajaAhorro(float saldo, float limiteMinimoCuenta, int cantidadExtraccionesPorMes, Titular titular
-                      , Calendar fechaApertura){
+                      , LocalDate fechaApertura){
         super(saldo, limiteMinimoCuenta, cantidadExtraccionesPorMes, titular, fechaApertura);
     }
     public CajaAhorro(float saldo, float limiteMinimoCuenta, int cantidadExtraccionesPorMes, Titular titular
-            ,Calendar fechaApertura, Collection<Transaccion> transacciones){
+            ,LocalDate fechaApertura, Collection<Transaccion> transacciones){
         super(saldo, limiteMinimoCuenta, cantidadExtraccionesPorMes, titular, fechaApertura, transacciones);
     }
 

@@ -3,9 +3,9 @@ module com.cuentabancaria {
     requires javafx.fxml;
     requires junit;
     requires org.testng;
-
-    exports com.cuentabancaria.controlador;
-    exports com.cuentabancaria.vista;
+    requires  java.sql;
+    requires  mysql.connector.java;
     opens com.cuentabancaria.controlador to javafx.fxml;
     opens com.cuentabancaria.vista to javafx.fxml;
+    opens com.cuentabancaria.controlador.login to javafx.fxml;
 }

@@ -9,7 +9,7 @@ public class TitularOrganizacion extends Application {
     @Override
     public void start(Stage stage) throws IOException {
         try {
-            FXMLLoader loader =  new FXMLLoader(getClass().getResource("/com/cuentabancaria/vista/TitularOrganizacion.fxml"));
+            FXMLLoader loader =  new FXMLLoader(getClass().getResource("/com/cuentabancaria/vista/titular/TitularOrganizacion.fxml"));
             Parent root = loader.load();
             Scene scene = new Scene(root);
             stage.setTitle("Cuenta bancaria");

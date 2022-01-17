@@ -5,20 +5,20 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import java.io.IOException;
-
 public class Login extends Application {
     @Override
-    public void start(Stage stage) {
+    public void start(Stage stage) throws IOException {
         try {
-            FXMLLoader loader =  new FXMLLoader(getClass().getResource("Login.fxml"));
+            FXMLLoader loader =  new FXMLLoader(getClass().getResource("login/Login.fxml"));
             Parent root = loader.load();
             Scene scene = new Scene(root);
             stage.setTitle("Iniciar Sesión.");
             stage.setScene(scene);
+            stage.setResizable(false);
             stage.show();
-        }catch (IOException e){
-            System.out.println(e.getMessage());
+        }catch (IOException exception){
+            System.out.println(exception.getMessage());
         }
     }
-    public static void main(String[] args) { launch(); }
+    public static void main(String[] args) {launch();}
 }

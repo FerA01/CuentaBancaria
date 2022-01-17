@@ -1,5 +1,6 @@
 package com.cuentabancaria.modelo.cuentas;
 import com.cuentabancaria.modelo.titular.Titular;
+import java.time.LocalDate;
 import java.util.Calendar;
 import java.util.Collection;
 public class CuentaCorriente extends CuentaBancaria{
@@ -8,7 +9,7 @@ public class CuentaCorriente extends CuentaBancaria{
         setLimiteMinimoCuenta(-150f);
         setCantidadExtraccionesPorMes(-1);
     }
-    public CuentaCorriente(Titular titular, Calendar fechaApertura){
+    public CuentaCorriente(Titular titular, LocalDate fechaApertura){
         setSaldo(0);
         setLimiteMinimoCuenta(-150f);
         setCantidadExtraccionesPorMes(-1);
@@ -16,11 +17,11 @@ public class CuentaCorriente extends CuentaBancaria{
         setFechaApertura(fechaApertura);
     }
     public CuentaCorriente(float saldo, float limiteMinimoCuenta, int cantidadExtraccionesPorMes, Titular titular
-                            , Calendar fechaApertura){
+                            , LocalDate fechaApertura){
         super(saldo, limiteMinimoCuenta, cantidadExtraccionesPorMes, titular, fechaApertura);
     }
     public CuentaCorriente(float saldo, float limiteMinimoCuenta, int cantidadExtraccionesPorMes, Titular titular
-                          ,Calendar fechaApertura, Collection<Transaccion> transacciones){
+                          ,LocalDate fechaApertura, Collection<Transaccion> transacciones){
         super(saldo, limiteMinimoCuenta, cantidadExtraccionesPorMes, titular, fechaApertura, transacciones);
     }
 

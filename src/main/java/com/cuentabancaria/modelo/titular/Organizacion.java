@@ -24,14 +24,6 @@ public class Organizacion extends Titular{
     public LocalDate getFechaCreacion() { return fechaCreacion; }
     public void setFechaCreacion(LocalDate fechaCreacion) { this.fechaCreacion = fechaCreacion; }
 
-    /*
-    public int obtenerDiaFechaCreacion(){ return getFechaCreacion().get(Calendar.DAY_OF_MONTH);}
-    public int obtenerMesFechaCreacion(){ return getFechaCreacion().get(Calendar.MONTH) + 1; }
-    public int obtenerAnioFechaCreacion(){ return getFechaCreacion().get(Calendar.YEAR); }
-    public String obtenerFechaCreacion(){
-        return obtenerDiaFechaCreacion() + "/" + obtenerMesFechaCreacion() + "/" + obtenerAnioFechaCreacion();
-    }
-     */
     @Override
     public String toString() { return "Organización"; }
     @Override
@@ -41,7 +33,7 @@ public class Organizacion extends Titular{
                 + ", número de cuit: " + getNumeroCuit();
     }
     @Override
-    public String obtenerFxml(){ return "TitularOrganizacion.fxml"; }
+    public String obtenerFxml(){ return "titular/TitularOrganizacion.fxml"; }
     public String obtenerFechaCreacion(){
         CambiarFecha cambiarFecha = new CambiarFecha(getFechaCreacion());
         return cambiarFecha.cambiar();

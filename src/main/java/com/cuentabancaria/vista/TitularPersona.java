@@ -4,13 +4,11 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-
 import java.io.IOException;
-
 public class TitularPersona extends Application {
     @Override
     public void start(Stage stage){
-        FXMLLoader loader =  new FXMLLoader(getClass().getResource("/com/cuentabancaria/vista/TitularPersona.fxml"));
+        FXMLLoader loader =  new FXMLLoader(getClass().getResource("/com/cuentabancaria/vista/titular/TitularPersona.fxml"));
         try {
             Parent root = loader.load();
             Scene scene = new Scene(root);

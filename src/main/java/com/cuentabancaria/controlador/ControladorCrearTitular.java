@@ -19,24 +19,28 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 public class ControladorCrearTitular implements Initializable {
-    @FXML
-    public AnchorPane panelTitular;
-    @FXML
-    private Button botonCrearTitular;
-    @FXML
-    private ComboBox<Titular> comboBoxTipoTitular = new ComboBox<>();
-    @FXML
-    private ComboBox<CuentaBancaria> comboBoxTipoCuenta = new ComboBox<>();
-
+    private Titular titular;
+    private CuentaBancaria cuentaBancaria;
+    @FXML private AnchorPane panelTitular = new AnchorPane();
+    @FXML private Button botonCrearTitular = new Button();
+    @FXML private ComboBox<Titular> comboBoxTipoTitular = new ComboBox<>();
+    @FXML private ComboBox<CuentaBancaria> comboBoxTipoCuenta = new ComboBox<>();
+    /**
+     * Inicializa los comboBox
+     * */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         getComboBoxTipoCuenta().setPromptText("Elige una cuenta");
         getComboBoxTipoCuenta().setItems(FXCollections.observableArrayList(new CajaAhorro(), new CuentaCorriente()));
         getComboBoxTipoTitular().setPromptText("Elige el titular");
         getComboBoxTipoTitular().setItems(FXCollections.observableArrayList(new Persona(), new Organizacion()));
-
+        getBotonCrearTitular().setVisible(true);
     }
 
+    public Titular getTitular() { return titular; }
+    public void setTitular(Titular titular) { this.titular = titular; }
+    public CuentaBancaria getCuentaBancaria() { return cuentaBancaria; }
+    public void setCuentaBancaria(CuentaBancaria cuentaBancaria) { this.cuentaBancaria = cuentaBancaria; }
     public Button getBotonCrearTitular() {return botonCrearTitular;}
     public void setBotonCrearTitular(Button botonCrearTitular){this.botonCrearTitular = botonCrearTitular;}
     public ComboBox<Titular> getComboBoxTipoTitular() {return comboBoxTipoTitular;}
@@ -46,6 +50,11 @@ public class ControladorCrearTitular implements Initializable {
     public AnchorPane getPanelTitular() {return panelTitular;}
     public void setPanelTitular(AnchorPane panelTitular) {this.panelTitular = panelTitular;}
 
+    /**
+     * Metodo que carga un panel de registro según el tipo de titular seleccionado en el comboBox
+     * (Persona u Organización).
+     * @param tipo
+     */
     private void tipoTitular(String tipo) {
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/cuentabancaria/vista/"+tipo));
@@ -63,23 +72,58 @@ public class ControladorCrearTitular implements Initializable {
             alert.showAndWait();
         }
     }
-    private String obtenerFxmlTitular(String titular){ return "/com/cuentabancaria/vista/" + titular; }
+    /**
+     * Obtengo el archivo fxml según el tipo de Titular
+     * @param titular
+     * @return String
+     */
+    private String obtenerFxmlTitular(Titular titular){ return "/com/cuentabancaria/vista/" + titular.obtenerFxml(); }
     @FXML
-    public void accionBoton(){
-        CuentaBancaria cuentaBancaria = getComboBoxTipoCuenta().getValue();
-        Titular tipoTitular = getComboBoxTipoTitular().getValue();
-        if (tipoTitular instanceof Persona){
-            tipoTitular = crearTitularPersona();
+    private void accionObtenerTitularSeleccionado(){
+        if (getComboBoxTipoTitular().getValue() instanceof Persona){
+            Persona persona = crearTitularPersona();
+            setTitular(persona);
         }else {
-            tipoTitular = crearTitularOrganizacion();
+            Organizacion organizacion = crearTitularOrganizacion();
+            setTitular(organizacion);
         }
-        cuentaBancaria.setTitular(tipoTitular);
+        System.out.println(getTitular().tipoTitular());
     }
+    @FXML
+    private void accionObtenerCuentaBancaria(){
+        setCuentaBancaria(getComboBoxTipoCuenta().getValue());
+        System.out.println(getCuentaBancaria().toString());
+    }
+    @FXML
+    private void accionBotonCrearTitular(){
+        setCuentaBancaria(getComboBoxTipoCuenta().getValue());
+        if (getComboBoxTipoTitular().getValue() instanceof Persona){
+            setTitular(new Persona());
+            setTitular(crearTitularPersona());
+            getCuentaBancaria().setTitular(getTitular());
+        }else {
+            setTitular(new Organizacion());
+            setTitular(crearTitularOrganizacion());
+            getCuentaBancaria().setTitular(getTitular());
+        }
+        try{
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/cuentabancaria/vista/Inicio.fxml"));
+            Controlador controlador = new Controlador();
+
+        }catch (Exception e){
+            System.out.println(e.getMessage());
+        }
+    }
+    /**
+     * Obtengo los datos ingresados de la persona y lo devuelvo.
+     * @return Persona
+     */
     private Persona crearTitularPersona(){
         TextField nombre = (TextField) getPanelTitular().getChildren().get(6);
         TextField segundoNombre = (TextField) getPanelTitular().getChildren().get(7);
         TextField apellido = (TextField) getPanelTitular().getChildren().get(8);
         TextField dni = (TextField) getPanelTitular().getChildren().get(9);
+        boolean dniEsNumero = InputValidator.textIsNumericOnly(dni.getText());
         TextField cuit = (TextField) getPanelTitular().getChildren().get(10);
         DatePicker fechaNacimiento = (DatePicker) getPanelTitular().getChildren().get(11);
         Persona nuevoTitular = new Persona(nombre.getText()
@@ -91,6 +135,10 @@ public class ControladorCrearTitular implements Initializable {
         System.out.println(nuevoTitular.tipoTitular());
         return nuevoTitular;
     }
+    /**
+     * Obtengo los datos ingresados de la organización y lo devuelvo.
+     * @return Organización
+     */
     private Organizacion crearTitularOrganizacion(){
         TextField nombre = (TextField) getPanelTitular().getChildren().get(4);
         TextField tipoOrganizacion = (TextField) getPanelTitular().getChildren().get(5);
@@ -103,36 +151,22 @@ public class ControladorCrearTitular implements Initializable {
         System.out.println(nuevoTitular.tipoTitular());
         return nuevoTitular;
     }
+    /**
+     * Metodo que selecciona los elementos de los comboBox tipo de titular y tipo de cuenta.
+     */
     @FXML
     public void combo(){
         Titular titular = getComboBoxTipoTitular().getValue();
         CuentaBancaria cuentaBancaria = getComboBoxTipoCuenta().getValue();
-        cuentaBancaria.setTitular(titular);
         try {
-            AnchorPane panel = FXMLLoader.load(getClass().getResource(obtenerFxmlTitular(titular.obtenerFxml())));
+            AnchorPane panel = FXMLLoader.load(getClass().getResource(obtenerFxmlTitular(titular)));
             getPanelTitular().getChildren().clear();
             getPanelTitular().getChildren().setAll(panel.getChildren());
         }catch (IOException exception){
-
+            System.out.println(exception.getMessage());
         }
+        setTitular(titular);
         System.out.println(cuentaBancaria);
-    }
-    @FXML
-    public void accionCrearCuenta(){
-        try{
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/cuentabancaria/vista/CrearTitular.fxml"));
-            Parent parent = fxmlLoader.load();
-            Scene scene = new Scene(parent);
-            Stage stage = new Stage();
-            stage.initModality(Modality.APPLICATION_MODAL);
-            stage.setScene(scene);
-            stage.showAndWait();
-        }catch (IOException e){
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Error");
-            alert.setHeaderText(null);
-            alert.setContentText(e.getMessage());
-            alert.showAndWait();
-        }
+        System.out.println(titular);
     }
 }

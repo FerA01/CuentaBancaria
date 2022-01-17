@@ -9,7 +9,14 @@ public class Persona extends Titular{
     private int dni;
     private LocalDate fechaNacimiento;
 
-    public Persona(){}
+    public Persona(){
+        setNombre("");
+        setSegundoNombre("");
+        setApellido("");
+        setDni(0);
+        setNumeroCuit("");
+        setFechaNacimiento(null);
+    }
     public Persona(String nombre, String apellido, int dni, String numeroCuit, LocalDate fechaNacimiento){
         setNombre(nombre);
         setSegundoNombre("");
@@ -27,6 +34,14 @@ public class Persona extends Titular{
         setNumeroCuit(numeroCuit);
         setFechaNacimiento(fechaNacimiento);
     }
+    public Persona(int dni, String nombre, String segundoNombre, String apellido, LocalDate fechaNacimiento, String numeroCuit){
+        setNombre(nombre);
+        setSegundoNombre(segundoNombre);
+        setApellido(apellido);
+        setDni(dni);
+        setNumeroCuit(numeroCuit);
+        setFechaNacimiento(fechaNacimiento);
+    }
     public String getNombre() { return nombre; }
     public void setNombre(String nombre) { this.nombre = nombre; }
     public String getSegundoNombre() { return segundoNombre; }
@@ -37,24 +52,19 @@ public class Persona extends Titular{
     public void setDni(int dni) { this.dni = dni; }
     public LocalDate getFechaNacimiento() { return fechaNacimiento; }
     public void setFechaNacimiento(LocalDate fechaNacimiento) { this.fechaNacimiento = fechaNacimiento; }
-
-    /*
-    public int obtenerDiaFechaNacimiento(){ return getFechaNacimiento().get(LocalDate.DAY_OF_MONTH);}
-    public int obtenerMesFechaNacimiento(){ return getFechaNacimiento().get(LocalDate.MONTH) + 1; }
-    public int obtenerAnioFechaNacimiento(){ return getFechaNacimiento().get(LocalDate.YEAR); }
-    public String obtenerFechaCreacion(){ return obtenerDiaFechaNacimiento()
-                                          + "/" + obtenerMesFechaNacimiento()
-                                          + "/" + obtenerAnioFechaNacimiento();
-    }*/
     @Override
     public String toString() { return "Personal"; }
     @Override
     public String tipoTitular() {
-        return "Nombre: " + getNombre() + " " + getSegundoNombre() + " " + getApellido() + ", dni: " + getDni()
-                + ", número de cuit: " + getNumeroCuit() + ", fecha de nacimiento: " + obtenerFechaNacimiento();
+        if (getSegundoNombre().equals("")){
+            return "Nombre: " + getNombre() + " " + getApellido() + ", dni: " + getDni() + ", número de cuit: " + getNumeroCuit() + ", fecha de nacimiento: " + obtenerFechaNacimiento();
+        }else {
+            return "Nombre: " + getNombre() + " " + getSegundoNombre() + " " + getApellido() + ", dni: " + getDni()
+                    + ", número de cuit: " + getNumeroCuit() + ", fecha de nacimiento: " + obtenerFechaNacimiento();
+        }
     }
     @Override
-    public String obtenerFxml(){ return "TitularPersona.fxml"; }
+    public String obtenerFxml(){ return "titular/TitularPersona.fxml"; }
     public String obtenerFechaNacimiento(){
         CambiarFecha cambiarFecha = new CambiarFecha(getFechaNacimiento());
         return cambiarFecha.cambiar();
