@@ -1,8 +1,12 @@
 package com.cuentabancaria.controlador;
+import com.cuentabancaria.basedatos.controlador.ControladorBaseDato;
+import com.cuentabancaria.modelo.cuentas.CajaAhorro;
 import com.cuentabancaria.modelo.cuentas.CuentaBancaria;
+import com.cuentabancaria.modelo.cuentas.Transaccion;
 import com.cuentabancaria.modelo.titular.Titular;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
@@ -11,16 +15,26 @@ import javafx.scene.control.Label;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import java.io.IOException;
-
-public class Controlador{
+import java.net.URL;
+import java.time.LocalDate;
+import java.util.ResourceBundle;
+public class Controlador implements Initializable {
+    private static ControladorBaseDato baseDato;
     @FXML private Button botonActualizar;
     public CuentaBancaria cuentaBancaria;
     public Titular titular;
     @FXML private Button botonCrearCuenta;
     @FXML private Button botonBuscarCuenta;
     @FXML private Button botonEliminarCuenta;
-    @FXML private Label labelSaldo = new Label();
-    @FXML private Label labelNumeroCuit = new Label();
+    @FXML private Label labelSaldo;
+    @FXML private Label labelNumeroCuit;
+
+    @Override
+    public void initialize(URL url, ResourceBundle resourceBundle) {
+        setLabelSaldo(new Label());
+        setLabelNumeroCuit(new Label());
+        setBaseDato(null);
+    }
 
     public CuentaBancaria getCuentaBancaria() {
         return cuentaBancaria;
@@ -52,6 +66,8 @@ public class Controlador{
     public void setLabelNumeroCuit(Label labelNumeroCuit) {
         this.labelNumeroCuit = labelNumeroCuit;
     }
+    public static ControladorBaseDato getBaseDato() { return baseDato; }
+    public static void setBaseDato(ControladorBaseDato baseDato) { Controlador.baseDato = baseDato; }
 
     /**
      *  Carga una nueva ventana emergente en donde se hace el registro de una cuenta bancaria con su titular
@@ -112,5 +128,12 @@ public class Controlador{
             alert.setContentText(e.getMessage());
             alert.showAndWait();
         }
+    }
+    @FXML
+    public void accionActualizar(){
+        setBaseDato(new ControladorBaseDato());
+        Transaccion transaccion = new Transaccion("11111111111", 35000, LocalDate.now(), "Deposito");
+        getBaseDato().insertarTransaccion(transaccion);
+        setBaseDato(null);
     }
 }

@@ -1,4 +1,5 @@
 package com.cuentabancaria.controlador;
+import com.cuentabancaria.basedatos.controlador.ControladorBaseDato;
 import com.cuentabancaria.modelo.cuentas.CajaAhorro;
 import com.cuentabancaria.modelo.cuentas.CuentaBancaria;
 import com.cuentabancaria.modelo.cuentas.CuentaCorriente;
@@ -17,8 +18,10 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import java.io.IOException;
 import java.net.URL;
+import java.sql.SQLException;
 import java.util.ResourceBundle;
 public class ControladorCrearTitular implements Initializable {
+    private static ControladorBaseDato baseDato;
     private Titular titular;
     private CuentaBancaria cuentaBancaria;
     @FXML private AnchorPane panelTitular = new AnchorPane();
@@ -35,6 +38,7 @@ public class ControladorCrearTitular implements Initializable {
         getComboBoxTipoTitular().setPromptText("Elige el titular");
         getComboBoxTipoTitular().setItems(FXCollections.observableArrayList(new Persona(), new Organizacion()));
         getBotonCrearTitular().setVisible(true);
+        setBaseDato(null);
     }
 
     public Titular getTitular() { return titular; }
@@ -49,6 +53,9 @@ public class ControladorCrearTitular implements Initializable {
     public void setComboBoxTipoCuenta(ComboBox<CuentaBancaria> comboBoxTipoCuenta) {this.comboBoxTipoCuenta = comboBoxTipoCuenta;}
     public AnchorPane getPanelTitular() {return panelTitular;}
     public void setPanelTitular(AnchorPane panelTitular) {this.panelTitular = panelTitular;}
+
+    public static ControladorBaseDato getBaseDato() { return baseDato; }
+    private static void setBaseDato(ControladorBaseDato baseDato) { ControladorCrearTitular.baseDato = baseDato; }
 
     /**
      * Metodo que carga un panel de registro según el tipo de titular seleccionado en el comboBox
@@ -95,7 +102,8 @@ public class ControladorCrearTitular implements Initializable {
         System.out.println(getCuentaBancaria().toString());
     }
     @FXML
-    private void accionBotonCrearTitular(){
+    private void accionBotonCrearTitular() throws SQLException {
+        /*
         setCuentaBancaria(getComboBoxTipoCuenta().getValue());
         if (getComboBoxTipoTitular().getValue() instanceof Persona){
             setTitular(new Persona());
@@ -113,6 +121,23 @@ public class ControladorCrearTitular implements Initializable {
         }catch (Exception e){
             System.out.println(e.getMessage());
         }
+        */
+        //Esta parte lo agrega a la base de datos
+        setCuentaBancaria(getComboBoxTipoCuenta().getValue());
+        setBaseDato(new ControladorBaseDato());
+        if (getComboBoxTipoTitular().getValue() instanceof Persona){
+            setTitular(crearTitularPersona());
+            getCuentaBancaria().setTitular(getTitular());
+
+            getBaseDato().insertarTitular(getTitular().getNumeroCuit());
+            getBaseDato().insertarPersona((Persona) getTitular());
+        }else {
+            setTitular(crearTitularOrganizacion());
+            getCuentaBancaria().setTitular(getTitular());
+            getBaseDato().insertarTitular(getTitular().getNumeroCuit());
+            getBaseDato().insertarOrganizacion((Organizacion) getTitular());
+        }
+        setBaseDato(null);
     }
     /**
      * Obtengo los datos ingresados de la persona y lo devuelvo.

@@ -57,7 +57,7 @@
                   <Font size="14.0" />
                </font>
             </Label>
-            <Button fx:id="botonActualizar" layoutX="274.0" layoutY="161.0" mnemonicParsing="false" text="Actualizar"/>
+            <Button fx:id="botonActualizar" layoutX="274.0" layoutY="161.0" mnemonicParsing="false" text="Actualizar" onAction="#accionActualizar"/>
          </children></AnchorPane>
    </children>
 </AnchorPane>

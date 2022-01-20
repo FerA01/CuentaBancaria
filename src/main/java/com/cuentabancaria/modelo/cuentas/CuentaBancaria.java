@@ -4,6 +4,7 @@ import com.cuentabancaria.modelo.titular.Titular;
 import java.time.LocalDate;
 import java.util.Collection;
 public abstract class CuentaBancaria implements Accion{
+    private String cbu;
     private float saldo;
     private float limiteMinimoCuenta;
     private int cantidadExtraccionesPorMes;
@@ -16,8 +17,9 @@ public abstract class CuentaBancaria implements Accion{
         setLimiteMinimoCuenta(0);
         setCantidadExtraccionesPorMes(0);
     }
-    public CuentaBancaria(float saldo, float limiteMinimoCuenta, int cantidadExtraccionesPorMes, Titular titular
+    public CuentaBancaria(String cbu, float saldo, float limiteMinimoCuenta, int cantidadExtraccionesPorMes, Titular titular
                          ,LocalDate fechaApertura){
+        setCbu(cbu);
         setSaldo(saldo);
         setLimiteMinimoCuenta(limiteMinimoCuenta);
         setCantidadExtraccionesPorMes(cantidadExtraccionesPorMes);
@@ -46,6 +48,8 @@ public abstract class CuentaBancaria implements Accion{
     public void setFechaApertura(LocalDate fechaApertura) { this.fechaApertura = fechaApertura; }
     public Collection<Transaccion> getTransacciones() { return transacciones; }
     public void setTransacciones(Collection<Transaccion> transacciones) { this.transacciones = transacciones; }
+    public String getCbu() { return this.cbu; }
+    public void setCbu(String cbu) { this.cbu = cbu; }
 
     public boolean agregarTransaccion(Transaccion transaccion){ return getTransacciones().add(transaccion); }
     public boolean eliminarTransaccion(Transaccion transaccion){ return getTransacciones().removeIf(trans -> trans.equals(transaccion)); }
@@ -56,6 +60,7 @@ public abstract class CuentaBancaria implements Accion{
     }
     public int cantidadTransacciones(){ return getTransacciones().size(); }
     protected boolean puedeRetirar(float monto){ return (getSaldo() - monto) > getLimiteMinimoCuenta(); }
+    public abstract String tipoCuentaBancaria();
     @Override
     public abstract String toString();
     @Override

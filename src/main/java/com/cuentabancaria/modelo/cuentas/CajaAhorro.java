@@ -1,8 +1,6 @@
 package com.cuentabancaria.modelo.cuentas;
 import com.cuentabancaria.modelo.titular.Titular;
-
 import java.time.LocalDate;
-import java.util.Calendar;
 import java.util.Collection;
 public class CajaAhorro extends CuentaBancaria{
     public CajaAhorro(){
@@ -17,9 +15,9 @@ public class CajaAhorro extends CuentaBancaria{
         setTitular(titular);
         setFechaApertura(fechaApertura);
     }
-    public CajaAhorro(float saldo, float limiteMinimoCuenta, int cantidadExtraccionesPorMes, Titular titular
+    public CajaAhorro(String cbu, float saldo, float limiteMinimoCuenta, int cantidadExtraccionesPorMes, Titular titular
                       , LocalDate fechaApertura){
-        super(saldo, limiteMinimoCuenta, cantidadExtraccionesPorMes, titular, fechaApertura);
+        super(cbu, saldo, limiteMinimoCuenta, cantidadExtraccionesPorMes, titular, fechaApertura);
     }
     public CajaAhorro(float saldo, float limiteMinimoCuenta, int cantidadExtraccionesPorMes, Titular titular
             ,LocalDate fechaApertura, Collection<Transaccion> transacciones){
@@ -27,13 +25,14 @@ public class CajaAhorro extends CuentaBancaria{
     }
 
     @Override
+    public String tipoCuentaBancaria() { return "Caja de ahorro"; }
+    @Override
     public String toString() { return "Caja de ahorro"; }
-
     @Override
     public boolean depositar(float monto) {
         if(monto > 0) {
             super.ingresarMonto(monto);
-            agregarTransaccion(new Transaccion(monto, Calendar.getInstance(), "Deposito"));
+            agregarTransaccion(new Transaccion(monto, null, "Deposito"));
             return true;
         }
         return false;
@@ -43,7 +42,7 @@ public class CajaAhorro extends CuentaBancaria{
         if (monto > 0 && getCantidadExtraccionesPorMes() > 0){
             if(puedeRetirar(monto)) {
                 super.sacarMonto(monto);
-                agregarTransaccion(new Transaccion(monto, Calendar.getInstance(), "Extracción"));
+                agregarTransaccion(new Transaccion(monto, null, "Extracción"));
                 return true;
             }
             return false;
