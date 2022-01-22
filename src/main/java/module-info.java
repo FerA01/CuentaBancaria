@@ -9,5 +9,8 @@ module com.cuentabancaria {
     opens com.cuentabancaria.vista to javafx.fxml;
     opens com.cuentabancaria.controlador.login to javafx.fxml;
     opens com.cuentabancaria.vista.titular to javafx.fxml;
+    opens  com.cuentabancaria.vista.buscar to javafx.fxml;
+    opens com.cuentabancaria.controlador.buscar to javafx.fxml;
+    opens com.cuentabancaria.modelo.titular to javafx.base;
     exports com.cuentabancaria.vista to javafx.graphics;
 }

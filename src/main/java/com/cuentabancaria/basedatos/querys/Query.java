@@ -23,7 +23,9 @@ public class Query {
     //Obtener datos.
     public final String obtenerUltimoIDTabla(){ return "SELECT MAX(?) FROM ? "; }
     public final String obtenerUltimoID(){ return "SELECT MAX(id) FROM titular"; }
-    public final String seleccionarPersona(){ return "SELECT * FROM persona"; }
+    public final String seleccionarPersona(){
+        return "SELECT * FROM persona";
+    }
     public final String obtenerNumeroCuitTitular(){ return "SELECT numero_cuit FROM titular"; }
 
     //Eliminar datos.

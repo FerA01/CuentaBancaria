@@ -1,6 +1,5 @@
 package com.cuentabancaria.modelo.titular;
 import com.cuentabancaria.modelo.CambiarFecha;
-
 import java.time.LocalDate;
 public class Persona extends Titular{
     private String nombre;
@@ -8,6 +7,7 @@ public class Persona extends Titular{
     private String apellido;
     private int dni;
     private LocalDate fechaNacimiento;
+    private String numeroCuit;
 
     public Persona(){
         setNombre("");
