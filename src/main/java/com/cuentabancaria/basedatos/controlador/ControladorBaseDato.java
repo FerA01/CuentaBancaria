@@ -11,11 +11,17 @@ public class ControladorBaseDato {
     private static Query query;
     private ConexionBD conexionBD;
     private CambiarFecha cambiarFecha;
+    private static Connection conexion;
+    private static PreparedStatement sentencia;
+    private static ResultSet resultado;
 
     public ControladorBaseDato(){
         setQuery(new Query());
         setConexionBD(new ConexionBD());
         setCambiarFecha(new CambiarFecha());
+        setConexion(null);
+        setSentencia(null);
+        setResultado(null);
     }
 
     public Query getQuery() { return query; }
@@ -24,6 +30,13 @@ public class ControladorBaseDato {
     private void setConexionBD(ConexionBD conexionBD) { this.conexionBD = conexionBD; }
     public CambiarFecha getCambiarFecha() { return cambiarFecha; }
     private void setCambiarFecha(CambiarFecha cambiarFecha) { this.cambiarFecha = cambiarFecha; }
+
+    public static Connection getConexion() { return conexion; }
+    public static void setConexion(Connection conexion) { ControladorBaseDato.conexion = conexion; }
+    public static PreparedStatement getSentencia() { return sentencia; }
+    public static void setSentencia(PreparedStatement sentencia) { ControladorBaseDato.sentencia = sentencia; }
+    public static ResultSet getResultado() { return resultado; }
+    public static void setResultado(ResultSet resultado) { ControladorBaseDato.resultado = resultado; }
 
     public int obtenerUltimoIDTabla(String id, String nombreTabla){
         int valorId = 0;
@@ -209,27 +222,31 @@ public class ControladorBaseDato {
     }
 
     public ResultSet obtenerPersonas(){
-        Connection conexion = null;
-        PreparedStatement sentencia = null;
-        ResultSet resultado = null;
+        setConexionBD(new ConexionBD());
         try{
-            conexion = getConexionBD().getConexion();
-            sentencia = conexion.prepareStatement(getQuery().seleccionarPersona());
-            resultado = sentencia.executeQuery();
-            return  resultado;
+            setConexion(getConexionBD().getConexion());
+            setSentencia(getConexion().prepareStatement(getQuery().seleccionarPersona()));
+            setResultado(getSentencia().executeQuery());
+            return  getResultado();
         }catch (SQLException exepcion){
             exepcion.getStackTrace();
-        }finally {
-            getConexionBD().cerrarConexion();
-            if (conexion != null && sentencia != null){
-                try {
-                    conexion.close();
-                    sentencia.close();
-                }catch (SQLException excepcion){
-                    excepcion.getStackTrace();
-                }
+        }finally { getConexionBD().cerrarConexion(); }
+        return null;
+    }
+    public void cerrarConexiones() throws SQLException {
+        if (!getSentencia().isClosed()){
+            try {
+                getSentencia().close();
+            }catch (SQLException excepcion){
+                System.out.println(excepcion.getMessage());
             }
         }
-        return resultado;
+        if (!getResultado().isClosed()){
+            try{
+                getResultado().close();
+            }catch (SQLException excepcion){
+                System.out.println(excepcion.getMessage());
+            }
+        }
     }
 }

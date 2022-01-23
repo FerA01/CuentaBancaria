@@ -27,6 +27,7 @@ public class Query {
         return "SELECT * FROM persona";
     }
     public final String obtenerNumeroCuitTitular(){ return "SELECT numero_cuit FROM titular"; }
+    public final String obtenerApellidosPersonas(){ return "SELECT apellido FROM persona"; }
 
     //Eliminar datos.
 

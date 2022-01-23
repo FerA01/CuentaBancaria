@@ -10,7 +10,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
-
 import java.net.URL;
 import java.sql.Date;
 import java.sql.ResultSet;
@@ -18,7 +17,6 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
-
 public class ControladorBuscarPersona implements Initializable {
     @FXML private Button botonBuscar;
     @FXML private TableView<Persona> tabla;
@@ -42,7 +40,7 @@ public class ControladorBuscarPersona implements Initializable {
         getColumnaApellido().setCellValueFactory(new PropertyValueFactory<Persona, String>("apellido"));
         getColumnaFechaNacimiento().setCellValueFactory(new PropertyValueFactory<Persona, LocalDate>("fechaNacimiento"));
         getColumnaNumeroCuit().setCellValueFactory(new PropertyValueFactory<Persona, String>("numeroCuit"));
-        getTabla().setItems(ol);
+        //getTabla().setItems(ol);
     }
 
     public Button getBotonBuscar() { return botonBuscar; }
@@ -82,12 +80,13 @@ public class ControladorBuscarPersona implements Initializable {
     }
 
     @FXML
-    public void accionBotonBuscar(){
+    public void accionBotonBuscar() throws SQLException {
         setBaseDato(new ControladorBaseDato());
-        Persona persona = new Persona(41203108, "Fernando", "David", "Andana", LocalDate.now(), "20412031084");
-        ArrayList<Persona> personas = new ArrayList<>();
-        personas.add(persona);
+        ResultSet resultado = getBaseDato().obtenerPersonas();
+        ArrayList<Persona> personas = obtenerPersonas(resultado);
+        getBaseDato().cerrarConexiones();
         ObservableList<Persona> ol = FXCollections.observableArrayList(personas);
         getTabla().setItems(ol);
+
     }
 }
