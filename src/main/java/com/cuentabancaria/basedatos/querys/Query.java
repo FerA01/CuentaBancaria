@@ -30,6 +30,17 @@ public class Query {
     public final String obtenerApellidosPersonas(){ return "SELECT apellido FROM persona"; }
 
     //Eliminar datos.
+    public final String eliminarPersona(){ return "DELETE FROM persona WHERE cuit = ?"; }
+    public final String eliminarOrganizacion(){ return "DELETE FROM organizacion WHERE cuit = ?"; }
+    public final String eliminarTitular(){ return "DELETE FROM titular WHERE numero_cuit = ?"; }
+    public final String eliminarTransaccion(){ return "DELETE FROM transacciones WHERE cbuAsociado = ?"; }
 
     //Modificar datos.
+    public final String actualizarPersona(){ return "UPDATE persona SET dni = ?, nombre = ?, segundoNombre = ?, apellido = ?, fechaNacimiento = ?"
+                                             + " WHERE cuit = ?"; }
+    public final String actualizarOrganizacion(){ return "UPDATE organizacion SET nombreOrganizacion = ?, tipoOrganizacion = ?, fechaCreacion = ?"
+                                                 + " WHERE cuit = ?"; }
+    public final String actualizarCuentaBancaria(){ return "UPDATE cuentaBancaria SET saldo = ?, limiteMinimoCuenta = ?, CantidadExtraccionesMes = ?, fechaApertura = ?"
+                                                    + " WHERE cbu = ?"; }
+
 }

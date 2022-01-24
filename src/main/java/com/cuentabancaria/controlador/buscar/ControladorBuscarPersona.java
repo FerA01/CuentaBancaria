@@ -9,6 +9,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import java.net.URL;
 import java.sql.Date;
@@ -16,9 +17,13 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.ResourceBundle;
+import org.controlsfx.control.textfield.TextFields;
+
 public class ControladorBuscarPersona implements Initializable {
     @FXML private Button botonBuscar;
+    @FXML private TextField textFieldBuscarApellido;
     @FXML private TableView<Persona> tabla;
     @FXML private TableColumn<Persona, String> columnaNumeroCuit;
     @FXML private TableColumn<Persona, String> columnaNombre;
@@ -27,20 +32,20 @@ public class ControladorBuscarPersona implements Initializable {
     @FXML private TableColumn<Persona, LocalDate> columnaFechaNacimiento;
     @FXML private TableColumn<Persona, Integer> columnaDni;
     private ControladorBaseDato baseDato;
-    ObservableList<Persona> ol = FXCollections.observableArrayList(
-            new Persona(41203108, "Fernando", "David", "Andana", LocalDate.now(), "20412031084")
-    );
+    private HashSet<String> posiblesApellidos;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         setBaseDato(null);
+        posiblesApellidos = new HashSet<>(obtenerApellidos());
+        TextFields.bindAutoCompletion(textFieldBuscarApellido, posiblesApellidos);
         getColumnaDni().setCellValueFactory(new PropertyValueFactory<Persona, Integer>("dni"));
         getColumnaNombre().setCellValueFactory(new PropertyValueFactory<Persona, String>("nombre"));
         getColumnaSegundoNombre().setCellValueFactory(new PropertyValueFactory<Persona, String>("segundoNombre"));
         getColumnaApellido().setCellValueFactory(new PropertyValueFactory<Persona, String>("apellido"));
         getColumnaFechaNacimiento().setCellValueFactory(new PropertyValueFactory<Persona, LocalDate>("fechaNacimiento"));
         getColumnaNumeroCuit().setCellValueFactory(new PropertyValueFactory<Persona, String>("numeroCuit"));
-        //getTabla().setItems(ol);
+
     }
 
     public Button getBotonBuscar() { return botonBuscar; }
@@ -78,7 +83,28 @@ public class ControladorBuscarPersona implements Initializable {
         }
         return personas;
     }
-
+    private ArrayList<String> obtenerApellidos(){
+        setBaseDato(new ControladorBaseDato());
+        ArrayList<String> apellidos = new ArrayList<>();
+        ResultSet resultado = null;
+        try{
+            resultado = getBaseDato().obtenerApellidos();
+            while (resultado.next()){
+                String apellido = resultado.getString(1);
+                apellidos.add(apellido);
+            }
+            return apellidos;
+        }catch (SQLException excepcion){
+            System.out.println(excepcion.getMessage());
+        }finally {
+            try {
+                getBaseDato().cerrarConexiones();
+            } catch (SQLException excepcion) {
+                System.out.println(excepcion.getMessage());
+            }
+        }
+        return apellidos;
+    }
     @FXML
     public void accionBotonBuscar() throws SQLException {
         setBaseDato(new ControladorBaseDato());
@@ -87,6 +113,5 @@ public class ControladorBuscarPersona implements Initializable {
         getBaseDato().cerrarConexiones();
         ObservableList<Persona> ol = FXCollections.observableArrayList(personas);
         getTabla().setItems(ol);
-
     }
 }

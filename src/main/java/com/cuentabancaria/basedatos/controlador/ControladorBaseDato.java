@@ -6,14 +6,15 @@ import com.cuentabancaria.modelo.cuentas.Transaccion;
 import com.cuentabancaria.modelo.titular.Organizacion;
 import com.cuentabancaria.modelo.titular.Persona;
 import java.sql.*;
+import java.util.ArrayList;
 
 public class ControladorBaseDato {
     private static Query query;
     private ConexionBD conexionBD;
     private CambiarFecha cambiarFecha;
-    private static Connection conexion;
-    private static PreparedStatement sentencia;
-    private static ResultSet resultado;
+    private Connection conexion;
+    private PreparedStatement sentencia;
+    private ResultSet resultado;
 
     public ControladorBaseDato(){
         setQuery(new Query());
@@ -31,12 +32,12 @@ public class ControladorBaseDato {
     public CambiarFecha getCambiarFecha() { return cambiarFecha; }
     private void setCambiarFecha(CambiarFecha cambiarFecha) { this.cambiarFecha = cambiarFecha; }
 
-    public static Connection getConexion() { return conexion; }
-    public static void setConexion(Connection conexion) { ControladorBaseDato.conexion = conexion; }
-    public static PreparedStatement getSentencia() { return sentencia; }
-    public static void setSentencia(PreparedStatement sentencia) { ControladorBaseDato.sentencia = sentencia; }
-    public static ResultSet getResultado() { return resultado; }
-    public static void setResultado(ResultSet resultado) { ControladorBaseDato.resultado = resultado; }
+    public Connection getConexion() { return conexion; }
+    public void setConexion(Connection conexion) { this.conexion = conexion; }
+    public PreparedStatement getSentencia() { return sentencia; }
+    public void setSentencia(PreparedStatement sentencia) { this.sentencia = sentencia; }
+    public ResultSet getResultado() { return resultado; }
+    public void setResultado(ResultSet resultado) { this.resultado = resultado; }
 
     public int obtenerUltimoIDTabla(String id, String nombreTabla){
         int valorId = 0;
@@ -220,7 +221,20 @@ public class ControladorBaseDato {
             }
         }
     }
-
+    public ResultSet obtenerApellidos(){
+        setConexionBD(new ConexionBD());
+        try {
+            setConexion(getConexionBD().getConexion());
+            setSentencia(getConexion().prepareStatement(getQuery().obtenerApellidosPersonas()));
+            setResultado(getSentencia().executeQuery());
+            return  getResultado();
+        }catch (SQLException excepcion){
+            System.out.println(excepcion.getMessage());
+        }finally {
+            getConexionBD().cerrarConexion();
+        }
+        return null;
+    }
     public ResultSet obtenerPersonas(){
         setConexionBD(new ConexionBD());
         try{
