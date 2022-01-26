@@ -3,6 +3,7 @@ import com.cuentabancaria.basedatos.controlador.ControladorBaseDato;
 import com.cuentabancaria.modelo.cuentas.CajaAhorro;
 import com.cuentabancaria.modelo.cuentas.CuentaBancaria;
 import com.cuentabancaria.modelo.cuentas.Transaccion;
+import com.cuentabancaria.modelo.titular.Persona;
 import com.cuentabancaria.modelo.titular.Titular;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -132,8 +133,39 @@ public class Controlador implements Initializable {
     @FXML
     public void accionActualizar(){
         setBaseDato(new ControladorBaseDato());
-        Transaccion transaccion = new Transaccion("11111111111", 35000, LocalDate.now(), "Deposito");
-        getBaseDato().insertarTransaccion(transaccion);
+
         setBaseDato(null);
+    }
+
+    @FXML
+    public void accionBotonBuscar(){
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/cuentabancaria/vista/buscar/buscarPersona.fxml"));
+            Parent root = loader.load();
+            Scene scene = new Scene(root);
+            Stage stage = new Stage();
+            stage.setTitle("Buscar");
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.setScene(scene);
+            stage.showAndWait();
+        }catch (IOException exception){
+
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setHeaderText(null);
+            alert.setTitle("Error");
+            alert.setContentText(exception.getMessage());
+            alert.showAndWait();
+        }
+    }
+    //Obtener saldo y cuit
+    private void obtenerSaldoCuitTitular(Titular titular, CuentaBancaria cuentaBancaria){
+        getLabelSaldo().setText(String.valueOf(cuentaBancaria.getSaldo()));
+        getLabelNumeroCuit().setText(titular.getNumeroCuit());
+    }
+    //Obtener persona
+    private Persona obtenerPersona(){
+        setBaseDato(new ControladorBaseDato());
+        Persona persona= null;
+        return persona;
     }
 }

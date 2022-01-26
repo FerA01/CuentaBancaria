@@ -19,7 +19,6 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.ResourceBundle;
-import org.controlsfx.control.textfield.TextFields;
 
 public class ControladorBuscarPersona implements Initializable {
     @FXML private Button botonBuscar;
@@ -37,15 +36,13 @@ public class ControladorBuscarPersona implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         setBaseDato(null);
-        posiblesApellidos = new HashSet<>(obtenerApellidos());
-        TextFields.bindAutoCompletion(textFieldBuscarApellido, posiblesApellidos);
+        //posiblesApellidos = new HashSet<>(obtenerApellidos());
         getColumnaDni().setCellValueFactory(new PropertyValueFactory<Persona, Integer>("dni"));
         getColumnaNombre().setCellValueFactory(new PropertyValueFactory<Persona, String>("nombre"));
         getColumnaSegundoNombre().setCellValueFactory(new PropertyValueFactory<Persona, String>("segundoNombre"));
         getColumnaApellido().setCellValueFactory(new PropertyValueFactory<Persona, String>("apellido"));
         getColumnaFechaNacimiento().setCellValueFactory(new PropertyValueFactory<Persona, LocalDate>("fechaNacimiento"));
         getColumnaNumeroCuit().setCellValueFactory(new PropertyValueFactory<Persona, String>("numeroCuit"));
-
     }
 
     public Button getBotonBuscar() { return botonBuscar; }

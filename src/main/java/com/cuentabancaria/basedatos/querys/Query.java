@@ -3,13 +3,13 @@ public class Query {
     public Query(){}
 
     //Inserciones.
-    public final String insertarTitular(){ return "INSERT INTO titular VALUES(null, ?)"; }
+    public final String insertarTitular(){ return "INSERT INTO titular VALUES(null, ?, ?)"; }
     public final String insertarPersona(){
-        return "INSERT INTO persona (dni, nombre, segundoNombre, apellido, fechaNacimiento, cuit) "
-                + "VALUES(?, ?, ?, ?, ?, ?)";
+        return "INSERT INTO persona (dni, nombre, segundoNombre, apellido, fechaNacimiento, cuit, tipoTitular) "
+                + "VALUES(?, ?, ?, ?, ?, ?, ?)";
     }
     public final String insertarOrganizacion(){
-        return "INSERT INTO organizacion (nombreOrganizacion, tipoOrganizacion, fechaCreacion, cuit) VALUES (?, ?, ?, ?)";
+        return "INSERT INTO organizacion (nombreOrganizacion, tipoOrganizacion, fechaCreacion, cuit, tipoTitular) VALUES (?, ?, ?, ?, ?)";
     }
     public final String insertartransaccion(){
         return "INSERT INTO transacciones (idTransaccion, cbuAsociado, monto, fechaTransaccion, tipoTransaccion) "
@@ -23,12 +23,15 @@ public class Query {
     //Obtener datos.
     public final String obtenerUltimoIDTabla(){ return "SELECT MAX(?) FROM ? "; }
     public final String obtenerUltimoID(){ return "SELECT MAX(id) FROM titular"; }
+    public final String obtenerCuitTitular(){ return "SELECT numero_cuit FROM titular WHERE numero_cuit = ?"; }
     public final String seleccionarPersona(){
         return "SELECT * FROM persona";
     }
+    public final String seleccionarPersonaPorCuit(){ return "SELECT * FROM persona WHERE cuit = ?"; }
     public final String obtenerNumeroCuitTitular(){ return "SELECT numero_cuit FROM titular"; }
     public final String obtenerApellidosPersonas(){ return "SELECT apellido FROM persona"; }
-
+    public final String seleccionarOrganizacion(){ return "SELECT * FROM organizacion"; }
+    public final String seleccionarOrganizacionPorCuit(){ return "SELECT * FROM organizacion WHERE cuit = ?"; }
     //Eliminar datos.
     public final String eliminarPersona(){ return "DELETE FROM persona WHERE cuit = ?"; }
     public final String eliminarOrganizacion(){ return "DELETE FROM organizacion WHERE cuit = ?"; }

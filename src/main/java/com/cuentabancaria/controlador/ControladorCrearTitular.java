@@ -103,25 +103,6 @@ public class ControladorCrearTitular implements Initializable {
     }
     @FXML
     private void accionBotonCrearTitular() throws SQLException {
-        /*
-        setCuentaBancaria(getComboBoxTipoCuenta().getValue());
-        if (getComboBoxTipoTitular().getValue() instanceof Persona){
-            setTitular(new Persona());
-            setTitular(crearTitularPersona());
-            getCuentaBancaria().setTitular(getTitular());
-        }else {
-            setTitular(new Organizacion());
-            setTitular(crearTitularOrganizacion());
-            getCuentaBancaria().setTitular(getTitular());
-        }
-        try{
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/cuentabancaria/vista/Inicio.fxml"));
-            Controlador controlador = new Controlador();
-
-        }catch (Exception e){
-            System.out.println(e.getMessage());
-        }
-        */
         //Esta parte lo agrega a la base de datos
         setCuentaBancaria(getComboBoxTipoCuenta().getValue());
         setBaseDato(new ControladorBaseDato());
@@ -129,12 +110,12 @@ public class ControladorCrearTitular implements Initializable {
             setTitular(crearTitularPersona());
             getCuentaBancaria().setTitular(getTitular());
 
-            getBaseDato().insertarTitular(getTitular().getNumeroCuit());
+            getBaseDato().insertarTitular(getTitular().getNumeroCuit(), getTitular().toString());
             getBaseDato().insertarPersona((Persona) getTitular());
         }else {
             setTitular(crearTitularOrganizacion());
             getCuentaBancaria().setTitular(getTitular());
-            getBaseDato().insertarTitular(getTitular().getNumeroCuit());
+            getBaseDato().insertarTitular(getTitular().getNumeroCuit(), getTitular().toString());
             getBaseDato().insertarOrganizacion((Organizacion) getTitular());
         }
         setBaseDato(null);

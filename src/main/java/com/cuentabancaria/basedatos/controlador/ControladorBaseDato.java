@@ -6,7 +6,7 @@ import com.cuentabancaria.modelo.cuentas.Transaccion;
 import com.cuentabancaria.modelo.titular.Organizacion;
 import com.cuentabancaria.modelo.titular.Persona;
 import java.sql.*;
-import java.util.ArrayList;
+import java.time.LocalDate;
 
 public class ControladorBaseDato {
     private static Query query;
@@ -31,13 +31,31 @@ public class ControladorBaseDato {
     private void setConexionBD(ConexionBD conexionBD) { this.conexionBD = conexionBD; }
     public CambiarFecha getCambiarFecha() { return cambiarFecha; }
     private void setCambiarFecha(CambiarFecha cambiarFecha) { this.cambiarFecha = cambiarFecha; }
-
     public Connection getConexion() { return conexion; }
     public void setConexion(Connection conexion) { this.conexion = conexion; }
     public PreparedStatement getSentencia() { return sentencia; }
     public void setSentencia(PreparedStatement sentencia) { this.sentencia = sentencia; }
     public ResultSet getResultado() { return resultado; }
     public void setResultado(ResultSet resultado) { this.resultado = resultado; }
+
+    // Cerrar conexiones.
+    public void cerrarConexiones() throws SQLException {
+        getConexionBD().cerrarConexion();
+        if (!getSentencia().isClosed()){
+            try {
+                getSentencia().close();
+            }catch (SQLException excepcion){
+                System.out.println(excepcion.getMessage());
+            }
+        }
+        if (!getResultado().isClosed()){
+            try{
+                getResultado().close();
+            }catch (SQLException excepcion){
+                System.out.println(excepcion.getMessage());
+            }
+        }
+    }
 
     public int obtenerUltimoIDTabla(String id, String nombreTabla){
         int valorId = 0;
@@ -111,7 +129,7 @@ public class ControladorBaseDato {
         }
         return -1;
     }
-    public void insertarPersona(Persona persona){ // 1|dni, 2|nombre, 3|segundoNombre, 4|apellido, 5|fechaNacimiento, 6|numeroCuit
+    public void insertarPersona(Persona persona){ // 1|dni, 2|nombre, 3|segundoNombre, 4|apellido, 5|fechaNacimiento, 6|numeroCuit, 7|tipoTitular
         Connection conexion = null;
         PreparedStatement sentencia = null;
         try{
@@ -128,6 +146,7 @@ public class ControladorBaseDato {
             java.sql.Date fecha = getCambiarFecha().localDateToDate(persona.getFechaNacimiento());
             sentencia.setDate(5, fecha);
             sentencia.setString(6, persona.getNumeroCuit());
+            sentencia.setString(7, persona.toString());
             sentencia.executeUpdate();
         }catch (SQLException exepcion){ System.out.println("Error en la conexión: " + exepcion.getMessage());
         }finally {
@@ -142,7 +161,7 @@ public class ControladorBaseDato {
             }
         }
     }
-    public void insertarOrganizacion(Organizacion organizacion){ // 1|nombreOrganización, 2|tipoOrganizacion, 3|fechaCreacion, 4|cuit
+    public void insertarOrganizacion(Organizacion organizacion){ // 1|nombreOrganización, 2|tipoOrganizacion, 3|fechaCreacion, 4|cuit, 5|tipoTitular
         Connection conexion = null;
         PreparedStatement sentencia = null;
         try{
@@ -153,6 +172,7 @@ public class ControladorBaseDato {
             java.sql.Date fecha = getCambiarFecha().localDateToDate(organizacion.getFechaCreacion());
             sentencia.setDate(3, fecha);
             sentencia.setString(4, organizacion.getNumeroCuit());
+            sentencia.setString(5, organizacion.toString());
 
             sentencia.executeUpdate();
         }catch (SQLException excepcion){
@@ -169,7 +189,7 @@ public class ControladorBaseDato {
             }
         }
     }
-    public void insertarTitular(String cuitTitular) throws SQLException { //  1|id, 2|numero_cuit
+    public void insertarTitular(String cuitTitular, String tipoTitular) throws SQLException { //  1|id, 2|numero_cuit, 3|tipoTitular
         Connection conexion = null;
         PreparedStatement sentencia = null;
         try {
@@ -178,6 +198,7 @@ public class ControladorBaseDato {
             //Elijo la Query
             sentencia = conexion.prepareStatement(getQuery().insertarTitular(), PreparedStatement.RETURN_GENERATED_KEYS);
             sentencia.setString(1, cuitTitular);
+            sentencia.setString(2, tipoTitular);
             //Ejecuto la sentencia.
             sentencia.executeUpdate();
         }catch (SQLException excepcion){ System.out.println("Error en la conexión: " + excepcion.getMessage());
@@ -243,24 +264,70 @@ public class ControladorBaseDato {
             setResultado(getSentencia().executeQuery());
             return  getResultado();
         }catch (SQLException exepcion){
-            exepcion.getStackTrace();
+            System.out.println(exepcion.getMessage());
         }finally { getConexionBD().cerrarConexion(); }
         return null;
     }
-    public void cerrarConexiones() throws SQLException {
-        if (!getSentencia().isClosed()){
-            try {
-                getSentencia().close();
-            }catch (SQLException excepcion){
-                System.out.println(excepcion.getMessage());
+    public Persona obtenerPersonaPorCuit(String cuit) throws SQLException{
+        setConexionBD(new ConexionBD());
+        try {
+            setConexion(getConexionBD().getConexion());
+            setSentencia(getConexion().prepareStatement(getQuery().seleccionarPersonaPorCuit()));
+            getSentencia().setString(6, cuit);
+            setResultado(getSentencia().executeQuery());
+            if(getResultado().next()){
+                int dni = getResultado().getInt(1);
+                String nombre = getResultado().getString(2);
+                String segundoNombre = getResultado().getString(3);
+                String apellido = getResultado().getString(4);
+                Date fechaNacimiento = getResultado().getDate(5);
+                LocalDate fecha = getCambiarFecha().dateToLocalDate(fechaNacimiento);
+                return new Persona(dni, nombre, segundoNombre, apellido, fecha, cuit);
             }
+            return null;
+        }catch (SQLException excepcion){ System.out.println(excepcion.getMessage()); }
+        finally {
+            getConexionBD().cerrarConexion();
+            cerrarConexiones();
         }
-        if (!getResultado().isClosed()){
-            try{
-                getResultado().close();
-            }catch (SQLException excepcion){
-                System.out.println(excepcion.getMessage());
+        return null;
+    }
+    public Organizacion obtenerOrganizacionPorCuit(String cuit) throws SQLException{
+        setConexionBD(new ConexionBD());
+        try {
+            setConexion(getConexionBD().getConexion());
+            setSentencia(getConexion().prepareStatement(getQuery().seleccionarOrganizacionPorCuit()));
+            getSentencia().setString(4, cuit);
+            setResultado(getSentencia().executeQuery());
+            if(getResultado().next()){
+                String nombreOrganizacion = getResultado().getString(1);
+                String tipoOrganizacion = getResultado().getString(2);
+                Date fecha = getResultado().getDate(3);
+                LocalDate fechaCreacion = getCambiarFecha().dateToLocalDate(fecha);
+                return new Organizacion(cuit, nombreOrganizacion, tipoOrganizacion, fechaCreacion);
             }
+            return null;
+        }catch (SQLException excepcion){
+            System.out.println(excepcion.getMessage());
+        }finally {
+            getConexionBD().cerrarConexion();
+            cerrarConexiones();
         }
+        return null;
+    }
+    public boolean existeNumeroCuit(String cuit) throws SQLException{
+        setConexionBD(new ConexionBD());
+        try {
+            setConexion(getConexionBD().getConexion());
+            setSentencia(getConexion().prepareStatement(getQuery().obtenerCuitTitular()));
+            getSentencia().setString(1, cuit);
+            setResultado(getSentencia().executeQuery());
+            if (getResultado().next()) { //Si hay resultado entro en el if
+                System.out.println("Entro en el if");
+                return  (getResultado().getString(1)).equals(cuit);
+            }
+        }catch (SQLException excepcion){ System.out.println(excepcion.getMessage()); }
+        finally { getConexionBD().cerrarConexion(); }
+        return false;
     }
 }

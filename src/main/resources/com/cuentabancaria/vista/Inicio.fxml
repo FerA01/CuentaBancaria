@@ -8,7 +8,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.cuentabancaria.controlador.Controlador">
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.cuentabancaria.controlador.Controlador">
    <children>
       <AnchorPane prefHeight="50.0" prefWidth="600.0" style="-fx-background-color: blue;">
          <children>
@@ -25,7 +25,7 @@
       <AnchorPane layoutY="50.0" prefHeight="160.0" prefWidth="300.0" style="-fx-background-color: gray;">
          <children>
             <Button fx:id="botonCrearCuenta" layoutX="95.0" layoutY="14.0" mnemonicParsing="false" onAction="#accionBotonCrearCuenta" prefHeight="40.0" prefWidth="110.0" text="Crear cuenta" />
-            <Button fx:id="botonBuscarCuenta" layoutX="95.0" layoutY="60.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="110.0" text="Buscar cuenta" />
+            <Button fx:id="botonBuscarCuenta" layoutX="95.0" layoutY="60.0" mnemonicParsing="false" onAction="#accionBotonBuscar" prefHeight="40.0" prefWidth="110.0" text="Buscar cuenta" />
             <Button fx:id="botonEliminarCuenta" layoutX="95.0" layoutY="106.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="110.0" text="Eliminar cuenta" />
          </children>
       </AnchorPane>
@@ -57,7 +57,8 @@
                   <Font size="14.0" />
                </font>
             </Label>
-            <Button fx:id="botonActualizar" layoutX="274.0" layoutY="161.0" mnemonicParsing="false" text="Actualizar" onAction="#accionActualizar"/>
+            <Button fx:id="botonActualizar" layoutX="274.0" layoutY="161.0" mnemonicParsing="false" onAction="#accionActualizar" text="Actualizar" />
+            <Button fx:id="botonObtenerTitular" layoutX="421.0" layoutY="161.0" mnemonicParsing="false" text="Obtener Titular" />
          </children></AnchorPane>
    </children>
 </AnchorPane>
