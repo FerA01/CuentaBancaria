@@ -63,6 +63,9 @@ public class Persona extends Titular{
                     + ", número de cuit: " + getNumeroCuit() + ", fecha de nacimiento: " + obtenerFechaNacimiento();
         }
     }
+
+    @Override
+    public String nombreTabla() { return "persona"; }
     @Override
     public String obtenerFxml(){ return "titular/TitularPersona.fxml"; }
     public String obtenerFechaNacimiento(){

@@ -25,6 +25,8 @@ public class Organizacion extends Titular{
     public void setFechaCreacion(LocalDate fechaCreacion) { this.fechaCreacion = fechaCreacion; }
 
     @Override
+    public String nombreTabla() { return "organizacion"; }
+    @Override
     public String toString() { return "Organización"; }
     @Override
     public String tipoTitular(){

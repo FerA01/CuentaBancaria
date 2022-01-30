@@ -8,6 +8,7 @@ module com.cuentabancaria {
 
     opens test;
     opens com.cuentabancaria.controlador.test to javafx.fxml;
+    opens com.cuentabancaria.controlador.cuentaBancaria to javafx.fxml;
     opens com.cuentabancaria.controlador to javafx.fxml;
     opens com.cuentabancaria.vista to javafx.fxml;
     opens com.cuentabancaria.controlador.login to javafx.fxml;

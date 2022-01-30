@@ -11,4 +11,5 @@ public abstract class Titular {
     public abstract String tipoTitular();
     public abstract String toString();
     public abstract String obtenerFxml();
+    public abstract String nombreTabla();
 }

@@ -5,6 +5,8 @@ import com.cuentabancaria.modelo.CambiarFecha;
 import com.cuentabancaria.modelo.cuentas.Transaccion;
 import com.cuentabancaria.modelo.titular.Organizacion;
 import com.cuentabancaria.modelo.titular.Persona;
+import com.cuentabancaria.modelo.titular.Titular;
+
 import java.sql.*;
 import java.time.LocalDate;
 
@@ -39,6 +41,25 @@ public class ControladorBaseDato {
     public void setResultado(ResultSet resultado) { this.resultado = resultado; }
 
     // Cerrar conexiones.
+    public int obtenerCantidadColumnasTabla(String nombreTabla) throws SQLException{
+        setConexionBD(new ConexionBD());
+        int cantidadColumnas = 0;
+        try {
+            setConexion(getConexionBD().getConexion());
+            setSentencia(getConexion().prepareStatement(getQuery().obtenerCantidadColumnasTabla()));
+            getSentencia().setString(1, nombreTabla);
+            setResultado(getSentencia().executeQuery());
+        }catch (SQLException excepcion){
+            System.out.println(excepcion.getMessage());
+        }finally {
+            if (getResultado().next()){
+                cantidadColumnas = getResultado().getInt(1);
+            }
+            getConexionBD().cerrarConexion();
+            cerrarConexiones();
+        }
+        return cantidadColumnas;
+    }
     public void cerrarConexiones() throws SQLException {
         getConexionBD().cerrarConexion();
         if (!getSentencia().isClosed()){
@@ -273,7 +294,7 @@ public class ControladorBaseDato {
         try {
             setConexion(getConexionBD().getConexion());
             setSentencia(getConexion().prepareStatement(getQuery().seleccionarPersonaPorCuit()));
-            getSentencia().setString(6, cuit);
+            getSentencia().setString(1, cuit);
             setResultado(getSentencia().executeQuery());
             if(getResultado().next()){
                 int dni = getResultado().getInt(1);
@@ -297,7 +318,7 @@ public class ControladorBaseDato {
         try {
             setConexion(getConexionBD().getConexion());
             setSentencia(getConexion().prepareStatement(getQuery().seleccionarOrganizacionPorCuit()));
-            getSentencia().setString(4, cuit);
+            getSentencia().setString(1, cuit);
             setResultado(getSentencia().executeQuery());
             if(getResultado().next()){
                 String nombreOrganizacion = getResultado().getString(1);
@@ -329,5 +350,95 @@ public class ControladorBaseDato {
         }catch (SQLException excepcion){ System.out.println(excepcion.getMessage()); }
         finally { getConexionBD().cerrarConexion(); }
         return false;
+    }
+    public Titular abc(Titular titular) throws SQLException{
+        setConexionBD(new ConexionBD());
+        Titular titular1 = null;
+        try{
+            setConexion(getConexionBD().getConexion());
+            setSentencia(getConexion().prepareStatement(getQuery().abc()));
+            getSentencia().setString(1, titular.nombreTabla());
+            getSentencia().setString(2, titular.getNumeroCuit());
+            setResultado(getSentencia().executeQuery());
+            if ((titular.nombreTabla()).equals("persona")){
+                titular1 = obtenerPersona(getResultado());
+            }
+            if ((titular.nombreTabla()).equals("organizacion")){
+                titular1 = obtenerOrganizacion(getResultado());
+            }
+            getConexionBD().cerrarConexion();
+            cerrarConexiones();
+            return titular1;
+        }catch (SQLException excepcion){
+            System.out.println(excepcion.getMessage());
+        }finally {
+            getConexionBD().cerrarConexion();
+            cerrarConexiones();
+        }
+        return null;
+    }
+    public Titular abc2(Titular titular) throws SQLException{
+        setConexionBD(new ConexionBD());
+        Titular titular1 = null;
+        try{
+            setConexion(getConexionBD().getConexion());
+            if (titular instanceof Persona){
+                setSentencia(getConexion().prepareStatement(getQuery().seleccionarPersona()));
+            }
+            if (titular instanceof Organizacion){
+                setSentencia(getConexion().prepareStatement(getQuery().seleccionarOrganizacion()));
+            }
+            setResultado(getSentencia().executeQuery());
+            if ((titular.nombreTabla()).equals("persona")){
+                titular1 = obtenerPersona(getResultado());
+            }else{
+                titular1 = obtenerOrganizacion(getResultado());
+            }
+        }catch (SQLException excepcion){
+            System.out.println("error aca");
+            System.out.println(excepcion.getMessage());
+        }finally {
+            getConexionBD().cerrarConexion();
+            cerrarConexiones();
+        }
+        return titular1;
+    }
+    private Persona obtenerPersona(ResultSet resultado) throws SQLException {
+        if (resultado.next()){
+            int dni = resultado.getInt(1);
+            String nombre = resultado.getString(2);
+            String segundoNombre = resultado.getString(3);
+            String apellido = resultado.getString(4);
+            Date fecha = resultado.getDate(5);
+            String cuit = resultado.getString(6);
+            LocalDate fechaNacimiento = getCambiarFecha().dateToLocalDate(fecha);
+            return new Persona(dni, nombre, segundoNombre, apellido, fechaNacimiento, cuit);
+        }
+        return null;
+    }
+    private Organizacion obtenerOrganizacion(ResultSet resultado) throws SQLException{
+        setConexionBD(new ConexionBD());
+        try {
+            setConexion(getConexionBD().getConexion());
+            setSentencia(getConexion().prepareStatement(getQuery().seleccionarOrganizacionPorCuit()));
+            setResultado(getSentencia().executeQuery());
+            if(getResultado().next()){
+                String nombreOrganizacion = resultado.getString(1);
+                String tipoOrganizacion = resultado.getString(2);
+                Date fecha = resultado.getDate(3);
+                LocalDate fechaCreacion = getCambiarFecha().dateToLocalDate(fecha);
+                String cuit = resultado.getString(4);
+                getConexionBD().cerrarConexion();
+                cerrarConexiones();
+                return new Organizacion(cuit, nombreOrganizacion, tipoOrganizacion, fechaCreacion);
+            }
+            return null;
+        }catch (SQLException excepcion){
+            System.out.println(excepcion.getMessage());
+        }finally {
+            getConexionBD().cerrarConexion();
+            cerrarConexiones();
+        }
+        return null;
     }
 }

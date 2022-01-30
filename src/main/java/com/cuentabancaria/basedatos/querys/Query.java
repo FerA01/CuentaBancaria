@@ -21,6 +21,7 @@ public class Query {
     }
 
     //Obtener datos.
+    public final String obtenerCantidadColumnasTabla(){ return "SELECT COUNT(*) FROM INFORMATION_SCHEMA.COLUMNS WHERE table_name = ?"; }
     public final String obtenerUltimoIDTabla(){ return "SELECT MAX(?) FROM ? "; }
     public final String obtenerUltimoID(){ return "SELECT MAX(id) FROM titular"; }
     public final String obtenerCuitTitular(){ return "SELECT numero_cuit FROM titular WHERE numero_cuit = ?"; }
@@ -32,6 +33,7 @@ public class Query {
     public final String obtenerApellidosPersonas(){ return "SELECT apellido FROM persona"; }
     public final String seleccionarOrganizacion(){ return "SELECT * FROM organizacion"; }
     public final String seleccionarOrganizacionPorCuit(){ return "SELECT * FROM organizacion WHERE cuit = ?"; }
+    public final String abc(){ return "SELECT * FROM ? WHERE cuit = ? "; }
     //Eliminar datos.
     public final String eliminarPersona(){ return "DELETE FROM persona WHERE cuit = ?"; }
     public final String eliminarOrganizacion(){ return "DELETE FROM organizacion WHERE cuit = ?"; }
