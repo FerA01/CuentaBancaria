@@ -1,7 +1,11 @@
 package com.cuentabancaria.controlador.buscar;
 import com.cuentabancaria.basedatos.controlador.ControladorBaseDato;
+import com.cuentabancaria.controlador.Controlador;
 import com.cuentabancaria.modelo.CambiarFecha;
+import com.cuentabancaria.modelo.cuentas.CuentaBancaria;
 import com.cuentabancaria.modelo.titular.Persona;
+import com.cuentabancaria.modelo.titular.Titular;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -19,7 +23,6 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.ResourceBundle;
-
 public class ControladorBuscarPersona implements Initializable {
     @FXML private Button botonBuscar;
     @FXML private TextField textFieldBuscarApellido;
@@ -31,18 +34,30 @@ public class ControladorBuscarPersona implements Initializable {
     @FXML private TableColumn<Persona, LocalDate> columnaFechaNacimiento;
     @FXML private TableColumn<Persona, Integer> columnaDni;
     private ControladorBaseDato baseDato;
+    private Controlador controladorPrincipal;
     private HashSet<String> posiblesApellidos;
+    public Titular titular;
+    public  CuentaBancaria cuentaBancaria;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        setBaseDato(null);
-        //posiblesApellidos = new HashSet<>(obtenerApellidos());
         getColumnaDni().setCellValueFactory(new PropertyValueFactory<Persona, Integer>("dni"));
         getColumnaNombre().setCellValueFactory(new PropertyValueFactory<Persona, String>("nombre"));
         getColumnaSegundoNombre().setCellValueFactory(new PropertyValueFactory<Persona, String>("segundoNombre"));
         getColumnaApellido().setCellValueFactory(new PropertyValueFactory<Persona, String>("apellido"));
         getColumnaFechaNacimiento().setCellValueFactory(new PropertyValueFactory<Persona, LocalDate>("fechaNacimiento"));
         getColumnaNumeroCuit().setCellValueFactory(new PropertyValueFactory<Persona, String>("numeroCuit"));
+
+        setBaseDato(new ControladorBaseDato());
+        try {
+            ResultSet resultado = getBaseDato().obtenerPersonas();
+            ArrayList<Persona> personas = obtenerPersonas(resultado);
+            getBaseDato().cerrarConexiones();
+            ObservableList<Persona> ol = FXCollections.observableArrayList(personas);
+            getTabla().setItems(ol);
+        }catch (SQLException excepcion){
+            System.out.println(excepcion.getMessage());
+        }
     }
 
     public Button getBotonBuscar() { return botonBuscar; }
@@ -63,6 +78,14 @@ public class ControladorBuscarPersona implements Initializable {
     public void setColumnaFechaNacimiento(TableColumn<Persona, LocalDate> columnaFechaNacimiento) { this.columnaFechaNacimiento = columnaFechaNacimiento; }
     public TableColumn<Persona, Integer> getColumnaDni() { return columnaDni; }
     public void setColumnaDni(TableColumn<Persona, Integer> columnaDni) { this.columnaDni = columnaDni; }
+
+    public Controlador getControladorPrincipal() {
+        return controladorPrincipal;
+    }
+
+    public void setControladorPrincipal(Controlador controladorPrincipal) {
+        this.controladorPrincipal = controladorPrincipal;
+    }
 
     public ArrayList<Persona> obtenerPersonas(ResultSet resultSet) throws SQLException {
         ArrayList<Persona> personas = new ArrayList<>();
@@ -104,11 +127,21 @@ public class ControladorBuscarPersona implements Initializable {
     }
     @FXML
     public void accionBotonBuscar() throws SQLException {
+        textFieldBuscarApellido.getCharacters();
+    }
+    @FXML
+    public void accionSeleccionarTitular() throws SQLException {
         setBaseDato(new ControladorBaseDato());
-        ResultSet resultado = getBaseDato().obtenerPersonas();
-        ArrayList<Persona> personas = obtenerPersonas(resultado);
-        getBaseDato().cerrarConexiones();
-        ObservableList<Persona> ol = FXCollections.observableArrayList(personas);
-        getTabla().setItems(ol);
+        Titular  titular = getTabla().getSelectionModel().getSelectedItem();
+        CuentaBancaria cuentaBancaria = getBaseDato().obtenerCuentaBancaria(titular.getNumeroCuit());
+        getControladorPrincipal().setTitular(titular);
+        getControladorPrincipal().setCuentaBancaria(cuentaBancaria);
+        getControladorPrincipal().obtenerSaldoCuitTitular();
     }
 }
+/*
+    SELECT persona.nombre, persona.apellido, persona.dni, saldo, titularCuenta
+    FROM persona
+    INNER JOIN cuentabancaria on persona.cuit = cuentabancaria.titularCuenta
+    WHERE cuentabancaria.saldo > 1000;
+ */

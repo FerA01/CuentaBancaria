@@ -1,10 +1,12 @@
 package com.cuentabancaria.controlador;
 import com.cuentabancaria.basedatos.controlador.ControladorBaseDato;
+import com.cuentabancaria.controlador.buscar.ControladorBuscarPersona;
 import com.cuentabancaria.modelo.cuentas.CajaAhorro;
 import com.cuentabancaria.modelo.cuentas.CuentaBancaria;
 import com.cuentabancaria.modelo.cuentas.Transaccion;
 import com.cuentabancaria.modelo.titular.Persona;
 import com.cuentabancaria.modelo.titular.Titular;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -32,8 +34,6 @@ public class Controlador implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        setLabelSaldo(new Label());
-        setLabelNumeroCuit(new Label());
         setBaseDato(null);
     }
 
@@ -132,9 +132,8 @@ public class Controlador implements Initializable {
     }
     @FXML
     public void accionActualizar(){
-        setBaseDato(new ControladorBaseDato());
-
-        setBaseDato(null);
+        System.out.println(getTitular().tipoTitular());
+        System.out.println(getCuentaBancaria().getSaldo());
     }
 
     @FXML
@@ -142,6 +141,8 @@ public class Controlador implements Initializable {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/cuentabancaria/vista/buscar/buscarPersona.fxml"));
             Parent root = loader.load();
+            ControladorBuscarPersona buscarPersona = loader.getController();
+            buscarPersona.setControladorPrincipal(this);
             Scene scene = new Scene(root);
             Stage stage = new Stage();
             stage.setTitle("Buscar");
@@ -158,9 +159,12 @@ public class Controlador implements Initializable {
         }
     }
     //Obtener saldo y cuit
-    private void obtenerSaldoCuitTitular(Titular titular, CuentaBancaria cuentaBancaria){
-        getLabelSaldo().setText(String.valueOf(cuentaBancaria.getSaldo()));
-        getLabelNumeroCuit().setText(titular.getNumeroCuit());
+    public void obtenerSaldoCuitTitular(){
+        getLabelSaldo().setText(String.valueOf(getCuentaBancaria().getSaldo()));
+        getLabelNumeroCuit().setText(mascaraNumeroCuit(getTitular().getNumeroCuit()));
+        System.out.println((getLabelNumeroCuit().getText()).replaceFirst("(\\d{2})(\\d{8})(\\d+)", "$1-$2-$3"));
+        Persona persona = (Persona) getTitular();
+        System.out.println((String.valueOf(persona.getDni())).replaceFirst("(\\d{2})(\\d{3})(\\d+)", "$1.$2.$3") );
     }
     //Obtener persona
     private Persona obtenerPersona(){
@@ -168,4 +172,6 @@ public class Controlador implements Initializable {
         Persona persona= null;
         return persona;
     }
+    private String mascaraNumeroCuit(String numeroCuit){ return (numeroCuit).replaceFirst("(\\d{2})(\\d{8})(\\d+)", "$1-$2-$3"); }
+    private String mascaraDni(int dni){ return (String.valueOf(dni)).replaceFirst("(\\d{2})(\\d{3})(\\d+)", "$1.$2.$3") ; }
 }

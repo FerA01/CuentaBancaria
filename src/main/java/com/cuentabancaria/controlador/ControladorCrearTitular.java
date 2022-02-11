@@ -19,6 +19,8 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
+import java.time.LocalDate;
+import java.util.Random;
 import java.util.ResourceBundle;
 public class ControladorCrearTitular implements Initializable {
     private static ControladorBaseDato baseDato;
@@ -56,6 +58,12 @@ public class ControladorCrearTitular implements Initializable {
 
     public static ControladorBaseDato getBaseDato() { return baseDato; }
     private static void setBaseDato(ControladorBaseDato baseDato) { ControladorCrearTitular.baseDato = baseDato; }
+
+    private String generarCbu(){
+        Random numero = new Random();
+        int generado =  (100 + numero.nextInt((1000+1)-100));
+        return String.valueOf(generado);
+    }
 
     /**
      * Metodo que carga un panel de registro según el tipo de titular seleccionado en el comboBox
@@ -118,7 +126,10 @@ public class ControladorCrearTitular implements Initializable {
             getBaseDato().insertarTitular(getTitular().getNumeroCuit(), getTitular().toString());
             getBaseDato().insertarOrganizacion((Organizacion) getTitular());
         }
-        setBaseDato(null);
+        getCuentaBancaria().setTitular(getTitular());
+        getCuentaBancaria().setCbu(generarCbu());
+        getCuentaBancaria().setFechaApertura(LocalDate.now());
+        getBaseDato().insertarCuentaBancaria(getCuentaBancaria());
     }
     /**
      * Obtengo los datos ingresados de la persona y lo devuelvo.

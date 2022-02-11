@@ -2,13 +2,17 @@ package com.cuentabancaria.basedatos.controlador;
 import com.cuentabancaria.basedatos.ConexionBD;
 import com.cuentabancaria.basedatos.querys.Query;
 import com.cuentabancaria.modelo.CambiarFecha;
+import com.cuentabancaria.modelo.cuentas.CajaAhorro;
+import com.cuentabancaria.modelo.cuentas.CuentaBancaria;
+import com.cuentabancaria.modelo.cuentas.CuentaCorriente;
 import com.cuentabancaria.modelo.cuentas.Transaccion;
 import com.cuentabancaria.modelo.titular.Organizacion;
 import com.cuentabancaria.modelo.titular.Persona;
 import com.cuentabancaria.modelo.titular.Titular;
-
 import java.sql.*;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ControladorBaseDato {
     private static Query query;
@@ -60,97 +64,48 @@ public class ControladorBaseDato {
         }
         return cantidadColumnas;
     }
+    public void cerrarConexionesInsertar() throws SQLException {
+        getConexionBD().cerrarConexion();
+        if (getSentencia() != null){
+            try {
+                getSentencia().close();
+            }catch (SQLException excepcion){
+                System.out.println("Error al cerrar la conexión: " + excepcion.getMessage());
+            }
+        }
+        if (getConexion() != null){
+            try {
+                getConexion().close();
+            }catch (SQLException excepcion){
+                System.out.println("Error al cerrar la conexión: " + excepcion.getMessage());
+            }
+        }
+    }
     public void cerrarConexiones() throws SQLException {
         getConexionBD().cerrarConexion();
-        if (!getSentencia().isClosed()){
+        if (getSentencia() != null){
             try {
                 getSentencia().close();
             }catch (SQLException excepcion){
                 System.out.println(excepcion.getMessage());
             }
         }
-        if (!getResultado().isClosed()){
+        if (getSentencia() != null){
             try{
                 getResultado().close();
             }catch (SQLException excepcion){
                 System.out.println(excepcion.getMessage());
             }
         }
-    }
-
-    public int obtenerUltimoIDTabla(String id, String nombreTabla){
-        int valorId = 0;
-        Connection conexion = null;
-        PreparedStatement sentencia = null;
-        ResultSet resultado;
-        try{
-            //Creo la conexion
-            conexion = getConexionBD().getConexion();
-            //Elijo la Query
-            sentencia = conexion.prepareStatement(getQuery().obtenerUltimoIDTabla());
-            sentencia.setString(1, id);
-            sentencia.setString(2, nombreTabla);
-            resultado = sentencia.executeQuery();
-
-            while (resultado.next()){
-                try {
-                    valorId = resultado.getInt(1);
-                    return valorId;
-                }catch (Exception excepcion){
-                    System.out.println("Error al obtener el valor: " + excepcion.getMessage());
-                }
-            }
-            return valorId;
-        }catch (SQLException excepcion){ System.out.println("Error en la conexión: " + excepcion.getMessage());
-        }finally {
-            getConexionBD().cerrarConexion();
-            if (conexion != null && sentencia != null){
-                try{
-                    conexion.close();
-                    sentencia.close();
-                } catch (SQLException exception) {
-                    exception.printStackTrace();
-                }
+        if (getConexion() != null){
+            try {
+                getConexion().close();
+            }catch (SQLException excepcion){
+                System.out.println(excepcion.getMessage());
             }
         }
-        return -1;
     }
-    public int obtenerUltimoID(){  //Autoincrementador para la tabla titular
-        int id = 0;
-        Connection conexion = null;
-        PreparedStatement sentencia = null;
-        ResultSet resultado;
-        try{
-            //Creo la conexion
-            conexion = getConexionBD().getConexion();
-            //Elijo la Query
-            sentencia = conexion.prepareStatement(getQuery().obtenerUltimoID());
-            resultado = sentencia.executeQuery();
-
-            while (resultado.next()){
-                try {
-                    id = resultado.getInt(1);
-                    return id;
-                }catch (Exception excepcion){
-                    System.out.println("Error al obtener el valor: " + excepcion.getMessage());
-                }
-            }
-            return id;
-        }catch (SQLException excepcion){ System.out.println("Error en la conexión: " + excepcion.getMessage());
-        }finally {
-            getConexionBD().cerrarConexion();
-            if (conexion != null && sentencia != null){
-                try{
-                    conexion.close();
-                    sentencia.close();
-                } catch (SQLException exception) {
-                    exception.printStackTrace();
-                }
-            }
-        }
-        return -1;
-    }
-    public void insertarPersona(Persona persona){ // 1|dni, 2|nombre, 3|segundoNombre, 4|apellido, 5|fechaNacimiento, 6|numeroCuit, 7|tipoTitular
+    public void insertarPersona(Persona persona) throws SQLException{ // 1|dni, 2|nombre, 3|segundoNombre, 4|apellido, 5|fechaNacimiento, 6|numeroCuit, 7|tipoTitular
         Connection conexion = null;
         PreparedStatement sentencia = null;
         try{
@@ -172,17 +127,10 @@ public class ControladorBaseDato {
         }catch (SQLException exepcion){ System.out.println("Error en la conexión: " + exepcion.getMessage());
         }finally {
             getConexionBD().cerrarConexion();
-            if (conexion != null && sentencia != null){
-                try{
-                    conexion.close();
-                    sentencia.close();
-                } catch (SQLException exception) {
-                    exception.printStackTrace();
-                }
-            }
+            cerrarConexionesInsertar();
         }
     }
-    public void insertarOrganizacion(Organizacion organizacion){ // 1|nombreOrganización, 2|tipoOrganizacion, 3|fechaCreacion, 4|cuit, 5|tipoTitular
+    public void insertarOrganizacion(Organizacion organizacion) throws SQLException{ // 1|nombreOrganización, 2|tipoOrganizacion, 3|fechaCreacion, 4|cuit, 5|tipoTitular
         Connection conexion = null;
         PreparedStatement sentencia = null;
         try{
@@ -199,15 +147,7 @@ public class ControladorBaseDato {
         }catch (SQLException excepcion){
             excepcion.getStackTrace();
         }finally {
-            getConexionBD().cerrarConexion();
-            if (conexion != null && sentencia != null){
-                try{
-                    conexion.close();
-                    sentencia.close();
-                } catch (SQLException exception) {
-                    exception.printStackTrace();
-                }
-            }
+            cerrarConexionesInsertar();
         }
     }
     public void insertarTitular(String cuitTitular, String tipoTitular) throws SQLException { //  1|id, 2|numero_cuit, 3|tipoTitular
@@ -224,15 +164,7 @@ public class ControladorBaseDato {
             sentencia.executeUpdate();
         }catch (SQLException excepcion){ System.out.println("Error en la conexión: " + excepcion.getMessage());
         }finally {
-            getConexionBD().cerrarConexion();
-            if (conexion != null && sentencia != null){
-                try{
-                    conexion.close();
-                    sentencia.close();
-                } catch (SQLException exception) {
-                    exception.printStackTrace();
-                }
-            }
+            cerrarConexionesInsertar();
         }
     }
     public void insertarTransaccion(Transaccion transaccion){ // 1|idTransaccion, 2|cbuAsociado, 3|monto, 4|fechaTransaccion, 5|tipoTransaccion
@@ -261,6 +193,26 @@ public class ControladorBaseDato {
                     excepcion.getStackTrace();
                 }
             }
+        }
+    }
+    public void insertarCuentaBancaria(CuentaBancaria cuentaBancaria) throws SQLException{
+        CambiarFecha cambiarFecha = new CambiarFecha();
+        try {  // 1|cbu  2|saldo 3|limiteMinimoCuenta 4|cantidadExtraccionesMes 5|fechaApertura 6|titularCuenta 7|tipoCuenta
+            setConexion(getConexionBD().getConexion());
+            setSentencia(getConexion().prepareStatement(getQuery().insertarCuentaBancaria()));
+            getSentencia().setString(1, cuentaBancaria.getCbu());
+            getSentencia().setFloat(2, cuentaBancaria.getSaldo());
+            getSentencia().setFloat(3, cuentaBancaria.getLimiteMinimoCuenta());
+            getSentencia().setInt(4, cuentaBancaria.getCantidadExtraccionesPorMes());
+            Date fecha = cambiarFecha.localDateToDate(cuentaBancaria.getFechaApertura());
+            getSentencia().setDate(5, fecha);
+            getSentencia().setString(6, cuentaBancaria.numeroCuitTitular());
+            getSentencia().setString(7, cuentaBancaria.tipoCuentaBancaria());
+            getSentencia().executeUpdate();
+        }catch (SQLException excepcion){
+            System.out.println("Error: " + excepcion.getMessage());
+        }finally {
+            cerrarConexionesInsertar();
         }
     }
     public ResultSet obtenerApellidos(){
@@ -438,6 +390,84 @@ public class ControladorBaseDato {
         }finally {
             getConexionBD().cerrarConexion();
             cerrarConexiones();
+        }
+        return null;
+    }
+    public CuentaBancaria obtenerCuentaBancaria(String titularCuenta) throws SQLException{
+        setConexionBD(new ConexionBD());
+        CambiarFecha cambiarFecha = new CambiarFecha();
+        CuentaBancaria cuentaBancaria = null;
+        try {  // 1|cbu  2|saldo 3|limiteMinimoCuenta 4|cantidadExtraccionesMes 5|fechaApertura 6|titularCuenta 7|tipoCuenta
+            setConexion(getConexionBD().getConexion());
+            setSentencia(getConexion().prepareStatement(getQuery().obtenerCuentaBancaria()));
+            getSentencia().setString(1, titularCuenta);
+            setResultado(getSentencia().executeQuery());
+            if (getResultado().next()){
+                String cbu = getResultado().getString(1);
+                float saldo = getResultado().getFloat(2);
+                float limiteMinimoCuenta = getResultado().getFloat(3);
+                int extraccionesMes = getResultado().getInt(4);
+                Date fechaApertura = getResultado().getDate(5);
+                LocalDate fecha = cambiarFecha.dateToLocalDate(fechaApertura);
+                String cuitTitular = getResultado().getString(6);
+                String tipoCuenta = getResultado().getString(7);
+                cuentaBancaria = tipoCuentaBancaria(tipoCuenta);
+                if (cuentaBancaria != null){
+                    cuentaBancaria.setCbu(cbu);
+                    cuentaBancaria.setSaldo(saldo);
+                    cuentaBancaria.setLimiteMinimoCuenta(limiteMinimoCuenta);
+                    cuentaBancaria.setCantidadExtraccionesPorMes(extraccionesMes);
+                    cuentaBancaria.setFechaApertura(fecha);
+                    cuentaBancaria.setNumeroCuit(cuitTitular);
+                    return cuentaBancaria;
+                }
+                else{ System.out.println("¡La cuenta bancaria es nula!"); }
+            }
+        }catch (SQLException excepcion){
+            System.out.println(excepcion.getMessage());
+        }finally {
+            cerrarConexiones();
+        }
+        return cuentaBancaria;
+    }
+    public ResultSet obtenerTransaccionesNumeroCbu(String cbu) throws SQLException{
+        setConexionBD(new ConexionBD());
+        ResultSet resultado;
+        try {
+            setConexion(getConexionBD().getConexion());
+            setSentencia(getConexion().prepareStatement(getQuery().obtenerTransaccionesNumeroCbu()));
+            getSentencia().setString(1, cbu);
+            setResultado(getSentencia().executeQuery());
+
+        }catch (SQLException excepcion){
+            System.out.println(excepcion.getMessage());
+        }
+        finally {
+            resultado = getResultado();
+            cerrarConexiones();
+        }
+        return resultado;
+    }
+    public List<Transaccion> obtenerTransaccionesNumeroCuit(ResultSet resultado) throws SQLException {
+        List<Transaccion> transacciones = new ArrayList<>(); //idTransaccion, cbuAsociado, monto, fechaTransaccion, tipoTransaccion
+        while (resultado.next()){
+            int id = resultado.getInt(1);
+            String cbu = resultado.getString(2);
+            float monto = resultado.getFloat(3);
+            Date fecha = resultado.getDate(4);
+            String tipoTransaccion = resultado.getString(5);
+            CambiarFecha cambiarFecha = new CambiarFecha();
+            Transaccion transaccion = new Transaccion(cbu, monto, cambiarFecha.dateToLocalDate(fecha), tipoTransaccion);
+            transacciones.add(transaccion);
+        }
+        return transacciones;
+    }
+    private CuentaBancaria tipoCuentaBancaria(String tipoCuenta){
+        if (tipoCuenta.equals("Caja de ahorro")){
+            return new CajaAhorro();
+        }
+        if (tipoCuenta.equals("Cuenta Corriente")){
+            return new CuentaCorriente();
         }
         return null;
     }

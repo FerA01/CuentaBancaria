@@ -11,8 +11,15 @@ public abstract class CuentaBancaria implements Accion{
     private Titular titular;
     private LocalDate fechaApertura;
     private Collection<Transaccion> transacciones;
+    private String numeroCuit;
 
     public CuentaBancaria(){
+        setSaldo(0f);
+        setLimiteMinimoCuenta(0);
+        setCantidadExtraccionesPorMes(0);
+    }
+    public CuentaBancaria(String cbu){
+        setCbu(cbu);
         setSaldo(0f);
         setLimiteMinimoCuenta(0);
         setCantidadExtraccionesPorMes(0);
@@ -51,6 +58,14 @@ public abstract class CuentaBancaria implements Accion{
     public String getCbu() { return this.cbu; }
     public void setCbu(String cbu) { this.cbu = cbu; }
 
+    public String getNumeroCuit() {
+        return numeroCuit;
+    }
+
+    public void setNumeroCuit(String numeroCuit) {
+        this.numeroCuit = numeroCuit;
+    }
+
     public boolean agregarTransaccion(Transaccion transaccion){ return getTransacciones().add(transaccion); }
     public boolean eliminarTransaccion(Transaccion transaccion){ return getTransacciones().removeIf(trans -> trans.equals(transaccion)); }
 
@@ -72,4 +87,5 @@ public abstract class CuentaBancaria implements Accion{
         setSaldo(getSaldo() - monto);
         setCantidadExtraccionesPorMes(getCantidadExtraccionesPorMes() - 1);
     }
+    public String numeroCuitTitular(){ return getTitular().getNumeroCuit(); }
 }

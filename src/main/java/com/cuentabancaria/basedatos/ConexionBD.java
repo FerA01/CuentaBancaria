@@ -10,7 +10,6 @@ public class ConexionBD {
     public ConexionBD() { setConexion(null); }
 
     public static void setConexion(Connection conexion) { ConexionBD.conexion = conexion; }
-
     public boolean isCerrada() throws SQLException { return conexion.isClosed(); }
     public Connection getConexion() throws SQLException {
         try {
@@ -21,21 +20,20 @@ public class ConexionBD {
                     , CONTRASENA
             );
             if (conexion != null) {
-                System.out.println("Conexión establecida.");
+                System.out.println("Conexión establecida con la base de datos.");
             }
         } catch (SQLException | ClassNotFoundException excepcion) {
-            System.out.println("Error en la conexión: " + excepcion.getMessage());
+            System.out.println("Error en la conexión con la base de datos: " + excepcion.getMessage());
         }
         return conexion;
     }
-
     public void cerrarConexion() {
         if (conexion != null) {
             try {
                 getConexion().close();
-                System.out.println("Conexión cerrada");
+                System.out.println("Conexión de la base de datos cerrada");
             } catch (SQLException excepcion) {
-                System.out.println("Error al cerrar la conexión: " + excepcion.getMessage());
+                System.out.println("Error al cerrar la conexión de la base da datos: " + excepcion.getMessage());
             }
         }
     }

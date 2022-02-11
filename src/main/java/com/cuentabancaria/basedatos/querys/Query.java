@@ -16,8 +16,8 @@ public class Query {
                 + "VALUES(null, ?, ?, ?, ?)";
     }
     public final String insertarCuentaBancaria(){
-        return "INSERT INTO cuentabancaria (cbu, saldo, limiteMinimoCuenta, cantidadExtraccionesMes, fechaApertura) "
-                + "VALUES(?, ?, ?, ?, ?)";
+        return "INSERT INTO cuentabancaria (cbu, saldo, limiteMinimoCuenta, cantidadExtraccionesMes, fechaApertura, titularCuenta, tipoCuenta) "
+                + "VALUES(?, ?, ?, ?, ?, ?, ?)";
     }
 
     //Obtener datos.
@@ -34,11 +34,14 @@ public class Query {
     public final String seleccionarOrganizacion(){ return "SELECT * FROM organizacion"; }
     public final String seleccionarOrganizacionPorCuit(){ return "SELECT * FROM organizacion WHERE cuit = ?"; }
     public final String abc(){ return "SELECT * FROM ? WHERE cuit = ? "; }
+    public final String obtenerCuentaBancaria(){ return  "SELECT cbu, saldo, limiteMinimoCuenta, cantidadExtraccionesMes, fechaApertura, titularCuenta, tipoCuenta FROM cuentabancaria WHERE titularCuenta = ?"; }
+    public final String obtenerTransaccionesNumeroCbu(){ return "SELECT * FROM transacciones INNER JOIN cuentabancaria ON transacciones.cbuAsociado = cuentabancaria.cbu WHERE cbu = ?"; }
     //Eliminar datos.
     public final String eliminarPersona(){ return "DELETE FROM persona WHERE cuit = ?"; }
     public final String eliminarOrganizacion(){ return "DELETE FROM organizacion WHERE cuit = ?"; }
     public final String eliminarTitular(){ return "DELETE FROM titular WHERE numero_cuit = ?"; }
     public final String eliminarTransaccion(){ return "DELETE FROM transacciones WHERE cbuAsociado = ?"; }
+    public final String eliminarCuentaBancaria(){ return "DELETE FROM cuentabancaria WHERE cbu = ?"; }
 
     //Modificar datos.
     public final String actualizarPersona(){ return "UPDATE persona SET dni = ?, nombre = ?, segundoNombre = ?, apellido = ?, fechaNacimiento = ?"
