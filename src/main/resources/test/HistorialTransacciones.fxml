@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.AnchorPane?>
+<AnchorPane prefHeight="406.0" prefWidth="440.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <TableView fx:id="tablaHistorialTransaccion" prefHeight="406.0" prefWidth="440.0">
+        <columns>
+          <TableColumn fx:id="columnaIdTransaccion" prefWidth="110.0" text="ID Transaccion" />
+          <TableColumn fx:id="columnaFechaTransaccion" prefWidth="110.0" text="Fecha Transacción" />
+            <TableColumn fx:id="columnaMonto" minWidth="110.0" prefWidth="110.0" text="Monto" />
+            <TableColumn fx:id="columnaTipoTransaccion" minWidth="110.0" prefWidth="110.0" text="Tipo Transacción" />
+        </columns>
+      </TableView>
+   </children>
+</AnchorPane>
