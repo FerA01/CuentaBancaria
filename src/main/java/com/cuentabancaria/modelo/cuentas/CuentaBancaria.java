@@ -1,6 +1,9 @@
 package com.cuentabancaria.modelo.cuentas;
+import com.cuentabancaria.basedatos.controlador.ControladorBaseDato;
 import com.cuentabancaria.modelo.CambiarFecha;
 import com.cuentabancaria.modelo.titular.Titular;
+
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.Collection;
 public abstract class CuentaBancaria implements Accion{
@@ -12,6 +15,8 @@ public abstract class CuentaBancaria implements Accion{
     private LocalDate fechaApertura;
     private Collection<Transaccion> transacciones;
     private String numeroCuit;
+    private ControladorBaseDato baseDato;
+    private String tipoTransaccion;
 
     public CuentaBancaria(){
         setSaldo(0f);
@@ -57,14 +62,12 @@ public abstract class CuentaBancaria implements Accion{
     public void setTransacciones(Collection<Transaccion> transacciones) { this.transacciones = transacciones; }
     public String getCbu() { return this.cbu; }
     public void setCbu(String cbu) { this.cbu = cbu; }
-
-    public String getNumeroCuit() {
-        return numeroCuit;
-    }
-
-    public void setNumeroCuit(String numeroCuit) {
-        this.numeroCuit = numeroCuit;
-    }
+    public String getNumeroCuit() { return numeroCuit; }
+    public void setNumeroCuit(String numeroCuit) { this.numeroCuit = numeroCuit; }
+    public ControladorBaseDato getBaseDato() { return baseDato; }
+    public void setBaseDato(ControladorBaseDato baseDato) { this.baseDato = baseDato; }
+    public String getTipoTransaccion() { return tipoTransaccion; }
+    public void setTipoTransaccion(String tipoTransaccion) { this.tipoTransaccion = tipoTransaccion; }
 
     public boolean agregarTransaccion(Transaccion transaccion){ return getTransacciones().add(transaccion); }
     public boolean eliminarTransaccion(Transaccion transaccion){ return getTransacciones().removeIf(trans -> trans.equals(transaccion)); }
@@ -79,13 +82,36 @@ public abstract class CuentaBancaria implements Accion{
     @Override
     public abstract String toString();
     @Override
-    public abstract boolean depositar(float monto);
+    public abstract boolean depositar(float monto) throws SQLException;
     @Override
-    public abstract boolean retirar(float monto);
+    public abstract boolean retirar(float monto) throws SQLException;
     protected void ingresarMonto(float monto){ setSaldo(getSaldo() + monto); }
     protected void sacarMonto(float monto){
         setSaldo(getSaldo() - monto);
         setCantidadExtraccionesPorMes(getCantidadExtraccionesPorMes() - 1);
     }
     public String numeroCuitTitular(){ return getTitular().getNumeroCuit(); }
+    protected void insertarTransaccion(Transaccion transaccion) throws SQLException{
+        setBaseDato(new ControladorBaseDato());
+        try{
+            getBaseDato().insertarTransaccion(transaccion);
+        }catch (SQLException excepcion){
+            System.out.println(excepcion.getMessage());
+        }
+    }
+    protected void actualizarDatosCuentaBancaria(float saldo, int cantidadTransaccionesMes, String cbu) throws SQLException{
+        setBaseDato(new ControladorBaseDato());
+        try {
+            getBaseDato().actualizarDatosCuentaBancaria(saldo, cantidadTransaccionesMes, cbu);
+        }catch (SQLException excepcion){
+            System.out.println(excepcion.getMessage());
+        }
+    }
+    public void tipoTransaccion(String tipoTransaccion, float monto) throws SQLException {
+        switch (tipoTransaccion) {
+            case "deposito" -> depositar(monto);
+            case "extraccion" -> retirar(monto);
+            default -> System.out.println("Error en el tipo de transacción.");
+        }
+    }
 }

@@ -19,9 +19,6 @@ public class ConexionBD {
                     , USUARIO
                     , CONTRASENA
             );
-            if (conexion != null) {
-                System.out.println("Conexión establecida con la base de datos.");
-            }
         } catch (SQLException | ClassNotFoundException excepcion) {
             System.out.println("Error en la conexión con la base de datos: " + excepcion.getMessage());
         }

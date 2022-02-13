@@ -36,7 +36,7 @@
                   <Font size="20.0" />
                </font>
             </Label>
-            <Label fx:id="labelSaldo" layoutX="124.0" layoutY="14.0" prefHeight="40.0" prefWidth="100.0" text="10000000" textFill="WHITE">
+            <Label fx:id="labelSaldo" layoutX="124.0" layoutY="14.0" prefHeight="40.0" prefWidth="100.0" text="0" textFill="WHITE">
                <font>
                   <Font size="20.0" />
                </font>
@@ -52,12 +52,12 @@
                   <Font size="14.0" />
                </font>
             </Label>
-            <Label fx:id="labelNumeroCuit" layoutX="74.0" layoutY="8.0" prefHeight="40.0" prefWidth="90.0" text="20999999994" textFill="WHITE">
+            <Label fx:id="labelNumeroCuit" layoutX="74.0" layoutY="8.0" prefHeight="40.0" prefWidth="110.0" textFill="WHITE">
                <font>
                   <Font size="14.0" />
                </font>
             </Label>
-            <Button fx:id="botonActualizar" layoutX="274.0" layoutY="161.0" mnemonicParsing="false" onAction="#accionActualizar" text="Actualizar" />
+            <Button fx:id="botonHistorialTransacciones" layoutX="274.0" layoutY="161.0" mnemonicParsing="false" onAction="#accionHistorialTransacciones" text="Historial Transacciones" />
             <Button fx:id="botonObtenerTitular" layoutX="421.0" layoutY="161.0" mnemonicParsing="false" text="Obtener Titular" />
          </children></AnchorPane>
    </children>

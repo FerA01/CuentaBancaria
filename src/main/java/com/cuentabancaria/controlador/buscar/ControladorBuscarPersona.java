@@ -5,7 +5,6 @@ import com.cuentabancaria.modelo.CambiarFecha;
 import com.cuentabancaria.modelo.cuentas.CuentaBancaria;
 import com.cuentabancaria.modelo.titular.Persona;
 import com.cuentabancaria.modelo.titular.Titular;
-import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -82,10 +81,7 @@ public class ControladorBuscarPersona implements Initializable {
     public Controlador getControladorPrincipal() {
         return controladorPrincipal;
     }
-
-    public void setControladorPrincipal(Controlador controladorPrincipal) {
-        this.controladorPrincipal = controladorPrincipal;
-    }
+    public void setControladorPrincipal(Controlador controladorPrincipal) { this.controladorPrincipal = controladorPrincipal; }
 
     public ArrayList<Persona> obtenerPersonas(ResultSet resultSet) throws SQLException {
         ArrayList<Persona> personas = new ArrayList<>();

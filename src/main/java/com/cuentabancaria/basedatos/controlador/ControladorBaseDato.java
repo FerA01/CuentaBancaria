@@ -90,7 +90,7 @@ public class ControladorBaseDato {
                 System.out.println(excepcion.getMessage());
             }
         }
-        if (getSentencia() != null){
+        if (getResultado() != null){
             try{
                 getResultado().close();
             }catch (SQLException excepcion){
@@ -106,94 +106,69 @@ public class ControladorBaseDato {
         }
     }
     public void insertarPersona(Persona persona) throws SQLException{ // 1|dni, 2|nombre, 3|segundoNombre, 4|apellido, 5|fechaNacimiento, 6|numeroCuit, 7|tipoTitular
-        Connection conexion = null;
-        PreparedStatement sentencia = null;
         try{
             //Creo la conexion
-            conexion = getConexionBD().getConexion();
+            setConexion(getConexionBD().getConexion());
             //Elijo la Query
-            sentencia = conexion.prepareStatement(getQuery().insertarPersona());
+            setSentencia(getConexion().prepareStatement(getQuery().insertarPersona()));
             //Obtengo los valores de persona y los paso a la PS
-            sentencia.setInt(1, persona.getDni());
-            sentencia.setString(2, persona.getNombre());
-            sentencia.setString(3, persona.getSegundoNombre());
-            sentencia.setString(4, persona.getApellido());
+            getSentencia().setInt(1, persona.getDni());
+            getSentencia().setString(2, persona.getNombre());
+            getSentencia().setString(3, persona.getSegundoNombre());
+            getSentencia().setString(4, persona.getApellido());
             //Transformo el LocalDate a date
             java.sql.Date fecha = getCambiarFecha().localDateToDate(persona.getFechaNacimiento());
-            sentencia.setDate(5, fecha);
-            sentencia.setString(6, persona.getNumeroCuit());
-            sentencia.setString(7, persona.toString());
-            sentencia.executeUpdate();
+            getSentencia().setDate(5, fecha);
+            getSentencia().setString(6, persona.getNumeroCuit());
+            getSentencia().setString(7, persona.toString());
+            getSentencia().executeUpdate();
         }catch (SQLException exepcion){ System.out.println("Error en la conexión: " + exepcion.getMessage());
-        }finally {
-            getConexionBD().cerrarConexion();
-            cerrarConexionesInsertar();
-        }
+        }finally { cerrarConexionesInsertar(); }
     }
     public void insertarOrganizacion(Organizacion organizacion) throws SQLException{ // 1|nombreOrganización, 2|tipoOrganizacion, 3|fechaCreacion, 4|cuit, 5|tipoTitular
         Connection conexion = null;
         PreparedStatement sentencia = null;
         try{
-            conexion = getConexionBD().getConexion();
-            sentencia = conexion.prepareStatement(getQuery().insertarOrganizacion());
-            sentencia.setString(1, organizacion.getNombreOrganizacion());
-            sentencia.setString(2, organizacion.getTipoOrganizacion());
+            setConexion(getConexionBD().getConexion());
+            setSentencia(getConexion().prepareStatement(getQuery().insertarOrganizacion()));
+            getSentencia().setString(1, organizacion.getNombreOrganizacion());
+            getSentencia().setString(2, organizacion.getTipoOrganizacion());
             java.sql.Date fecha = getCambiarFecha().localDateToDate(organizacion.getFechaCreacion());
-            sentencia.setDate(3, fecha);
-            sentencia.setString(4, organizacion.getNumeroCuit());
-            sentencia.setString(5, organizacion.toString());
-
-            sentencia.executeUpdate();
-        }catch (SQLException excepcion){
-            excepcion.getStackTrace();
-        }finally {
-            cerrarConexionesInsertar();
-        }
+            getSentencia().setDate(3, fecha);
+            getSentencia().setString(4, organizacion.getNumeroCuit());
+            getSentencia().setString(5, organizacion.toString());
+            getSentencia().executeUpdate();
+        }catch (SQLException excepcion){ excepcion.getStackTrace();
+        }finally { cerrarConexionesInsertar(); }
     }
     public void insertarTitular(String cuitTitular, String tipoTitular) throws SQLException { //  1|id, 2|numero_cuit, 3|tipoTitular
-        Connection conexion = null;
-        PreparedStatement sentencia = null;
         try {
             //Establezco conexion con la base de datos
-            conexion = getConexionBD().getConexion();
+            setConexion(getConexionBD().getConexion());
             //Elijo la Query
-            sentencia = conexion.prepareStatement(getQuery().insertarTitular(), PreparedStatement.RETURN_GENERATED_KEYS);
-            sentencia.setString(1, cuitTitular);
-            sentencia.setString(2, tipoTitular);
+            setSentencia(getConexion().prepareStatement(getQuery().insertarTitular(), PreparedStatement.RETURN_GENERATED_KEYS));
+            getSentencia().setString(1, cuitTitular);
+            getSentencia().setString(2, tipoTitular);
             //Ejecuto la sentencia.
-            sentencia.executeUpdate();
+            getSentencia().executeUpdate();
         }catch (SQLException excepcion){ System.out.println("Error en la conexión: " + excepcion.getMessage());
-        }finally {
-            cerrarConexionesInsertar();
-        }
+        }finally { cerrarConexionesInsertar(); }
     }
-    public void insertarTransaccion(Transaccion transaccion){ // 1|idTransaccion, 2|cbuAsociado, 3|monto, 4|fechaTransaccion, 5|tipoTransaccion
-        Connection conexion = null;
-        PreparedStatement sentencia = null;
+    public void insertarTransaccion(Transaccion transaccion) throws SQLException { // 1|idTransaccion, 2|cbuAsociado, 3|monto, 4|fechaTransaccion, 5|tipoTransaccion
+        setConexionBD(new ConexionBD());
         try {
-            conexion = getConexionBD().getConexion();
-            sentencia = conexion.prepareStatement(getQuery().insertartransaccion(), Statement.RETURN_GENERATED_KEYS);
+            setConexion(getConexionBD().getConexion());
+            setSentencia(getConexion().prepareStatement(getQuery().insertartransaccion(), Statement.RETURN_GENERATED_KEYS));
 
-            sentencia.setString(1, transaccion.getCbuAsociado());
-            sentencia.setFloat(2, transaccion.getMonto());
+            getSentencia().setString(1, transaccion.getCbuAsociado());
+            getSentencia().setFloat(2, transaccion.getMonto());
             java.sql.Date fecha = getCambiarFecha().localDateToDate(transaccion.getFechaTransaccion());
-            sentencia.setDate(3, fecha);
-            sentencia.setString(4, transaccion.getTipoTransaccion());
+            getSentencia().setDate(3, fecha);
+            getSentencia().setString(4, transaccion.getTipoTransaccion());
             /*Si no carga la transaccion, entonces no se registra en la base de datos*/
-            sentencia.executeUpdate();
-        }catch (SQLException excepcion){
-            excepcion.getStackTrace();
-        }finally {
-            getConexionBD().cerrarConexion();
-            if (conexion != null && sentencia != null){
-                try {
-                    conexion.close();
-                    sentencia.close();
-                }catch (SQLException excepcion){
-                    excepcion.getStackTrace();
-                }
-            }
-        }
+            getSentencia().executeUpdate();
+        }catch (SQLException excepcion){ excepcion.getStackTrace();
+        }finally { cerrarConexionesInsertar(); }
     }
     public void insertarCuentaBancaria(CuentaBancaria cuentaBancaria) throws SQLException{
         CambiarFecha cambiarFecha = new CambiarFecha();
@@ -209,11 +184,8 @@ public class ControladorBaseDato {
             getSentencia().setString(6, cuentaBancaria.numeroCuitTitular());
             getSentencia().setString(7, cuentaBancaria.tipoCuentaBancaria());
             getSentencia().executeUpdate();
-        }catch (SQLException excepcion){
-            System.out.println("Error: " + excepcion.getMessage());
-        }finally {
-            cerrarConexionesInsertar();
-        }
+        }catch (SQLException excepcion){ System.out.println("Error: " + excepcion.getMessage());
+        }finally { cerrarConexionesInsertar(); }
     }
     public ResultSet obtenerApellidos(){
         setConexionBD(new ConexionBD());
@@ -222,23 +194,19 @@ public class ControladorBaseDato {
             setSentencia(getConexion().prepareStatement(getQuery().obtenerApellidosPersonas()));
             setResultado(getSentencia().executeQuery());
             return  getResultado();
-        }catch (SQLException excepcion){
-            System.out.println(excepcion.getMessage());
-        }finally {
-            getConexionBD().cerrarConexion();
-        }
+        }catch (SQLException excepcion){ System.out.println(excepcion.getMessage()); }
+        finally { getConexionBD().cerrarConexion(); }
         return null;
     }
-    public ResultSet obtenerPersonas(){
+    public ResultSet obtenerPersonas() throws SQLException {
         setConexionBD(new ConexionBD());
         try{
             setConexion(getConexionBD().getConexion());
             setSentencia(getConexion().prepareStatement(getQuery().seleccionarPersona()));
             setResultado(getSentencia().executeQuery());
             return  getResultado();
-        }catch (SQLException exepcion){
-            System.out.println(exepcion.getMessage());
-        }finally { getConexionBD().cerrarConexion(); }
+        }catch (SQLException exepcion){ System.out.println(exepcion.getMessage()); }
+        finally { getConexionBD().cerrarConexion(); }
         return null;
     }
     public Persona obtenerPersonaPorCuit(String cuit) throws SQLException{
@@ -347,7 +315,6 @@ public class ControladorBaseDato {
                 titular1 = obtenerOrganizacion(getResultado());
             }
         }catch (SQLException excepcion){
-            System.out.println("error aca");
             System.out.println(excepcion.getMessage());
         }finally {
             getConexionBD().cerrarConexion();
@@ -432,7 +399,7 @@ public class ControladorBaseDato {
     }
     public ResultSet obtenerTransaccionesNumeroCbu(String cbu) throws SQLException{
         setConexionBD(new ConexionBD());
-        ResultSet resultado;
+        ResultSet resultado = null;
         try {
             setConexion(getConexionBD().getConexion());
             setSentencia(getConexion().prepareStatement(getQuery().obtenerTransaccionesNumeroCbu()));
@@ -442,10 +409,7 @@ public class ControladorBaseDato {
         }catch (SQLException excepcion){
             System.out.println(excepcion.getMessage());
         }
-        finally {
-            resultado = getResultado();
-            cerrarConexiones();
-        }
+        resultado = getResultado();
         return resultado;
     }
     public List<Transaccion> obtenerTransaccionesNumeroCuit(ResultSet resultado) throws SQLException {
@@ -457,7 +421,7 @@ public class ControladorBaseDato {
             Date fecha = resultado.getDate(4);
             String tipoTransaccion = resultado.getString(5);
             CambiarFecha cambiarFecha = new CambiarFecha();
-            Transaccion transaccion = new Transaccion(cbu, monto, cambiarFecha.dateToLocalDate(fecha), tipoTransaccion);
+            Transaccion transaccion = new Transaccion(id, cbu, monto, cambiarFecha.dateToLocalDate(fecha), tipoTransaccion);
             transacciones.add(transaccion);
         }
         return transacciones;
@@ -470,5 +434,17 @@ public class ControladorBaseDato {
             return new CuentaCorriente();
         }
         return null;
+    }
+    public void actualizarDatosCuentaBancaria(float saldo, int cantidadTransaccionesMes, String cbu) throws SQLException{
+        setConexionBD(new ConexionBD());
+        try{
+            setConexion(getConexionBD().getConexion());
+            setSentencia(getConexion().prepareStatement(getQuery().actualizarDatosCuentaBancaria()));
+            getSentencia().setFloat(1, saldo);
+            getSentencia().setInt(2, cantidadTransaccionesMes);
+            getSentencia().setString(3, cbu);
+            getSentencia().executeUpdate();
+        }catch (SQLException excepcion){ System.out.println(excepcion.getMessage()); }
+        finally { cerrarConexionesInsertar(); }
     }
 }

@@ -20,6 +20,13 @@ public class Transaccion {
         setFechaTransaccion(fechaTransaccion);
         setTipoTransaccion(tipoTransaccion);
     }
+    public Transaccion(int idTransaccion, String cbuAsociado, float monto, LocalDate fechaTransaccion, String tipoTransaccion){
+        setIdTransaccion(idTransaccion);
+        setCbuAsociado(cbuAsociado);
+        setMonto(monto);
+        setFechaTransaccion(fechaTransaccion);
+        setTipoTransaccion(tipoTransaccion);
+    }
     public float getMonto() { return monto; }
     public void setMonto(float monto) { this.monto = monto; }
     public LocalDate getFechaTransaccion() { return fechaTransaccion; }
