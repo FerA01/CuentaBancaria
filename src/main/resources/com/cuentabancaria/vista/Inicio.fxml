@@ -8,28 +8,26 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.cuentabancaria.controlador.Controlador">
+<AnchorPane prefHeight="464.0" prefWidth="598.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.cuentabancaria.controlador.Controlador">
    <children>
-      <AnchorPane prefHeight="50.0" prefWidth="600.0" style="-fx-background-color: blue;">
+      <ImageView fitHeight="464.0" fitWidth="600.0" pickOnBounds="true">
+         <image>
+            <Image url="@../../../imagenes/fondo-pantalla.jpg" />
+         </image>
+      </ImageView>
+      <AnchorPane prefHeight="104.0" prefWidth="600.0">
          <children>
             <ImageView fitHeight="40.0" layoutX="181.0" layoutY="5.0" pickOnBounds="true" preserveRatio="true" AnchorPane.leftAnchor="181.0" AnchorPane.rightAnchor="181.22909545898438">
                <viewport>
                   <Rectangle2D />
                </viewport>
                <image>
-                  <Image url="@../../../logoBancoPcia.png" />
+                  <Image url="@../../../imagenes/logoBancoPcia.png" />
                </image>
             </ImageView>
          </children>
       </AnchorPane>
-      <AnchorPane layoutY="50.0" prefHeight="160.0" prefWidth="300.0" style="-fx-background-color: gray;">
-         <children>
-            <Button fx:id="botonCrearCuenta" layoutX="95.0" layoutY="14.0" mnemonicParsing="false" onAction="#accionBotonCrearCuenta" prefHeight="40.0" prefWidth="110.0" text="Crear cuenta" />
-            <Button fx:id="botonBuscarCuenta" layoutX="95.0" layoutY="60.0" mnemonicParsing="false" onAction="#accionBotonBuscar" prefHeight="40.0" prefWidth="110.0" text="Buscar cuenta" />
-            <Button fx:id="botonEliminarCuenta" layoutX="95.0" layoutY="106.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="110.0" text="Eliminar cuenta" />
-         </children>
-      </AnchorPane>
-      <AnchorPane layoutX="300.0" layoutY="50.0" prefHeight="160.0" prefWidth="300.0" style="-fx-background-color: black;">
+      <AnchorPane layoutX="300.0" layoutY="104.0" prefHeight="160.0" prefWidth="300.0">
          <children>
             <Label layoutX="40.0" layoutY="14.0" prefHeight="40.0" prefWidth="84.0" text="Saldo:   $" textFill="WHITE">
                <font>
@@ -45,14 +43,21 @@
             <Button fx:id="botonRetirar" layoutX="95.0" layoutY="106.0" mnemonicParsing="false" onAction="#accionBotonRetirar" prefHeight="40.0" prefWidth="110.0" text="Retirar" />
          </children>
       </AnchorPane>
-      <AnchorPane layoutY="210.0" prefHeight="200.0" prefWidth="600.0" style="-fx-background-color: brown;">
+      <AnchorPane layoutY="104.0" prefHeight="160.0" prefWidth="300.0" AnchorPane.topAnchor="104.0">
+         <children>
+            <Button fx:id="botonCrearCuenta" layoutX="95.0" layoutY="14.0" mnemonicParsing="false" onAction="#accionBotonCrearCuenta" prefHeight="40.0" prefWidth="110.0" style="-fx-font-family: sans-serif;" text="Crear cuenta" />
+            <Button fx:id="botonBuscarCuenta" layoutX="95.0" layoutY="60.0" mnemonicParsing="false" onAction="#accionBotonBuscar" prefHeight="40.0" prefWidth="110.0" text="Buscar cuenta" />
+            <Button fx:id="botonEliminarCuenta" layoutX="95.0" layoutY="106.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="110.0" text="Eliminar cuenta" />
+         </children>
+      </AnchorPane>
+      <AnchorPane layoutY="264.0" prefHeight="200.0" prefWidth="600.0">
          <children>
             <Label layoutX="14.0" layoutY="8.0" prefHeight="40.0" prefWidth="60.0" text="Cuit nro: " textFill="WHITE">
                <font>
                   <Font size="14.0" />
                </font>
             </Label>
-            <Label fx:id="labelNumeroCuit" layoutX="74.0" layoutY="8.0" prefHeight="40.0" prefWidth="110.0" textFill="WHITE">
+            <Label fx:id="labelNumeroCuit" layoutX="74.0" layoutY="8.0" prefHeight="40.0" prefWidth="110.0">
                <font>
                   <Font size="14.0" />
                </font>
