@@ -5,6 +5,7 @@ import com.cuentabancaria.modelo.titular.Titular;
 
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Collection;
 public abstract class CuentaBancaria implements Accion{
     private String cbu;
@@ -114,4 +115,5 @@ public abstract class CuentaBancaria implements Accion{
             default -> System.out.println("Error en el tipo de transacción.");
         }
     }
+    protected abstract boolean puedeRetirar();
 }

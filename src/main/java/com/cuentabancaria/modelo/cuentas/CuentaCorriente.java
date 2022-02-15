@@ -46,14 +46,14 @@ public class CuentaCorriente extends CuentaBancaria{
     }
     @Override
     public boolean retirar(float monto) throws SQLException{
-        if (monto > getSaldo()){
+        if (monto > getSaldo() || !puedeRetirar()){
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setHeaderText("ERROR");
             alert.setTitle("SALDO INSUFICIENTE");
             alert.setContentText("!POR FAVOR INGRESE UN MONTO VALIDO¡");
             alert.showAndWait();
         }
-        if (monto > 0 && puedeRetirar(monto)){
+        if (monto > 0 && puedeRetirar(monto) && puedeRetirar()){
             super.sacarMonto(monto);
             //agregarTransaccion(new Transaccion(monto, null, "Extracción"));
             insertarTransaccion(new Transaccion(getCbu(), monto, LocalDate.now(), "Extracción"));
@@ -63,4 +63,7 @@ public class CuentaCorriente extends CuentaBancaria{
         }
         return false;
     }
+
+    @Override
+    protected boolean puedeRetirar() { return true; }
 }

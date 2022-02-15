@@ -16,6 +16,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.image.Image;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import java.io.IOException;
@@ -25,16 +26,20 @@ import java.time.LocalDate;
 import java.util.ResourceBundle;
 public class Controlador implements Initializable {
     private static ControladorBaseDato baseDato;
+    @FXML private Label labelCantidadExtraccionesDisponibles;
+    @FXML private Label labelTipoTitular;
+    @FXML private Label labelNombreTitular;
+    @FXML private Label labelTipoCuentaBancaria;
     @FXML private Button botonRetirar;
     @FXML private Button botonDepositar;
     @FXML private Button botonHistorialTransacciones;
-    private CuentaBancaria cuentaBancaria;
-    private Titular titular;
     @FXML private Button botonCrearCuenta;
     @FXML private Button botonBuscarCuenta;
     @FXML private Button botonEliminarCuenta;
     @FXML private Label labelSaldo;
     @FXML private Label labelNumeroCuit;
+    private CuentaBancaria cuentaBancaria;
+    private Titular titular;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -78,6 +83,14 @@ public class Controlador implements Initializable {
     public Button getBotonDepositar() { return botonDepositar; }
     public void setBotonDepositar(Button botonDepositar) { this.botonDepositar = botonDepositar; }
     public Button getBotonHistorialTransacciones() { return botonHistorialTransacciones; }
+    public Label getLabelCantidadExtraccionesDisponibles() { return labelCantidadExtraccionesDisponibles; }
+    public void setLabelCantidadExtraccionesDisponibles(Label labelCantidadExtraccionesDisponibles) { this.labelCantidadExtraccionesDisponibles = labelCantidadExtraccionesDisponibles; }
+    public Label getLabelTipoTitular() { return labelTipoTitular; }
+    public void setLabelTipoTitular(Label labelTipoTitular) { this.labelTipoTitular = labelTipoTitular; }
+    public Label getLabelNombreTitular() { return labelNombreTitular; }
+    public void setLabelNombreTitular(Label labelNombreTitular) { this.labelNombreTitular = labelNombreTitular; }
+    public Label getLabelTipoCuentaBancaria() { return labelTipoCuentaBancaria; }
+    public void setLabelTipoCuentaBancaria(Label labelTipoCuentaBancaria) { this.labelTipoCuentaBancaria = labelTipoCuentaBancaria; }
 
     /**
      *  Carga una nueva ventana emergente en donde se hace el registro de una cuenta bancaria con su titular
@@ -113,7 +126,11 @@ public class Controlador implements Initializable {
             Scene scene = new Scene(parent);
             Stage stage = new Stage();
             stage.initModality(Modality.APPLICATION_MODAL);
+            stage.setTitle("Deposito");
             stage.setScene(scene);
+            stage.setResizable(false);
+            stage.getIcons().add( new Image(
+                    getClass().getResourceAsStream( "/imagenes/icono.png" )));
             stage.showAndWait();
         }catch (IOException e){
             Alert alert = new Alert(Alert.AlertType.ERROR);
@@ -135,6 +152,10 @@ public class Controlador implements Initializable {
             Scene scene = new Scene(parent);
             Stage stage = new Stage();
             stage.initModality(Modality.APPLICATION_MODAL);
+            stage.setTitle("Extracción");
+            stage.setResizable(false);
+            stage.getIcons().add( new Image(
+                    getClass().getResourceAsStream( "/imagenes/icono.png" )));
             stage.setScene(scene);
             stage.showAndWait();
         }catch (IOException e){
@@ -154,6 +175,10 @@ public class Controlador implements Initializable {
             controladorTransacciones.mostrarDatos();
             Scene scene = new Scene(parent);
             Stage stage = new Stage();
+            stage.setTitle("Historial de transacciones");
+            stage.setResizable(false);
+            stage.getIcons().add( new Image(
+                getClass().getResourceAsStream( "/imagenes/icono.png" )));
             stage.initModality(Modality.APPLICATION_MODAL);
             stage.setScene(scene);
             stage.showAndWait();
@@ -182,12 +207,15 @@ public class Controlador implements Initializable {
         }
     }
     //Obtener saldo y cuit
-    public void obtenerSaldoCuitTitular(){
+    public void obtenerDatosTitularCuenta(){
+        CuentaBancaria cuentaBancaria = getCuentaBancaria();
+        Titular titular = getTitular();
         getLabelSaldo().setText(String.valueOf(getCuentaBancaria().getSaldo()));
         getLabelNumeroCuit().setText(mascaraNumeroCuit(getTitular().getNumeroCuit()));
-        System.out.println((getLabelNumeroCuit().getText()).replaceFirst("(\\d{2})(\\d{8})(\\d+)", "$1-$2-$3"));
-        Persona persona = (Persona) getTitular();
-        System.out.println((String.valueOf(persona.getDni())).replaceFirst("(\\d{2})(\\d{3})(\\d+)", "$1.$2.$3") );
+        cambiarEtiquetas(getLabelTipoCuentaBancaria(), cuentaBancaria.tipoCuentaBancaria());
+        cambiarEtiquetas(getLabelCantidadExtraccionesDisponibles(),String.valueOf(getCuentaBancaria().getCantidadExtraccionesPorMes()));
+        cambiarEtiquetas(getLabelTipoTitular(), titular.toString());
+        cambiarEtiquetas(getLabelNombreTitular(), titular.nombreTitular());
     }
     //Obtener persona
     private Persona obtenerPersona(){
@@ -195,6 +223,7 @@ public class Controlador implements Initializable {
         Persona persona= null;
         return persona;
     }
+    private void cambiarEtiquetas(Label etiqueta, String valor){ etiqueta.setText(valor); }
     private String mascaraNumeroCuit(String numeroCuit){ return (numeroCuit).replaceFirst("(\\d{2})(\\d{8})(\\d+)", "$1-$2-$3"); }
     private String mascaraDni(int dni){ return (String.valueOf(dni)).replaceFirst("(\\d{2})(\\d{3})(\\d+)", "$1.$2.$3") ; }
 }

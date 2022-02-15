@@ -72,4 +72,6 @@ public class Persona extends Titular{
         CambiarFecha cambiarFecha = new CambiarFecha(getFechaNacimiento());
         return cambiarFecha.cambiar();
     }
+    @Override
+    public String nombreTitular() { return getNombre() + " " + getApellido(); }
 }

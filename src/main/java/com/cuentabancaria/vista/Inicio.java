@@ -3,8 +3,10 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import java.io.IOException;
+
 public class Inicio extends Application {
     @Override
     public void start(Stage stage) throws IOException {
@@ -14,6 +16,9 @@ public class Inicio extends Application {
             Scene scene = new Scene(root);
             stage.setTitle("Cuenta bancaria");
             stage.setScene(scene);
+            stage.setResizable(false);
+            stage.getIcons().add( new Image(
+                    getClass().getResourceAsStream( "/imagenes/icono.png" )));
             stage.show();
         }catch (IOException e){
             System.out.println(e.getMessage());

@@ -1,5 +1,6 @@
 package com.cuentabancaria.modelo.cuentas;
 import java.time.LocalDate;
+
 public class Transaccion {
     private int idTransaccion;
     private float monto;
@@ -37,14 +38,6 @@ public class Transaccion {
     public void setCbuAsociado(String cbuAsociado) { this.cbuAsociado = cbuAsociado; }
     public int getIdTransaccion() { return idTransaccion; }
     public void setIdTransaccion(int idTransaccion) { this.idTransaccion = idTransaccion; }
-
-    /*
-            public int obtenerDiaFechaTransaccion(){ return getFechaTransaccion().get(Calendar.DAY_OF_MONTH); }
-            public int obtenerMesFechaTransaccion(){ return getFechaTransaccion().get(Calendar.MONTH) + 1; }
-            public int obtenerAnioFechaTransaccion(){ return getFechaTransaccion().get(Calendar.YEAR); }
-            public String obtenerFechaTransaccion(){ return obtenerDiaFechaTransaccion() + "/" + obtenerMesFechaTransaccion()
-                                                     + "/" + obtenerAnioFechaTransaccion(); }
-            */
     @Override
     public String toString(){
         return "Tipo de transacción: " + getTipoTransaccion() + ", monto: $" + getMonto() + ", fecha transacción: " + getFechaTransaccion().toString();

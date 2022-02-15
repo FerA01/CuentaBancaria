@@ -51,7 +51,14 @@ public class CajaAhorro extends CuentaBancaria{
             alert.setContentText("!POR FAVOR INGRESE UN MONTO VALIDO¡");
             alert.showAndWait();
         }
-        if (monto > 0 && getCantidadExtraccionesPorMes() > 0){
+        if (!puedeRetirar()){
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setHeaderText("SUPERO CANTIDAD DE EXTRACCIONES POR DIA");
+            alert.setTitle("ERROR");
+            alert.setContentText("!POR FAVOR, VUELVA EL PROXIMO MES¡");
+            alert.showAndWait();
+        }
+        if (monto > 0 && puedeRetirar()){
             if(puedeRetirar(monto)) {
                 super.sacarMonto(monto);
                 //agregarTransaccion(new Transaccion(monto, null, "Extracción"));
@@ -63,4 +70,6 @@ public class CajaAhorro extends CuentaBancaria{
         }
         return false;
     }
+    @Override
+    protected boolean puedeRetirar() { return getCantidadExtraccionesPorMes() > 0; }
 }

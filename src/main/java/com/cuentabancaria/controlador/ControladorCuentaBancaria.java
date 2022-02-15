@@ -58,7 +58,8 @@ public class ControladorCuentaBancaria implements Initializable {
             alert.showAndWait();
         }else{
             cuentaBancaria.tipoTransaccion(cuentaBancaria.getTipoTransaccion(), valor);
-            getControladorPrincipal().obtenerSaldoCuitTitular();
+            getControladorPrincipal().obtenerDatosTitularCuenta();
+            cambiarTextoSaldoDisponible(cuentaBancaria.getSaldo());
         }
     }
     public void cambiarTextoSaldoDisponible(float monto){ getSaldoDisponible().setText(String.valueOf(monto)); }

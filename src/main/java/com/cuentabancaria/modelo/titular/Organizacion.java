@@ -40,4 +40,7 @@ public class Organizacion extends Titular{
         CambiarFecha cambiarFecha = new CambiarFecha(getFechaCreacion());
         return cambiarFecha.cambiar();
     }
+
+    @Override
+    public String nombreTitular() { return getNombreOrganizacion() + " " + getTipoOrganizacion(); }
 }

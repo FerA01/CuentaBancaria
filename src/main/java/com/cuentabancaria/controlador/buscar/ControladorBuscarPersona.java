@@ -123,7 +123,7 @@ public class ControladorBuscarPersona implements Initializable {
     }
     @FXML
     public void accionBotonBuscar() throws SQLException {
-        textFieldBuscarApellido.getCharacters();
+
     }
     @FXML
     public void accionSeleccionarTitular() throws SQLException {
@@ -132,7 +132,7 @@ public class ControladorBuscarPersona implements Initializable {
         CuentaBancaria cuentaBancaria = getBaseDato().obtenerCuentaBancaria(titular.getNumeroCuit());
         getControladorPrincipal().setTitular(titular);
         getControladorPrincipal().setCuentaBancaria(cuentaBancaria);
-        getControladorPrincipal().obtenerSaldoCuitTitular();
+        getControladorPrincipal().obtenerDatosTitularCuenta();
     }
 }
 /*
