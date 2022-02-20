@@ -5,6 +5,7 @@ module com.cuentabancaria {
     requires org.testng;
     requires  java.sql;
     requires  mysql.connector.java;
+    requires org.apache.commons.codec;
 
     opens test;
     opens com.cuentabancaria.modelo.cuentas to javafx.base;

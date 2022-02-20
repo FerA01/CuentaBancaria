@@ -13,4 +13,5 @@ public abstract class Titular {
     public abstract String obtenerFxml();
     public abstract String nombreTabla();
     public abstract String nombreTitular();
+    public abstract boolean datosCompletos();
 }

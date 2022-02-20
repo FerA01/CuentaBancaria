@@ -1,4 +1,5 @@
 package com.cuentabancaria.modelo.cuentas;
+import com.cuentabancaria.controlador.Validador;
 import com.cuentabancaria.modelo.titular.Titular;
 import javafx.scene.control.Alert;
 
@@ -37,7 +38,6 @@ public class CuentaCorriente extends CuentaBancaria{
     public boolean depositar(float monto) throws SQLException {
         if(monto > 0) {
             super.ingresarMonto(monto);
-            //agregarTransaccion(new Transaccion(monto, null, "Deposito"));
             insertarTransaccion(new Transaccion(getCbu(), monto, LocalDate.now(), "Deposito"));
             actualizarDatosCuentaBancaria(getSaldo(), getCantidadExtraccionesPorMes(), getCbu());
             return true;
@@ -47,15 +47,10 @@ public class CuentaCorriente extends CuentaBancaria{
     @Override
     public boolean retirar(float monto) throws SQLException{
         if (monto > getSaldo() || !puedeRetirar()){
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setHeaderText("ERROR");
-            alert.setTitle("SALDO INSUFICIENTE");
-            alert.setContentText("!POR FAVOR INGRESE UN MONTO VALIDO¡");
-            alert.showAndWait();
+            Validador.alertaSaldoInsuficiente();
         }
         if (monto > 0 && puedeRetirar(monto) && puedeRetirar()){
             super.sacarMonto(monto);
-            //agregarTransaccion(new Transaccion(monto, null, "Extracción"));
             insertarTransaccion(new Transaccion(getCbu(), monto, LocalDate.now(), "Extracción"));
             setCantidadExtraccionesPorMes(-1);
             actualizarDatosCuentaBancaria(getSaldo(), getCantidadExtraccionesPorMes(), getCbu());

@@ -3,6 +3,7 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import java.io.IOException;
 public class Login extends Application {
@@ -15,6 +16,8 @@ public class Login extends Application {
             stage.setTitle("Iniciar Sesión.");
             stage.setScene(scene);
             stage.setResizable(false);
+            stage.getIcons().add( new Image(
+                    getClass().getResourceAsStream( "/imagenes/icono.png" )));
             stage.show();
         }catch (IOException exception){
             System.out.println(exception.getMessage());

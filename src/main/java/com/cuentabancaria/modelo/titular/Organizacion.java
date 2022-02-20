@@ -42,5 +42,10 @@ public class Organizacion extends Titular{
     }
 
     @Override
+    public boolean datosCompletos() {
+        return !getNombreOrganizacion().isEmpty() && !getTipoOrganizacion().isEmpty() && !getNumeroCuit().isEmpty() && getFechaCreacion() != null;
+    }
+
+    @Override
     public String nombreTitular() { return getNombreOrganizacion() + " " + getTipoOrganizacion(); }
 }

@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
+
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.layout.AnchorPane?>
-<AnchorPane prefHeight="406.0" prefWidth="440.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.cuentabancaria.controlador.cuentaBancaria.ControladorTransacciones">
+
+<AnchorPane prefHeight="406.0" prefWidth="440.0" stylesheets="@../estilos/historialTransacciones.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.cuentabancaria.controlador.cuentaBancaria.ControladorTransacciones">
    <children>
       <TableView fx:id="tablaHistorialTransaccion" prefHeight="406.0" prefWidth="440.0">
         <columns>

@@ -1,4 +1,5 @@
 package com.cuentabancaria.modelo.cuentas;
+import com.cuentabancaria.controlador.Validador;
 import com.cuentabancaria.modelo.titular.Titular;
 import javafx.scene.control.Alert;
 
@@ -45,18 +46,10 @@ public class CajaAhorro extends CuentaBancaria{
     @Override
     public boolean retirar(float monto) throws SQLException{
         if (monto > getSaldo()){
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setHeaderText("ERROR");
-            alert.setTitle("SALDO INSUFICIENTE");
-            alert.setContentText("!POR FAVOR INGRESE UN MONTO VALIDO¡");
-            alert.showAndWait();
+            Validador.alertaSaldoInsuficiente();
         }
         if (!puedeRetirar()){
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setHeaderText("SUPERO CANTIDAD DE EXTRACCIONES POR DIA");
-            alert.setTitle("ERROR");
-            alert.setContentText("!POR FAVOR, VUELVA EL PROXIMO MES¡");
-            alert.showAndWait();
+            Validador.alertaSuperoCantidadExtraccionesPorMes();
         }
         if (monto > 0 && puedeRetirar()){
             if(puedeRetirar(monto)) {

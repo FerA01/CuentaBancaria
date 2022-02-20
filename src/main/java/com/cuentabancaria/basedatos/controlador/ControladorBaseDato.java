@@ -9,6 +9,8 @@ import com.cuentabancaria.modelo.cuentas.Transaccion;
 import com.cuentabancaria.modelo.titular.Organizacion;
 import com.cuentabancaria.modelo.titular.Persona;
 import com.cuentabancaria.modelo.titular.Titular;
+import com.cuentabancaria.modelo.usuario.Usuario;
+
 import java.sql.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -162,15 +164,15 @@ public class ControladorBaseDato {
 
             getSentencia().setString(1, transaccion.getCbuAsociado());
             getSentencia().setFloat(2, transaccion.getMonto());
-            java.sql.Date fecha = getCambiarFecha().localDateToDate(transaccion.getFechaTransaccion());
-            getSentencia().setDate(3, fecha);
-            getSentencia().setString(4, transaccion.getTipoTransaccion());
+            //java.sql.Date fecha = getCambiarFecha().localDateToDate(transaccion.getFechaTransaccion());
+            //getSentencia().setDate(3, fecha);
+            getSentencia().setString(3, transaccion.getTipoTransaccion());
             /*Si no carga la transaccion, entonces no se registra en la base de datos*/
             getSentencia().executeUpdate();
         }catch (SQLException excepcion){ excepcion.getStackTrace();
         }finally { cerrarConexionesInsertar(); }
     }
-    public void insertarCuentaBancaria(CuentaBancaria cuentaBancaria) throws SQLException{
+    public boolean insertarCuentaBancaria(CuentaBancaria cuentaBancaria) throws SQLException{
         CambiarFecha cambiarFecha = new CambiarFecha();
         try {  // 1|cbu  2|saldo 3|limiteMinimoCuenta 4|cantidadExtraccionesMes 5|fechaApertura 6|titularCuenta 7|tipoCuenta
             setConexion(getConexionBD().getConexion());
@@ -179,14 +181,37 @@ public class ControladorBaseDato {
             getSentencia().setFloat(2, cuentaBancaria.getSaldo());
             getSentencia().setFloat(3, cuentaBancaria.getLimiteMinimoCuenta());
             getSentencia().setInt(4, cuentaBancaria.getCantidadExtraccionesPorMes());
-            Date fecha = cambiarFecha.localDateToDate(cuentaBancaria.getFechaApertura());
-            getSentencia().setDate(5, fecha);
-            getSentencia().setString(6, cuentaBancaria.numeroCuitTitular());
-            getSentencia().setString(7, cuentaBancaria.tipoCuentaBancaria());
+            //Date fecha = cambiarFecha.localDateToDate(cuentaBancaria.getFechaApertura());
+            //getSentencia().setDate(5, fecha);
+            getSentencia().setString(5, cuentaBancaria.numeroCuitTitular());
+            getSentencia().setString(6, cuentaBancaria.tipoCuentaBancaria());
             getSentencia().executeUpdate();
+            return true;
         }catch (SQLException excepcion){ System.out.println("Error: " + excepcion.getMessage());
         }finally { cerrarConexionesInsertar(); }
+        return false;
     }
+    public void insertarUsuario(Usuario usuario) throws SQLException{
+        setConexionBD(new ConexionBD());
+        try{
+            setConexion(getConexionBD().getConexion());
+            setSentencia(getConexion().prepareStatement(getQuery().insertarUsuario(), Statement.RETURN_GENERATED_KEYS));
+            getSentencia().setString(1, usuario.getNombreUsuario());
+            getSentencia().setString(2, usuario.getContrasena());
+            getSentencia().setString(3, usuario.getCuitTitular());
+            Date fecha = getCambiarFecha().localDateToDate(usuario.getFechaCreacion());
+
+            getSentencia().executeUpdate();
+        }catch (SQLException excepcion){
+            System.out.println("Error: " + excepcion.getMessage());
+        }finally { cerrarConexionesInsertar(); }
+    }
+    public boolean loginUsuario(Usuario usuario){
+        setConexionBD(new ConexionBD());
+        return false;
+    }
+
+    //Obtener datos
     public ResultSet obtenerApellidos(){
         setConexionBD(new ConexionBD());
         try {
@@ -264,13 +289,48 @@ public class ControladorBaseDato {
             getSentencia().setString(1, cuit);
             setResultado(getSentencia().executeQuery());
             if (getResultado().next()) { //Si hay resultado entro en el if
-                System.out.println("Entro en el if");
                 return  (getResultado().getString(1)).equals(cuit);
             }
         }catch (SQLException excepcion){ System.out.println(excepcion.getMessage()); }
         finally { getConexionBD().cerrarConexion(); }
         return false;
     }
+    public boolean existeNombreUsuario(String nombreUsuario) throws SQLException{
+        setConexionBD(new ConexionBD());
+        try{
+            setConexion(getConexionBD().getConexion());
+            setSentencia(getConexion().prepareStatement(getQuery().obtenerNombreUsuario()));
+            getSentencia().setString(1, nombreUsuario);
+            setResultado(getSentencia().executeQuery());
+            if (getResultado().next()){
+                return (getResultado().getString(1)).equals(nombreUsuario);
+            }
+        }catch (SQLException exception){
+            System.out.println(exception.getMessage());
+        }finally {
+            cerrarConexiones();
+        }
+        return false;
+    }
+
+    public String obtenerContrasena(String nombreUsuario) throws SQLException{
+        setConexionBD(new ConexionBD());
+        try{
+            setConexion(getConexionBD().getConexion());
+            setSentencia(getConexion().prepareStatement(getQuery().obtenerContrasena()));
+            getSentencia().setString(1, nombreUsuario);
+            setResultado(getSentencia().executeQuery());
+            if (getResultado().next()){
+                return getResultado().getString(1);
+            }
+        }catch (SQLException excepcion){
+            System.out.println(excepcion.getMessage());
+        }finally {
+            cerrarConexiones();
+        }
+        return null;
+    }
+
     public Titular abc(Titular titular) throws SQLException{
         setConexionBD(new ConexionBD());
         Titular titular1 = null;
@@ -446,5 +506,33 @@ public class ControladorBaseDato {
             getSentencia().executeUpdate();
         }catch (SQLException excepcion){ System.out.println(excepcion.getMessage()); }
         finally { cerrarConexionesInsertar(); }
+    }
+    public Usuario obtenerUsuario(String nombreUsuario) throws SQLException{
+        setConexionBD(new ConexionBD());
+        try{ // 1| nombreUsuario, 2| contrasena, 3| cuitTitular, 4| fechaCreacion
+            setConexion(getConexionBD().getConexion());
+            setSentencia(getConexion().prepareStatement(getQuery().obtenerUsuario()));
+            getSentencia().setString(1, nombreUsuario);
+            setResultado(getSentencia().executeQuery());
+            if (getResultado().next()){
+                String nombre = getResultado().getString(1);
+                String contrasena = getResultado().getString(2);
+                String cuit = getResultado().getString(3);
+                LocalDate fecha = getCambiarFecha().dateToLocalDate(getResultado().getDate(4));
+
+                return new Usuario(nombre, contrasena, comprobarCuitNulo(cuit), fecha);
+            }
+        }catch (SQLException excepcion){
+            System.out.println(excepcion.getMessage());
+        }finally {
+            cerrarConexiones();
+        }
+        return null;
+    }
+    private String comprobarCuitNulo(String cuit){
+        if (cuit == null){
+            return "";
+        }
+        return cuit;
     }
 }

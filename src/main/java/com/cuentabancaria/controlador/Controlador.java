@@ -103,7 +103,13 @@ public class Controlador implements Initializable {
             Scene scene = new Scene(parent);
             Stage stage = new Stage();
 
+            ControladorCrearTitular crearTitular = fxmlLoader.getController();
+            crearTitular.setVentana(stage);
+            stage.setTitle("Crear Cuenta");
+            stage.setResizable(false);
             stage.initModality(Modality.APPLICATION_MODAL);
+            stage.getIcons().add( new Image(
+                    getClass().getResourceAsStream( "/imagenes/icono.png" )));
             stage.setScene(scene);
             stage.showAndWait();
         }catch (IOException e){
@@ -116,72 +122,90 @@ public class Controlador implements Initializable {
     }
     @FXML
     public void accionBotonDepositar(){
-        getCuentaBancaria().setTipoTransaccion("deposito");
-        try {
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/cuentabancaria/vista/DepositarRetirar.fxml"));
-            Parent parent = fxmlLoader.load();
-            ControladorCuentaBancaria cuentaBancaria = fxmlLoader.getController();
-            cuentaBancaria.setControladorPrincipal(this);
-            cuentaBancaria.cambiarTextoSaldoDisponible(getCuentaBancaria().getSaldo());
-            Scene scene = new Scene(parent);
-            Stage stage = new Stage();
-            stage.initModality(Modality.APPLICATION_MODAL);
-            stage.setTitle("Deposito");
-            stage.setScene(scene);
-            stage.setResizable(false);
-            stage.getIcons().add( new Image(
-                    getClass().getResourceAsStream( "/imagenes/icono.png" )));
-            stage.showAndWait();
-        }catch (IOException e){
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setHeaderText(null);
-            alert.setTitle("Error");
-            alert.setContentText(e.getMessage());
-            alert.showAndWait();
+        Validador validador = new Validador();
+        if (validador.usuarioSeleccionado(getTitular())) {
+            getCuentaBancaria().setTipoTransaccion("deposito");
+            try {
+                FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/cuentabancaria/vista/DepositarRetirar.fxml"));
+                Parent parent = fxmlLoader.load();
+                Scene scene = new Scene(parent);
+                Stage stage = new Stage();
+                ControladorCuentaBancaria cuentaBancaria = fxmlLoader.getController();
+                cuentaBancaria.setControladorPrincipal(this);
+                cuentaBancaria.cambiarTextoSaldoDisponible(getCuentaBancaria().getSaldo());
+                cuentaBancaria.setVentana(stage);
+
+                stage.initModality(Modality.APPLICATION_MODAL);
+                stage.setTitle("Deposito");
+                stage.setScene(scene);
+                stage.setResizable(false);
+                stage.getIcons().add(new Image(
+                        getClass().getResourceAsStream("/imagenes/icono.png")));
+                stage.showAndWait();
+            } catch (IOException e) {
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setHeaderText(null);
+                alert.setTitle("Error");
+                alert.setContentText(e.getMessage());
+                alert.showAndWait();
+            }
+        }else{
+            validador.alertaNombreUsuarioNoSeleccionado();
         }
     }
     @FXML
     public void accionBotonRetirar(){
-        getCuentaBancaria().setTipoTransaccion("extraccion");
-        try {
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/cuentabancaria/vista/DepositarRetirar.fxml"));
-            Parent parent = fxmlLoader.load();
-            ControladorCuentaBancaria cuentaBancaria = fxmlLoader.getController();
-            cuentaBancaria.setControladorPrincipal(this);
-            cuentaBancaria.cambiarTextoSaldoDisponible(getCuentaBancaria().getSaldo());
-            Scene scene = new Scene(parent);
-            Stage stage = new Stage();
-            stage.initModality(Modality.APPLICATION_MODAL);
-            stage.setTitle("Extracción");
-            stage.setResizable(false);
-            stage.getIcons().add( new Image(
-                    getClass().getResourceAsStream( "/imagenes/icono.png" )));
-            stage.setScene(scene);
-            stage.showAndWait();
-        }catch (IOException e){
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setHeaderText(null);
-            alert.setTitle("Error");
-            alert.setContentText(e.getMessage());
-            alert.showAndWait();
+        Validador validador = new Validador();
+        if(validador.usuarioSeleccionado(getTitular())){
+            getCuentaBancaria().setTipoTransaccion("extraccion");
+            try {
+                FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/cuentabancaria/vista/DepositarRetirar.fxml"));
+                Parent parent = fxmlLoader.load();
+                Scene scene = new Scene(parent);
+                Stage stage = new Stage();
+                ControladorCuentaBancaria cuentaBancaria = fxmlLoader.getController();
+                cuentaBancaria.setControladorPrincipal(this);
+                cuentaBancaria.cambiarTextoSaldoDisponible(getCuentaBancaria().getSaldo());
+                cuentaBancaria.setVentana(stage);
+                stage.initModality(Modality.APPLICATION_MODAL);
+                stage.setTitle("Extracción");
+                stage.setResizable(false);
+                stage.getIcons().add( new Image(
+                        getClass().getResourceAsStream( "/imagenes/icono.png" )));
+                stage.setScene(scene);
+                stage.showAndWait();
+            }catch (IOException e){
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setHeaderText(null);
+                alert.setTitle("Error");
+                alert.setContentText(e.getMessage());
+                alert.showAndWait();
+            }
+        }else{
+            validador.alertaNombreUsuarioNoSeleccionado();
         }
     }
     @FXML
     public void accionHistorialTransacciones() throws IOException, SQLException {
+        Validador validador = new Validador();
+        if (validador.usuarioSeleccionado(getTitular())) {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/test/HistorialTransacciones.fxml"));
             Parent parent = loader.load();
-            ControladorTransacciones controladorTransacciones =  (ControladorTransacciones) loader.getController();
+            ControladorTransacciones controladorTransacciones = (ControladorTransacciones) loader.getController();
             controladorTransacciones.setControladorPrincipal(this);
             controladorTransacciones.mostrarDatos();
             Scene scene = new Scene(parent);
             Stage stage = new Stage();
             stage.setTitle("Historial de transacciones");
             stage.setResizable(false);
-            stage.getIcons().add( new Image(
-                getClass().getResourceAsStream( "/imagenes/icono.png" )));
+            stage.getIcons().add(new Image(
+                    getClass().getResourceAsStream("/imagenes/icono.png")));
             stage.initModality(Modality.APPLICATION_MODAL);
             stage.setScene(scene);
             stage.showAndWait();
+        }else{
+            validador.alertaNombreUsuarioNoSeleccionado();
+        }
     }
 
     @FXML
@@ -194,6 +218,9 @@ public class Controlador implements Initializable {
             Scene scene = new Scene(root);
             Stage stage = new Stage();
             stage.setTitle("Buscar");
+            stage.setResizable(false);
+            stage.getIcons().add( new Image(
+                    getClass().getResourceAsStream( "/imagenes/icono.png" )));
             stage.initModality(Modality.APPLICATION_MODAL);
             stage.setScene(scene);
             stage.showAndWait();

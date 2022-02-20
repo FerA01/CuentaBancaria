@@ -3,7 +3,6 @@ import com.cuentabancaria.basedatos.controlador.ControladorBaseDato;
 import com.cuentabancaria.controlador.Controlador;
 import com.cuentabancaria.modelo.cuentas.CuentaBancaria;
 import com.cuentabancaria.modelo.cuentas.Transaccion;
-import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;

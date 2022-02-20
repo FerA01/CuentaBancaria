@@ -7,7 +7,7 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane prefHeight="465.0" prefWidth="826.0" stylesheets="@../../../estilos/labels.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.cuentabancaria.controlador.Controlador">
+<AnchorPane prefHeight="465.0" prefWidth="826.0" stylesheets="@../../../estilos/inicio.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.cuentabancaria.controlador.Controlador">
    <children>
       <ImageView fitHeight="465.0" fitWidth="826.0" pickOnBounds="true" preserveRatio="true">
          <image>

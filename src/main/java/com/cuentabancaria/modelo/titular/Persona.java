@@ -28,7 +28,11 @@ public class Persona extends Titular{
     public Persona(String nombre, String segundoNombre, String apellido, int dni, String numeroCuit
                   , LocalDate fechaNacimiento){
         setNombre(nombre);
-        setSegundoNombre(segundoNombre);
+        if (segundoNombre == null){
+            setSegundoNombre("");
+        }else{
+            setSegundoNombre(segundoNombre);
+        }
         setApellido(apellido);
         setDni(dni);
         setNumeroCuit(numeroCuit);
@@ -72,6 +76,12 @@ public class Persona extends Titular{
         CambiarFecha cambiarFecha = new CambiarFecha(getFechaNacimiento());
         return cambiarFecha.cambiar();
     }
+
+    @Override
+    public boolean datosCompletos() {
+        return !getNombre().isEmpty() && !getApellido().isEmpty() && !getNumeroCuit().isEmpty() && getFechaNacimiento() != null;
+    }
+
     @Override
     public String nombreTitular() { return getNombre() + " " + getApellido(); }
 }

@@ -13,11 +13,14 @@ public class Query {
     }
     public final String insertartransaccion(){
         return "INSERT INTO transacciones (idTransaccion, cbuAsociado, monto, fechaTransaccion, tipoTransaccion) "
-                + "VALUES(null, ?, ?, ?, ?)";
+                + "VALUES(null, ?, ?, now(), ?)";
     }
     public final String insertarCuentaBancaria(){
         return "INSERT INTO cuentabancaria (cbu, saldo, limiteMinimoCuenta, cantidadExtraccionesMes, fechaApertura, titularCuenta, tipoCuenta) "
-                + "VALUES(?, ?, ?, ?, ?, ?, ?)";
+                + "VALUES(?, ?, ?, ?, now(), ?, ?)";
+    }
+    public final String insertarUsuario(){
+        return "INSERT INTO usuario (idUsuario, nombreUsuario, contrasena, cuitTitular, fechaCreacion) VALUES (null, ?, ?, ?, now())";
     }
 
     //Obtener datos.
@@ -25,6 +28,7 @@ public class Query {
     public final String obtenerUltimoIDTabla(){ return "SELECT MAX(?) FROM ? "; }
     public final String obtenerUltimoID(){ return "SELECT MAX(id) FROM titular"; }
     public final String obtenerCuitTitular(){ return "SELECT numero_cuit FROM titular WHERE numero_cuit = ?"; }
+    public final String existeCuitTitular(){ return "SELECT tipoTitular FROM titular WHERE EXISTS ()"; }
     public final String seleccionarPersona(){
         return "SELECT * FROM persona";
     }
@@ -36,6 +40,10 @@ public class Query {
     public final String abc(){ return "SELECT * FROM ? WHERE cuit = ? "; }
     public final String obtenerCuentaBancaria(){ return  "SELECT cbu, saldo, limiteMinimoCuenta, cantidadExtraccionesMes, fechaApertura, titularCuenta, tipoCuenta FROM cuentabancaria WHERE titularCuenta = ?"; }
     public final String obtenerTransaccionesNumeroCbu(){ return "SELECT * FROM transacciones WHERE cbuAsociado = ?"; }
+    public final String obtenerNombreUsuario(){ return "SELECT nombreUsuario FROM usuario WHERE nombreUsuario = ?"; }
+    public final String obtenerContrasena(){ return "SELECT contrasena FROM usuario WHERE nombreUsuario = ?"; }
+    public final String obtenerUsuario(){ return "SELECT nombreUsuario, contrasena, cuitTitular, fechaCreacion FROM usuario WHERE nombreUsuario = ?"; }
+
     //Eliminar datos.
     public final String eliminarPersona(){ return "DELETE FROM persona WHERE cuit = ?"; }
     public final String eliminarOrganizacion(){ return "DELETE FROM organizacion WHERE cuit = ?"; }
