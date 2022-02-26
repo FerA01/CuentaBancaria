@@ -108,12 +108,12 @@ public abstract class CuentaBancaria implements Accion{
             System.out.println(excepcion.getMessage());
         }
     }
-    public void tipoTransaccion(String tipoTransaccion, float monto) throws SQLException {
-        switch (tipoTransaccion) {
+    public boolean tipoTransaccion(String tipoTransaccion, float monto) throws SQLException {
+        return switch (tipoTransaccion) {
             case "deposito" -> depositar(monto);
             case "extraccion" -> retirar(monto);
-            default -> System.out.println("Error en el tipo de transacción.");
-        }
+            default -> false;
+        };
     }
     protected abstract boolean puedeRetirar();
 }

@@ -36,7 +36,6 @@ public class CajaAhorro extends CuentaBancaria{
     public boolean depositar(float monto) throws SQLException {
         if(monto > 0) {
             super.ingresarMonto(monto);
-            //agregarTransaccion(new Transaccion(monto, null, "Deposito"));
             insertarTransaccion(new Transaccion(getCbu(), monto, LocalDate.now(), "Deposito"));
             actualizarDatosCuentaBancaria(getSaldo(), getCantidadExtraccionesPorMes(), getCbu());
             return true;
@@ -47,14 +46,15 @@ public class CajaAhorro extends CuentaBancaria{
     public boolean retirar(float monto) throws SQLException{
         if (monto > getSaldo()){
             Validador.alertaSaldoInsuficiente();
+            return false;
         }
         if (!puedeRetirar()){
             Validador.alertaSuperoCantidadExtraccionesPorMes();
+            return false;
         }
         if (monto > 0 && puedeRetirar()){
             if(puedeRetirar(monto)) {
                 super.sacarMonto(monto);
-                //agregarTransaccion(new Transaccion(monto, null, "Extracción"));
                 insertarTransaccion(new Transaccion(getCbu(), monto, LocalDate.now(), "Extracción"));
                 actualizarDatosCuentaBancaria(getSaldo(), getCantidadExtraccionesPorMes(), getCbu());
                 return true;

@@ -43,7 +43,8 @@ public class Query {
     public final String obtenerNombreUsuario(){ return "SELECT nombreUsuario FROM usuario WHERE nombreUsuario = ?"; }
     public final String obtenerContrasena(){ return "SELECT contrasena FROM usuario WHERE nombreUsuario = ?"; }
     public final String obtenerUsuario(){ return "SELECT nombreUsuario, contrasena, cuitTitular, fechaCreacion FROM usuario WHERE nombreUsuario = ?"; }
-
+    public final String obtenerDniPersona(){ return "SELECT dni FROM persona WHERE cuit = ?"; }
+    public final String obtenerDni(){ return "SELECT dni FROM persona WHERE dni = ?"; }
     //Eliminar datos.
     public final String eliminarPersona(){ return "DELETE FROM persona WHERE cuit = ?"; }
     public final String eliminarOrganizacion(){ return "DELETE FROM organizacion WHERE cuit = ?"; }

@@ -8,6 +8,7 @@ module com.cuentabancaria {
     requires org.apache.commons.codec;
 
     opens test;
+    opens com.cuentabancaria.controlador.titular to javafx.fxml;
     opens com.cuentabancaria.modelo.cuentas to javafx.base;
     opens com.cuentabancaria.controlador.test to javafx.fxml;
     opens com.cuentabancaria.controlador.cuentaBancaria to javafx.fxml;

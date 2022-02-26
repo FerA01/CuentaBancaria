@@ -1,5 +1,6 @@
 package com.cuentabancaria.controlador;
 import com.cuentabancaria.basedatos.controlador.ControladorBaseDato;
+import com.cuentabancaria.controlador.titular.ControladorTitular;
 import com.cuentabancaria.modelo.cuentas.CajaAhorro;
 import com.cuentabancaria.modelo.cuentas.CuentaBancaria;
 import com.cuentabancaria.modelo.cuentas.CuentaCorriente;
@@ -13,6 +14,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -31,6 +33,7 @@ public class ControladorCrearTitular implements Initializable {
     @FXML private Button botonCrearTitular = new Button();
     @FXML private ComboBox<Titular> comboBoxTipoTitular = new ComboBox<>();
     @FXML private ComboBox<CuentaBancaria> comboBoxTipoCuenta = new ComboBox<>();
+    private ControladorTitular controladorTitular;
     /**
      * Inicializa los comboBox
      * */
@@ -60,6 +63,8 @@ public class ControladorCrearTitular implements Initializable {
     public void setVentana(Stage ventana) { this.ventana = ventana; }
     public static ControladorBaseDato getBaseDato() { return baseDato; }
     private static void setBaseDato(ControladorBaseDato baseDato) { ControladorCrearTitular.baseDato = baseDato; }
+    public ControladorTitular getControladorTitular() { return controladorTitular; }
+    public void setControladorTitular(ControladorTitular controladorTitular) { this.controladorTitular = controladorTitular; }
 
     private boolean comprobarDatosSeleccionados(){ return Validador.tipoUsuarioCuentaBancariaSeleccionada(getComboBoxTipoTitular(), getComboBoxTipoCuenta()); }
     private String generarCbu(){
@@ -90,6 +95,112 @@ public class ControladorCrearTitular implements Initializable {
             alert.showAndWait();
         }
     }
+    private boolean insertarDatos(ControladorBaseDato baseDato ,CuentaBancaria cuentaBancaria, Titular titular, String cbu) throws SQLException {
+        cuentaBancaria.setTitular(titular);
+        cuentaBancaria.setCbu(cbu);
+        cuentaBancaria.setFechaApertura(LocalDate.now());
+        return baseDato.insertarCuentaBancaria(cuentaBancaria);
+    }
+    private boolean comprobarDatosOrganizacionVacios(){
+        TextField nombre = (TextField) getPanelTitular().getChildren().get(4);
+        TextField tipoOrganizacion = (TextField) getPanelTitular().getChildren().get(5);
+        TextField numeroCuit = (TextField) getPanelTitular().getChildren().get(6);
+        DatePicker fechaCreacion = (DatePicker) getPanelTitular().getChildren().get(7);
+        return nombre.getText().isEmpty() || tipoOrganizacion.getText().isEmpty() || numeroCuit.getText().isEmpty() || fechaCreacion.getValue() == null;
+    }
+    private boolean datosOrganizacionNulos(){
+        TextField nombre = (TextField) getPanelTitular().getChildren().get(4);
+        TextField tipoOrganizacion = (TextField) getPanelTitular().getChildren().get(5);
+        TextField numeroCuit = (TextField) getPanelTitular().getChildren().get(6);
+        DatePicker fechaCreacion = (DatePicker) getPanelTitular().getChildren().get(7);
+        return nombre.getText() == null && tipoOrganizacion.getText() == null && numeroCuit.getText() == null && fechaCreacion.getValue() == null;
+    }
+    private boolean datosPersonaVacios(){
+        TextField nombre = getControladorTitular().getTextFieldNombre();
+        TextField apellido = getControladorTitular().getTextFieldApellido();
+        TextField dni = getControladorTitular().getTextFieldDni();
+        TextField cuit = getControladorTitular().getTextFieldCuit();
+        DatePicker fechaNacimiento = getControladorTitular().getFechaNacimiento();
+        return nombre.getText().isEmpty() || apellido.getText().isEmpty() || dni.getText().isEmpty() || cuit.getText().isEmpty() || fechaNacimiento.getValue() == null;
+    }
+    private boolean datosPersonaNulos(){
+        TextField nombre = getControladorTitular().getTextFieldNombre();
+        TextField apellido = getControladorTitular().getTextFieldApellido();
+        TextField dni = getControladorTitular().getTextFieldDni();
+        TextField cuit = getControladorTitular().getTextFieldCuit();
+        DatePicker fechaNacimiento = getControladorTitular().getFechaNacimiento();
+        return nombre.getText() == null || apellido.getText() == null || dni.getText() == null || cuit.getText() == null || fechaNacimiento.getValue() == null;
+    }
+    /**
+     * Obtengo los datos ingresados de la organización y lo devuelvo.
+     * @return Organización
+     */
+    private Organizacion crearTitularOrganizacion(){
+        TextField nombre = getControladorTitular().getTextFieldNombreOrganizacion();
+        TextField tipoOrganizacion = getControladorTitular().getTextFieldTipoOrganizacion();
+        TextField numeroCuit = getControladorTitular().getTextFieldNumeroCuitOrganizacion();
+        DatePicker fechaCreacion = getControladorTitular().getFechaCreacion();
+        Organizacion nuevoTitular = new Organizacion(numeroCuit.getText()
+                                                    , InputValidator.capitalizarDatos(nombre.getText())
+                                                    , InputValidator.capitalizarTodoLosdatos(tipoOrganizacion.getText())
+                                                    , fechaCreacion.getValue());
+        System.out.println(nuevoTitular.tipoTitular());
+        return nuevoTitular;
+    }
+    /**
+     * Obtengo los datos ingresados de la persona y lo devuelvo.
+     * @return Persona
+     */
+    private Persona crearTitularPersona(){
+        Persona nuevoTitular = null;
+        TextField nombre = (TextField) getPanelTitular().getChildren().get(6);
+        TextField segundoNombre = (TextField) getPanelTitular().getChildren().get(7);
+        TextField apellido = (TextField) getPanelTitular().getChildren().get(8);
+        TextField dni = (TextField) getPanelTitular().getChildren().get(9);
+        TextField cuit = (TextField) getPanelTitular().getChildren().get(10);
+        DatePicker fechaNacimiento = (DatePicker) getPanelTitular().getChildren().get(11);
+        String segNombre= segundoNombre.getText();
+        if (segNombre.isEmpty()){
+            nuevoTitular = new Persona(InputValidator.capitalizarDatos(nombre.getText())
+                    , InputValidator.capitalizarDatos(apellido.getText())
+                    , Integer.parseInt(dni.getText())
+                    , cuit.getText()
+                    , fechaNacimiento.getValue());
+        }else{
+            nuevoTitular = new Persona(InputValidator.capitalizarDatos(nombre.getText())
+                    , InputValidator.capitalizarDatos(segundoNombre.getText())
+                    , InputValidator.capitalizarDatos(apellido.getText())
+                    , Integer.parseInt(dni.getText())
+                    , cuit.getText()
+                    , fechaNacimiento.getValue());
+        }
+
+        System.out.println(nuevoTitular.tipoTitular());
+        return nuevoTitular;
+    }
+    //ACCIONES
+    /**
+     * Metodo que selecciona los elementos de los comboBox tipo de titular y tipo de cuenta.
+     */
+    @FXML
+    public void accionObtenerCuentaBancariaTitular(){
+        if (comprobarDatosSeleccionados()) {
+            getBotonCrearTitular().setDisable(false);
+            Titular titular = getComboBoxTipoTitular().getValue();
+            CuentaBancaria cuentaBancaria = getComboBoxTipoCuenta().getValue();
+            try {
+                FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource(obtenerFxmlTitular(titular)));
+                Parent root = fxmlLoader.load();
+                AnchorPane panel = (AnchorPane) root;
+                setControladorTitular(fxmlLoader.getController());
+                getPanelTitular().getChildren().clear();
+                getPanelTitular().getChildren().setAll(panel.getChildren());
+            } catch (IOException exception) {
+                System.out.println(exception.getMessage());
+            }
+            setTitular(titular);
+        }
+    }
     /**
      * Obtengo el archivo fxml según el tipo de Titular
      * @param titular
@@ -108,128 +219,56 @@ public class ControladorCrearTitular implements Initializable {
         System.out.println(getTitular().tipoTitular());
     }
     @FXML
-    private void combo(){
-        setCuentaBancaria(getComboBoxTipoCuenta().getValue());
-        System.out.println(getCuentaBancaria().toString());
-    }
-    @FXML
     private void accionBotonCrearTitular() throws SQLException {
         //Esta parte lo agrega a la base de datos
         setCuentaBancaria(getComboBoxTipoCuenta().getValue());
         setBaseDato(new ControladorBaseDato());
         if (getComboBoxTipoTitular().getValue() instanceof Persona){
-            if (!comprobarDatosPersonaVacios()){
-                setTitular(crearTitularPersona());
-                getBaseDato().insertarTitular(getTitular().getNumeroCuit(), getTitular().toString());
-                getBaseDato().insertarPersona((Persona) getTitular());
-                if(insertarDatos(getBaseDato(), getCuentaBancaria(), getTitular(), generarCbu())) {
-                    Validador.alertaTitularCreadoExitosamente();
-                    getVentana().close();
-                }
-            }else{
+            String cuitPersona = getControladorTitular().getTextFieldCuit().getText();
+            String dni = getControladorTitular().getTextFieldDni().getText();
+            if (datosPersonaVacios() || datosPersonaNulos()){
                 Validador.alertaDatosTitularIncompletos();
+            }else{
+                if (Validador.validarNumeroCuit(cuitPersona) && InputValidator.esNumero(cuitPersona)){
+                    if (getBaseDato().existeNumeroCuit(cuitPersona)){
+                        Validador.alertaNumeroCuitExistente();
+                    }else{
+                        if (Validador.validarDni(dni) && InputValidator.esNumero(dni)){
+                            if (getBaseDato().existeNumeroDni(dni)){
+                                Validador.alertaNumeroDniExistente();
+                            }else{
+                                setTitular(crearTitularPersona());
+                                getBaseDato().insertarTitular(getTitular().getNumeroCuit(), getTitular().toString());
+                                getBaseDato().insertarPersona((Persona) getTitular());
+                                if(insertarDatos(getBaseDato(), getCuentaBancaria(), getTitular(), generarCbu())) {
+                                    Validador.alertaTitularCreadoExitosamente();
+                                    getVentana().close();
+                                }
+                            }
+                        }else{ Validador.alertaDniIncorrecto(); }
+                    }
+                }else{
+                    Validador.alertaNumeroCuitInvalido();
+                }
             }
         }else {
-            if (!comprobarDatosOrganizacionVacios()){
-                setTitular(crearTitularOrganizacion());
-                getCuentaBancaria().setTitular(getTitular());
-                getBaseDato().insertarTitular(getTitular().getNumeroCuit(), getTitular().toString());
-                getBaseDato().insertarOrganizacion((Organizacion) getTitular());
-                if(insertarDatos(getBaseDato(), getCuentaBancaria(), getTitular(), generarCbu())) {
-                    Validador.alertaTitularCreadoExitosamente();
-                    getVentana().close();
-                }
-            }else{
+            String cuitOrganizacion = getControladorTitular().getTextFieldNumeroCuitOrganizacion().getText();
+            if (comprobarDatosOrganizacionVacios() || datosOrganizacionNulos()){
                 Validador.alertaDatosTitularIncompletos();
+            }else{
+                if(Validador.validarNumeroCuit(cuitOrganizacion) && InputValidator.esNumero(cuitOrganizacion)){
+                    setTitular(crearTitularOrganizacion());
+                    getCuentaBancaria().setTitular(getTitular());
+                    getBaseDato().insertarTitular(getTitular().getNumeroCuit(), getTitular().toString());
+                    getBaseDato().insertarOrganizacion((Organizacion) getTitular());
+                    if(insertarDatos(getBaseDato(), getCuentaBancaria(), getTitular(), generarCbu())) {
+                        Validador.alertaTitularCreadoExitosamente();
+                        getVentana().close();
+                    }
+                }else{
+                    Validador.alertaNumeroCuitInvalido();
+                }
             }
         }
-    }
-    private boolean insertarDatos(ControladorBaseDato baseDato ,CuentaBancaria cuentaBancaria, Titular titular, String cbu) throws SQLException {
-        cuentaBancaria.setTitular(titular);
-        cuentaBancaria.setCbu(cbu);
-        cuentaBancaria.setFechaApertura(LocalDate.now());
-        return baseDato.insertarCuentaBancaria(cuentaBancaria);
-    }
-    /**
-     * Obtengo los datos ingresados de la persona y lo devuelvo.
-     * @return Persona
-     */
-    private Persona crearTitularPersona(){
-        Persona nuevoTitular = null;
-        TextField nombre = (TextField) getPanelTitular().getChildren().get(6);
-        TextField segundoNombre = (TextField) getPanelTitular().getChildren().get(7);
-        TextField apellido = (TextField) getPanelTitular().getChildren().get(8);
-        TextField dni = (TextField) getPanelTitular().getChildren().get(9);
-        TextField cuit = (TextField) getPanelTitular().getChildren().get(10);
-        DatePicker fechaNacimiento = (DatePicker) getPanelTitular().getChildren().get(11);
-        nuevoTitular = new Persona(nombre.getText()
-                     , segundoNombre.getText()
-                     , apellido.getText()
-                     , Integer.parseInt(dni.getText())
-                     , cuit.getText()
-                     , fechaNacimiento.getValue());
-        System.out.println(nuevoTitular.tipoTitular());
-        return nuevoTitular;
-    }
-    private boolean comprobarDatosOrganizacionVacios(){
-        TextField nombre = (TextField) getPanelTitular().getChildren().get(4);
-        TextField tipoOrganizacion = (TextField) getPanelTitular().getChildren().get(5);
-        TextField numeroCuit = (TextField) getPanelTitular().getChildren().get(6);
-        DatePicker fechaCreacion = (DatePicker) getPanelTitular().getChildren().get(7);
-        if(nombre.getText().isEmpty() || tipoOrganizacion.getText().isEmpty() || numeroCuit.getText().isEmpty() || fechaCreacion.getValue() == null){
-            return true;
-        }
-        return false;
-    }
-    private boolean comprobarDatosPersonaVacios(){
-        TextField nombre = (TextField) getPanelTitular().getChildren().get(6);
-        TextField apellido = (TextField) getPanelTitular().getChildren().get(8);
-        TextField dni = (TextField) getPanelTitular().getChildren().get(9);
-        TextField cuit = (TextField) getPanelTitular().getChildren().get(10);
-        DatePicker fechaNacimiento = (DatePicker) getPanelTitular().getChildren().get(11);
-        if(nombre.getText().isEmpty() || apellido.getText().isEmpty() || dni.getText().isEmpty() || cuit.getText().isEmpty() || fechaNacimiento.getValue() != null){
-            return true;
-        }
-        return false;
-    }
-    /**
-     * Obtengo los datos ingresados de la organización y lo devuelvo.
-     * @return Organización
-     */
-    private Organizacion crearTitularOrganizacion(){
-        TextField nombre = (TextField) getPanelTitular().getChildren().get(4);
-        TextField tipoOrganizacion = (TextField) getPanelTitular().getChildren().get(5);
-        TextField numeroCuit = (TextField) getPanelTitular().getChildren().get(6);
-        DatePicker fechaCreacion = (DatePicker) getPanelTitular().getChildren().get(7);
-        Organizacion nuevoTitular = new Organizacion(numeroCuit.getText()
-                                                    , nombre.getText()
-                                                    , tipoOrganizacion.getText()
-                                                    , fechaCreacion.getValue());
-        System.out.println(nuevoTitular.tipoTitular());
-        return nuevoTitular;
-    }
-    /**
-     * Metodo que selecciona los elementos de los comboBox tipo de titular y tipo de cuenta.
-     */
-    @FXML
-    public void accionObtenerCuentaBancariaTitular(){
-        if (comprobarDatosSeleccionados()) {
-            getBotonCrearTitular().setDisable(false);
-            Titular titular = getComboBoxTipoTitular().getValue();
-            CuentaBancaria cuentaBancaria = getComboBoxTipoCuenta().getValue();
-            try {
-                AnchorPane panel = FXMLLoader.load(getClass().getResource(obtenerFxmlTitular(titular)));
-                getPanelTitular().getChildren().clear();
-                getPanelTitular().getChildren().setAll(panel.getChildren());
-            } catch (IOException exception) {
-                System.out.println(exception.getMessage());
-            }
-            setTitular(titular);
-            System.out.println(cuentaBancaria);
-            System.out.println(titular);
-        }
-    }
-    public void verificarDatosIngresados(){
-
     }
 }

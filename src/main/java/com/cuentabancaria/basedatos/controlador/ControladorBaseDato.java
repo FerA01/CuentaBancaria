@@ -295,6 +295,40 @@ public class ControladorBaseDato {
         finally { getConexionBD().cerrarConexion(); }
         return false;
     }
+    public boolean existeNumeroDni(String cuit, String dni) throws SQLException{
+        setConexionBD(new ConexionBD());
+        try{
+            int dni1;
+            int dni2;
+            setConexion(getConexionBD().getConexion());
+            setSentencia(getConexion().prepareStatement(getQuery().obtenerDniPersona()));
+            getSentencia().setString(1, cuit);
+            setResultado(getSentencia().executeQuery());
+            if (getResultado().next()){
+                dni1 = (getResultado().getInt(1));
+                dni2 = (int) Integer.parseInt(dni);
+                return (dni1 == dni2) ? true : false;
+            }else{ return false; }
+        }catch (SQLException excepcion){ System.out.println(excepcion.getMessage()); }
+        finally { cerrarConexiones(); }
+        return false;
+    }
+    public boolean existeNumeroDni(String dni) throws SQLException{
+        setConexionBD(new ConexionBD());
+        try{
+            int dni1 = Integer.parseInt(dni);
+            setConexion(getConexionBD().getConexion());
+            setSentencia(getConexion().prepareStatement(getQuery().obtenerDni()));
+            getSentencia().setInt(1, dni1);
+            setResultado(getSentencia().executeQuery());
+            if (getResultado().next()){
+                int dni2 = (getResultado().getInt(1));
+                return dni1 == dni2;
+            }else{ return false; }
+        }catch (SQLException excepcion){ System.out.println(excepcion.getMessage()); }
+        finally { cerrarConexiones(); }
+        return false;
+    }
     public boolean existeNombreUsuario(String nombreUsuario) throws SQLException{
         setConexionBD(new ConexionBD());
         try{

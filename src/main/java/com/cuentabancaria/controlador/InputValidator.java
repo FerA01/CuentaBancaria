@@ -1,4 +1,5 @@
 package com.cuentabancaria.controlador;
+import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 public class InputValidator {
@@ -29,4 +30,6 @@ public class InputValidator {
         Matcher matcher = patron.matcher(email);
         return matcher.find();
     }
+    public static String capitalizarDatos(String dato){ return dato.substring(0, 1).toUpperCase() + dato.substring(1).toLowerCase(); }
+    public static String capitalizarTodoLosdatos(String dato){ return dato.toUpperCase(); }
 }

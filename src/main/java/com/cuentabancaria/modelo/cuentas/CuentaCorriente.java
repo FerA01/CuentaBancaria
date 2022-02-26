@@ -46,8 +46,9 @@ public class CuentaCorriente extends CuentaBancaria{
     }
     @Override
     public boolean retirar(float monto) throws SQLException{
-        if (monto > getSaldo() || !puedeRetirar()){
+        if (monto > getSaldo()){
             Validador.alertaSaldoInsuficiente();
+            return false;
         }
         if (monto > 0 && puedeRetirar(monto) && puedeRetirar()){
             super.sacarMonto(monto);
@@ -55,8 +56,10 @@ public class CuentaCorriente extends CuentaBancaria{
             setCantidadExtraccionesPorMes(-1);
             actualizarDatosCuentaBancaria(getSaldo(), getCantidadExtraccionesPorMes(), getCbu());
             return true;
+        }else{
+            Validador.alertaSaldoInsuficiente();
+            return false;
         }
-        return false;
     }
 
     @Override

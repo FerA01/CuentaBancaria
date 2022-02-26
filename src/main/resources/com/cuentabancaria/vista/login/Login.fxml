@@ -14,7 +14,7 @@
       <AnchorPane layoutX="132.0" layoutY="108.0" prefHeight="260.0" prefWidth="337.0">
          <children>
             <TextField fx:id="nombreUsuario" layoutX="94.0" layoutY="56.0" prefHeight="35.0" prefWidth="150.0" promptText="Nombre Usuario" />
-            <Button fx:id="iniciarSesion" layoutX="94.0" layoutY="169.0" mnemonicParsing="false" onAction="#accionIniciarSesion" prefHeight="35.0" prefWidth="150.0" text="Iniciar Sesión" />
+            <Button fx:id="iniciarSesion" layoutX="61.0" layoutY="171.0" mnemonicParsing="false" onAction="#accionIniciarSesion" prefHeight="35.0" prefWidth="215.0" text="Iniciar Sesión" />
             <Text layoutX="71.0" layoutY="241.0" strokeType="OUTSIDE" strokeWidth="0.0" text="¿No tienes cuenta?" wrappingWidth="120.0">
                <font>
                   <Font size="14.0" />

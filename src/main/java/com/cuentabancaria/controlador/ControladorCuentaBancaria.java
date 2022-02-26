@@ -7,7 +7,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
-
 import java.net.URL;
 import java.sql.SQLException;
 import java.util.ResourceBundle;
@@ -59,11 +58,14 @@ public class ControladorCuentaBancaria implements Initializable {
         if (valor <= limiteMinimo){
             Validador.alertaIngresoMontoLimite(valor);
         }else{
-            cuentaBancaria.tipoTransaccion(cuentaBancaria.getTipoTransaccion(), valor);
-            getControladorPrincipal().obtenerDatosTitularCuenta();
-            cambiarTextoSaldoDisponible(cuentaBancaria.getSaldo());
-            Validador.alertaOperacionRealizadaConExito();
-            getVentana().close();
+            if(cuentaBancaria.tipoTransaccion(cuentaBancaria.getTipoTransaccion(), valor)) {
+                getControladorPrincipal().obtenerDatosTitularCuenta();
+                cambiarTextoSaldoDisponible(cuentaBancaria.getSaldo());
+                Validador.alertaOperacionRealizadaConExito();
+                getVentana().close();
+            }else{
+                Validador.alertaOperacionFallida();
+            }
         }
     }
     public void cambiarTextoSaldoDisponible(float monto){ getSaldoDisponible().setText(String.valueOf(monto)); }
