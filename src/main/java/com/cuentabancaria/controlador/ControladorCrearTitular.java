@@ -257,13 +257,17 @@ public class ControladorCrearTitular implements Initializable {
                 Validador.alertaDatosTitularIncompletos();
             }else{
                 if(Validador.validarNumeroCuit(cuitOrganizacion) && InputValidator.esNumero(cuitOrganizacion)){
-                    setTitular(crearTitularOrganizacion());
-                    getCuentaBancaria().setTitular(getTitular());
-                    getBaseDato().insertarTitular(getTitular().getNumeroCuit(), getTitular().toString());
-                    getBaseDato().insertarOrganizacion((Organizacion) getTitular());
-                    if(insertarDatos(getBaseDato(), getCuentaBancaria(), getTitular(), generarCbu())) {
-                        Validador.alertaTitularCreadoExitosamente();
-                        getVentana().close();
+                    if(getBaseDato().existeNumeroCuit(cuitOrganizacion)){
+                        Validador.alertaNumeroCuitExistente();
+                    }else{
+                        setTitular(crearTitularOrganizacion());
+                        getCuentaBancaria().setTitular(getTitular());
+                        getBaseDato().insertarTitular(getTitular().getNumeroCuit(), getTitular().toString());
+                        getBaseDato().insertarOrganizacion((Organizacion) getTitular());
+                        if(insertarDatos(getBaseDato(), getCuentaBancaria(), getTitular(), generarCbu())) {
+                            Validador.alertaTitularCreadoExitosamente();
+                            getVentana().close();
+                        }
                     }
                 }else{
                     Validador.alertaNumeroCuitInvalido();

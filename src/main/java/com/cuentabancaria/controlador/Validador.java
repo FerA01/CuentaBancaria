@@ -3,7 +3,6 @@ import com.cuentabancaria.modelo.cuentas.CuentaBancaria;
 import com.cuentabancaria.modelo.titular.Titular;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ComboBox;
-
 public class Validador {
     public static boolean cuentaBancariaSeleccionada(CuentaBancaria cuentaBancaria){ return cuentaBancaria != null; }
     public static boolean usuarioSeleccionado(Titular titular){ return titular != null; }
@@ -11,7 +10,7 @@ public class Validador {
     public static boolean tipoUsuarioCuentaBancariaSeleccionada(ComboBox<Titular> titular, ComboBox<CuentaBancaria> cuentaBancaria){
         return titular.getValue() != null && cuentaBancaria.getValue() != null;
     }
-    public void alertaNombreUsuarioNoSeleccionado(){
+    public static void alertaNombreUsuarioNoSeleccionado(){
         Alert alert = new Alert(Alert.AlertType.WARNING);
         alert.setHeaderText(null);
         alert.setTitle(null);

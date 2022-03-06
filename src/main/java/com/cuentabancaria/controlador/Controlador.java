@@ -2,12 +2,9 @@ package com.cuentabancaria.controlador;
 import com.cuentabancaria.basedatos.controlador.ControladorBaseDato;
 import com.cuentabancaria.controlador.buscar.ControladorBuscarPersona;
 import com.cuentabancaria.controlador.cuentaBancaria.ControladorTransacciones;
-import com.cuentabancaria.modelo.cuentas.CajaAhorro;
 import com.cuentabancaria.modelo.cuentas.CuentaBancaria;
-import com.cuentabancaria.modelo.cuentas.Transaccion;
 import com.cuentabancaria.modelo.titular.Persona;
 import com.cuentabancaria.modelo.titular.Titular;
-import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -22,7 +19,6 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
-import java.time.LocalDate;
 import java.util.ResourceBundle;
 public class Controlador implements Initializable {
     private static ControladorBaseDato baseDato;
@@ -122,8 +118,7 @@ public class Controlador implements Initializable {
     }
     @FXML
     public void accionBotonDepositar(){
-        Validador validador = new Validador();
-        if (validador.usuarioSeleccionado(getTitular())) {
+        if (Validador.usuarioSeleccionado(getTitular())) {
             getCuentaBancaria().setTipoTransaccion("deposito");
             try {
                 FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/cuentabancaria/vista/DepositarRetirar.fxml"));
@@ -150,7 +145,7 @@ public class Controlador implements Initializable {
                 alert.showAndWait();
             }
         }else{
-            validador.alertaNombreUsuarioNoSeleccionado();
+            Validador.alertaNombreUsuarioNoSeleccionado();
         }
     }
     @FXML
@@ -189,7 +184,7 @@ public class Controlador implements Initializable {
     public void accionHistorialTransacciones() throws IOException, SQLException {
         Validador validador = new Validador();
         if (validador.usuarioSeleccionado(getTitular())) {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/test/HistorialTransacciones.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/cuentabancaria/vista/cuentaBancaria/HistorialTransacciones.fxml"));
             Parent parent = loader.load();
             ControladorTransacciones controladorTransacciones = (ControladorTransacciones) loader.getController();
             controladorTransacciones.setControladorPrincipal(this);

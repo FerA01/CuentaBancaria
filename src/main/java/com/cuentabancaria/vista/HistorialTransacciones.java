@@ -7,7 +7,7 @@ import javafx.stage.Stage;
 public class HistorialTransacciones extends Application {
     @Override
     public void start(Stage stage) throws Exception {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/test/HistorialTransacciones.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/cuentabancaria/vista/cuentaBancaria/HistorialTransacciones.fxml"));
         Parent root = loader.load();
         Scene scene = new Scene(root);
         stage.setScene(scene);
