@@ -1,15 +1,22 @@
 package com.cuentabancaria.controlador.login;
 import com.cuentabancaria.basedatos.controlador.ControladorBaseDato;
+import com.cuentabancaria.controlador.InputValidator;
 import com.cuentabancaria.encoder.Encoder;
 import com.cuentabancaria.modelo.usuario.Usuario;
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
+
+import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.sql.SQLException;
-public class ControladorRegistrarse {
+import java.util.ResourceBundle;
+
+public class ControladorRegistrarse implements Initializable {
+    @FXML private TextField numeroCuit;
     @FXML private Button botonRegistrarse;
     @FXML private TextField nombreUsuario;
     @FXML private PasswordField contrasena;
@@ -18,12 +25,18 @@ public class ControladorRegistrarse {
     private ControladorLogin controladorLogin;
     private Stage ventana;
 
+    @Override
+    public void initialize(URL url, ResourceBundle resourceBundle) {
+    }
+
     public Button getBotonRegistrarse() { return botonRegistrarse; }
     public void setBotonRegistrarse(Button botonRegistrarse) { this.botonRegistrarse = botonRegistrarse; }
     public TextField getNombreUsuario() { return nombreUsuario; }
     public void setNombreUsuario(TextField nombreUsuario) { this.nombreUsuario = nombreUsuario; }
     public PasswordField getContrasena() { return contrasena; }
     public void setContrasena(PasswordField contrasena) { this.contrasena = contrasena; }
+    public TextField getNumeroCuit() { return numeroCuit; }
+    public void setNumeroCuit(TextField numeroCuit) { this.numeroCuit = numeroCuit; }
     public ControladorBaseDato getBaseDato() { return baseDato; }
     public void setBaseDato(ControladorBaseDato baseDato) { this.baseDato = baseDato; }
     public ValidadorLoginRegistro getValidadorLoginRegistro() { return validadorLoginRegistro; }
@@ -39,19 +52,24 @@ public class ControladorRegistrarse {
         setBaseDato(new ControladorBaseDato());
         Encoder encoder = new Encoder();
         Usuario usuario = null;
-        if (getValidadorLoginRegistro().nombreUsuarioVacio(getNombreUsuario()) || getValidadorLoginRegistro().contrasenaVacio(getContrasena())){
-            getValidadorLoginRegistro().alertaNombreUsuarioContrasenaVacio();
+        if (getValidadorLoginRegistro().nombreUsuarioVacio(getNombreUsuario()) || getValidadorLoginRegistro().contrasenaVacio(getContrasena()) || getValidadorLoginRegistro().nombreUsuarioVacio(getNumeroCuit())){
+            ValidadorLoginRegistro.alertaNombreUsuarioContrasenaVacio();
         }else {
             usuario = new Usuario(getNombreUsuario().getText(), getContrasena().getText());
             if (getValidadorLoginRegistro().existeNombreUsuario(usuario.getNombreUsuario())){
-                getValidadorLoginRegistro().alertaUsuarioExistente();
+                ValidadorLoginRegistro.alertaUsuarioExistente();
             }else {
-                byte[] encriptar = encoder.encode(usuario.getContrasena());
-                String contrasenaEncriptada = new String(encriptar, StandardCharsets.UTF_8);
-                usuario.setContrasena(contrasenaEncriptada);
-                getBaseDato().insertarUsuario(usuario);
-                getValidadorLoginRegistro().alertaUsuarioCreadoExitosamente();
-                getVentana().close();
+                if (InputValidator.esNumero(getNumeroCuit().getText())){
+                    usuario.setCuitTitular(getNumeroCuit().getText());
+                    if (!getValidadorLoginRegistro().existeNumeroCuit(usuario.getCuitTitular())) {
+                        byte[] encriptar = encoder.encode(usuario.getContrasena());
+                        String contrasenaEncriptada = new String(encriptar, StandardCharsets.UTF_8);
+                        usuario.setContrasena(contrasenaEncriptada);
+                        getBaseDato().insertarUsuario(usuario);
+                        ValidadorLoginRegistro.alertaUsuarioCreadoExitosamente();
+                        getVentana().close();
+                    } else { ValidadorLoginRegistro.alertaNumeroCuitExistenteInvalido(); }
+                }else{ ValidadorLoginRegistro.alertaNumeroCuitExistenteInvalido(); }
             }
         }
     }

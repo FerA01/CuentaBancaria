@@ -6,7 +6,7 @@ module com.cuentabancaria {
     requires  java.sql;
     requires  mysql.connector.java;
     requires org.apache.commons.codec;
-    requires org.controlsfx.controls;
+   // requires org.controlsfx.controls;
     opens com.cuentabancaria.controlador.test to javafx.fxml;
     opens com.cuentabancaria.controlador.cuentaBancaria to javafx.fxml;
     opens com.cuentabancaria.controlador to javafx.fxml;

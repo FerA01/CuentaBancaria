@@ -12,6 +12,13 @@ public class CuentaCorriente extends CuentaBancaria{
         setLimiteMinimoCuenta(-150f);
         setCantidadExtraccionesPorMes(-1);
     }
+    public CuentaCorriente(Titular titular){
+        setSaldo(0);
+        setLimiteMinimoCuenta(-150f);
+        setCantidadExtraccionesPorMes(-1);
+        setTitular(titular);
+        setNumeroCuit(titular.getNumeroCuit());
+    }
     public CuentaCorriente(Titular titular, LocalDate fechaApertura){
         setSaldo(0);
         setLimiteMinimoCuenta(-150f);

@@ -50,10 +50,7 @@ public class ControladorTransacciones implements Initializable {
     public void setBaseDato(ControladorBaseDato baseDato) {this.baseDato = baseDato;}
     public Controlador getControladorPrincipal() { return controladorPrincipal; }
     public void setControladorPrincipal(Controlador controladorPrincipal) { this.controladorPrincipal = controladorPrincipal; }
-
-    public void setCuentaBancaria(CuentaBancaria cuentaBancaria) {
-        this.cuentaBancaria = cuentaBancaria;
-    }
+    public void setCuentaBancaria(CuentaBancaria cuentaBancaria) { this.cuentaBancaria = cuentaBancaria; }
 
     public void mostrarDatos() throws SQLException {
         setCuentaBancaria(getControladorPrincipal().getCuentaBancaria());

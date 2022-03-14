@@ -6,7 +6,6 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import java.nio.charset.StandardCharsets;
 import java.sql.SQLException;
-
 public class ValidadorLoginRegistro {
     private ControladorBaseDato baseDato;
 
@@ -19,9 +18,11 @@ public class ValidadorLoginRegistro {
         setBaseDato(new ControladorBaseDato());
         return getBaseDato().existeNombreUsuario(nombreUsuario);
     }
+    public boolean existeNumeroCuit(String numeroCuit) throws SQLException{ return getBaseDato().existeNumeroCuit(numeroCuit); }
 
     public boolean nombreUsuarioVacio(TextField nombreUsuario){ return nombreUsuario.getText().isEmpty(); }
     public boolean contrasenaVacio(PasswordField contrasena){ return contrasena.getText().isEmpty(); }
+    public boolean numeroCuitVacio(TextField numeroCuit){ return numeroCuit.getText().isEmpty(); }
 
     public boolean validarContrasena(String contrasena, String nombreUsuario) throws SQLException {
         Encoder encoder = new Encoder();
@@ -33,46 +34,53 @@ public class ValidadorLoginRegistro {
     private boolean contrasenasIguales(String contrasena1, String contrasena2){ return contrasena1.equals(contrasena2); }
 
     //Alertas.
-    public void alertaNombreUsuarioContrasenaVacio(){
+    public static void alertaNombreUsuarioContrasenaVacio(){
         Alert alert = new Alert(Alert.AlertType.WARNING);
         alert.setHeaderText(null);
         alert.setTitle(null);
         alert.setContentText("¡Por favor, rellene los campos!");
         alert.showAndWait();
     }
-    public void alertaUsuarioInexistente(){
+    public static void alertaUsuarioInexistente(){
         Alert alert = new Alert(Alert.AlertType.WARNING);
         alert.setHeaderText(null);
         alert.setTitle(null);
         alert.setContentText("No existe el nombre de usuario");
         alert.showAndWait();
     }
-    public void alertaUsuarioExistente(){
+    public static void alertaUsuarioExistente(){
         Alert alert = new Alert(Alert.AlertType.WARNING);
         alert.setHeaderText(null);
         alert.setTitle(null);
         alert.setContentText("El nombre de usuario ya existe \n!Por Favor¡ elija otro nombre");
         alert.showAndWait();
     }
-    public void alertaUsuarioCreadoExitosamente(){
+    public static void alertaUsuarioCreadoExitosamente(){
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setHeaderText(null);
         alert.setTitle(null);
         alert.setContentText("Usuario creado exitosamente");
         alert.showAndWait();
     }
-    public void alertaUsuarioLogeadoExitosamente(){
+    public static void alertaUsuarioLogeadoExitosamente(){
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setHeaderText(null);
         alert.setTitle(null);
         alert.setContentText("Usuario logeado exitosamente");
         alert.showAndWait();
     }
-    public void alertaContrasenaIncorrecta(){
+    public static void alertaContrasenaIncorrecta(){
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setHeaderText(null);
         alert.setTitle(null);
         alert.setContentText("Contraseña incorrecta");
+        alert.showAndWait();
+    }
+    public static void alertaNumeroCuitExistenteInvalido(){
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setHeaderText(null);
+        alert.setTitle(null);
+        alert.setContentText("¡ERROR! \nÉl número de cuit ya existe o es un número de cuit invalido.");
         alert.showAndWait();
     }
 }

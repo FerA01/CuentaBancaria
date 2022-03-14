@@ -16,9 +16,10 @@
       </ImageView>
       <AnchorPane layoutX="132.0" layoutY="97.0" prefHeight="260.0" prefWidth="337.0">
          <children>
-            <TextField fx:id="nombreUsuario" layoutX="94.0" layoutY="56.0" prefHeight="35.0" prefWidth="150.0" promptText="Nombre Usuario" />
-            <Button fx:id="botonRegistrarse" layoutX="94.0" layoutY="169.0" mnemonicParsing="false" onAction="#accionRegistrarse" prefHeight="35.0" prefWidth="150.0" text="Registrarse" />
-            <PasswordField fx:id="contrasena" layoutX="94.0" layoutY="113.0" prefHeight="35.0" prefWidth="150.0" promptText="Contraseña" />
+            <TextField fx:id="nombreUsuario" layoutX="94.0" layoutY="50.0" prefHeight="35.0" prefWidth="150.0" promptText="Nombre Usuario" />
+            <Button fx:id="botonRegistrarse" layoutX="94.0" layoutY="196.0" mnemonicParsing="false" onAction="#accionRegistrarse" prefHeight="35.0" prefWidth="150.0" text="Registrarse" />
+            <PasswordField fx:id="contrasena" layoutX="94.0" layoutY="140.0" prefHeight="35.0" prefWidth="150.0" promptText="Contraseña" />
+            <TextField fx:id="numeroCuit" layoutX="94.0" layoutY="95.0" prefHeight="35.0" prefWidth="150.0" promptText="Número de cuit" />
          </children>
       </AnchorPane>
    </children>

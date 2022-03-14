@@ -1,6 +1,7 @@
 package com.cuentabancaria.basedatos.controlador;
 import com.cuentabancaria.basedatos.ConexionBD;
 import com.cuentabancaria.basedatos.querys.Query;
+import com.cuentabancaria.controlador.InputValidator;
 import com.cuentabancaria.modelo.CambiarFecha;
 import com.cuentabancaria.modelo.cuentas.CajaAhorro;
 import com.cuentabancaria.modelo.cuentas.CuentaBancaria;
@@ -10,12 +11,11 @@ import com.cuentabancaria.modelo.titular.Organizacion;
 import com.cuentabancaria.modelo.titular.Persona;
 import com.cuentabancaria.modelo.titular.Titular;
 import com.cuentabancaria.modelo.usuario.Usuario;
-
 import java.sql.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
-
 public class ControladorBaseDato {
     private static Query query;
     private ConexionBD conexionBD;
@@ -173,16 +173,13 @@ public class ControladorBaseDato {
         }finally { cerrarConexionesInsertar(); }
     }
     public boolean insertarCuentaBancaria(CuentaBancaria cuentaBancaria) throws SQLException{
-        CambiarFecha cambiarFecha = new CambiarFecha();
         try {  // 1|cbu  2|saldo 3|limiteMinimoCuenta 4|cantidadExtraccionesMes 5|fechaApertura 6|titularCuenta 7|tipoCuenta
             setConexion(getConexionBD().getConexion());
             setSentencia(getConexion().prepareStatement(getQuery().insertarCuentaBancaria()));
-            getSentencia().setString(1, cuentaBancaria.getCbu());
+            getSentencia().setString(1, InputValidator.generarCbu());
             getSentencia().setFloat(2, cuentaBancaria.getSaldo());
             getSentencia().setFloat(3, cuentaBancaria.getLimiteMinimoCuenta());
             getSentencia().setInt(4, cuentaBancaria.getCantidadExtraccionesPorMes());
-            //Date fecha = cambiarFecha.localDateToDate(cuentaBancaria.getFechaApertura());
-            //getSentencia().setDate(5, fecha);
             getSentencia().setString(5, cuentaBancaria.numeroCuitTitular());
             getSentencia().setString(6, cuentaBancaria.tipoCuentaBancaria());
             getSentencia().executeUpdate();
@@ -484,11 +481,8 @@ public class ControladorBaseDato {
                 }
                 else{ System.out.println("¡La cuenta bancaria es nula!"); }
             }
-        }catch (SQLException excepcion){
-            System.out.println(excepcion.getMessage());
-        }finally {
-            cerrarConexiones();
-        }
+        }catch (SQLException excepcion){ System.out.println(excepcion.getMessage());
+        }finally { cerrarConexiones(); }
         return cuentaBancaria;
     }
     public ResultSet obtenerTransaccionesNumeroCbu(String cbu) throws SQLException{
@@ -521,12 +515,8 @@ public class ControladorBaseDato {
         return transacciones;
     }
     private CuentaBancaria tipoCuentaBancaria(String tipoCuenta){
-        if (tipoCuenta.equals("Caja de ahorro")){
-            return new CajaAhorro();
-        }
-        if (tipoCuenta.equals("Cuenta Corriente")){
-            return new CuentaCorriente();
-        }
+        if (tipoCuenta.equals("Caja de ahorro")){ return new CajaAhorro(); }
+        if (tipoCuenta.equals("Cuenta Corriente")){ return new CuentaCorriente(); }
         return null;
     }
     public void actualizarDatosCuentaBancaria(float saldo, int cantidadTransaccionesMes, String cbu) throws SQLException{
@@ -564,9 +554,38 @@ public class ControladorBaseDato {
         return null;
     }
     private String comprobarCuitNulo(String cuit){
-        if (cuit == null){
-            return "";
-        }
+        if (cuit == null){ return ""; }
         return cuit;
+    }
+
+    public Collection<CuentaBancaria> obtenerCuentasBancariasPorCuit(String numeroCuit, ArrayList<CuentaBancaria> cuentasBancarias) throws SQLException{
+        setConexionBD(new ConexionBD());
+        try {
+            setConexion(getConexionBD().getConexion());
+            setSentencia(getConexion().prepareStatement(getQuery().obtenerCuentaBancaria()));
+            getSentencia().setString(1, numeroCuit);
+            setResultado(getSentencia().executeQuery());
+            while (getResultado().next()){
+                String cbu = getResultado().getString(1);
+                float saldo = getResultado().getFloat(2);
+                float limiteMinimoCuenta = getResultado().getFloat(3);
+                int extraccionesMes = getResultado().getInt(4);
+                Date fechaApertura = getResultado().getDate(5);
+                LocalDate fecha = cambiarFecha.dateToLocalDate(fechaApertura);
+                String cuitTitular = getResultado().getString(6);
+                String tipoCuenta = getResultado().getString(7);
+                CuentaBancaria cuentaBancaria = tipoCuentaBancaria(tipoCuenta);
+                if (cuentaBancaria != null){
+                    cuentaBancaria.setCbu(cbu);
+                    cuentaBancaria.setSaldo(saldo);
+                    cuentaBancaria.setLimiteMinimoCuenta(limiteMinimoCuenta);
+                    cuentaBancaria.setCantidadExtraccionesPorMes(extraccionesMes);
+                    cuentaBancaria.setFechaApertura(fecha);
+                    cuentaBancaria.setNumeroCuit(cuitTitular);
+                    cuentasBancarias.add(cuentaBancaria);
+                }
+            }
+        }catch (SQLException excepcion){ System.out.println(excepcion.getMessage()); }
+        return cuentasBancarias;
     }
 }

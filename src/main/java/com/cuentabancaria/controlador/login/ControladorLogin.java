@@ -47,22 +47,17 @@ public class ControladorLogin {
         setValidadorLoginRegistro(new ValidadorLoginRegistro());
         Usuario usuario = null;
         if ( getValidadorLoginRegistro().nombreUsuarioVacio(getNombreUsuario()) || getValidadorLoginRegistro().contrasenaVacio(getContrasena())){
-            getValidadorLoginRegistro().alertaNombreUsuarioContrasenaVacio();
+            ValidadorLoginRegistro.alertaNombreUsuarioContrasenaVacio();
         }else {
             Usuario nuevo = null;
             usuario = new Usuario(getNombreUsuario().getText(), getContrasena().getText());
             if(getValidadorLoginRegistro().existeNombreUsuario(usuario.getNombreUsuario())){
                 if(getValidadorLoginRegistro().validarContrasena(getContrasena().getText(), usuario.getNombreUsuario())){
                     nuevo = getBaseDato().obtenerUsuario(usuario.getNombreUsuario());
-                }else{
-                    getValidadorLoginRegistro().alertaContrasenaIncorrecta();
-                }
-            }else{
-                getValidadorLoginRegistro().alertaUsuarioInexistente();
-            }
-            if (nuevo != null){
-                System.out.println(nuevo);
-            }
+                    ValidadorLoginRegistro.alertaUsuarioLogeadoExitosamente();
+                }else{ ValidadorLoginRegistro.alertaContrasenaIncorrecta(); }
+            }else{ ValidadorLoginRegistro.alertaUsuarioInexistente(); }
+            if (nuevo != null){ System.out.println(nuevo); }
         }
         
     }

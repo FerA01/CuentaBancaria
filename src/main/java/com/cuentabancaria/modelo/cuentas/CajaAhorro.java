@@ -1,8 +1,6 @@
 package com.cuentabancaria.modelo.cuentas;
 import com.cuentabancaria.controlador.Validador;
 import com.cuentabancaria.modelo.titular.Titular;
-import javafx.scene.control.Alert;
-
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.Collection;
@@ -11,6 +9,13 @@ public class CajaAhorro extends CuentaBancaria{
         setSaldo(0);
         setLimiteMinimoCuenta(10f);
         setCantidadExtraccionesPorMes(5);
+    }
+    public CajaAhorro(Titular titular){
+        setSaldo(0);
+        setLimiteMinimoCuenta(10f);
+        setCantidadExtraccionesPorMes(5);
+        setTitular(titular);
+        setNumeroCuit(titular.getNumeroCuit());
     }
     public CajaAhorro(Titular titular, LocalDate fechaApertura){
         setSaldo(0);

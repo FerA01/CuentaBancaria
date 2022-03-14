@@ -1,5 +1,6 @@
 package com.cuentabancaria.controlador;
 import java.util.Locale;
+import java.util.Random;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 public class InputValidator {
@@ -32,4 +33,9 @@ public class InputValidator {
     }
     public static String capitalizarDatos(String dato){ return dato.substring(0, 1).toUpperCase() + dato.substring(1).toLowerCase(); }
     public static String capitalizarTodoLosdatos(String dato){ return dato.toUpperCase(); }
+    public static String generarCbu(){
+        Random numero = new Random();
+        int generado =  (1000 + numero.nextInt((10000+1)-1000));
+        return String.valueOf(generado);
+    }
 }

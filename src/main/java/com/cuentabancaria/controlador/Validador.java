@@ -17,6 +17,20 @@ public class Validador {
         alert.setContentText("¡Por favor, seleccione un usuario!");
         alert.showAndWait();
     }
+    public static void alertaCuentaBancariaCreadoExitosamente(){
+        Alert alert = new Alert(Alert.AlertType.WARNING);
+        alert.setHeaderText(null);
+        alert.setTitle(null);
+        alert.setContentText("Cuenta bancaria creada exitosamente");
+        alert.showAndWait();
+    }
+    public static void alertaCuentaBancariaCreadoFallido(){
+        Alert alert = new Alert(Alert.AlertType.WARNING);
+        alert.setHeaderText(null);
+        alert.setTitle(null);
+        alert.setContentText("!Error al crear la cuenta bancaria¡");
+        alert.showAndWait();
+    }
     public static void alertaTitularCreadoExitosamente(){
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setHeaderText(null);
