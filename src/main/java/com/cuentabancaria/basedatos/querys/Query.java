@@ -60,4 +60,6 @@ public class Query {
     public final String actualizarCuentaBancaria(){ return "UPDATE cuentabancaria SET saldo = ?, limiteMinimoCuenta = ?, cantidadExtraccionesMes = ?, fechaApertura = ?"
                                                   + " WHERE cbu = ?"; }
     public final String actualizarDatosCuentaBancaria(){ return "UPDATE cuentabancaria SET saldo = ?, cantidadExtraccionesMes = ? WHERE cbu = ?"; }
+
+    public final String actualizarNumeroCuitUsuario(){ return "UPDATE usuario SET cuitTitular = ? WHERE nombreUsuario = ?"; }
 }

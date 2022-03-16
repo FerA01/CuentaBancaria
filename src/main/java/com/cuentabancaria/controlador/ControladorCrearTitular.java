@@ -1,5 +1,6 @@
 package com.cuentabancaria.controlador;
 import com.cuentabancaria.basedatos.controlador.ControladorBaseDato;
+import com.cuentabancaria.controlador.cuentaBancaria.ControladorCuentaBancaria2;
 import com.cuentabancaria.controlador.titular.ControladorTitular;
 import com.cuentabancaria.modelo.cuentas.CajaAhorro;
 import com.cuentabancaria.modelo.cuentas.CuentaBancaria;
@@ -7,6 +8,7 @@ import com.cuentabancaria.modelo.cuentas.CuentaCorriente;
 import com.cuentabancaria.modelo.titular.Organizacion;
 import com.cuentabancaria.modelo.titular.Persona;
 import com.cuentabancaria.modelo.titular.Titular;
+import com.cuentabancaria.modelo.usuario.Usuario;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -34,6 +36,7 @@ public class ControladorCrearTitular implements Initializable {
     @FXML private ComboBox<Titular> comboBoxTipoTitular = new ComboBox<>();
     @FXML private ComboBox<CuentaBancaria> comboBoxTipoCuenta = new ComboBox<>();
     private ControladorTitular controladorTitular;
+    private ControladorCuentaBancaria2 controladorCuentaBancaria2;
     /**
      * Inicializa los comboBox
      * */
@@ -65,6 +68,8 @@ public class ControladorCrearTitular implements Initializable {
     private static void setBaseDato(ControladorBaseDato baseDato) { ControladorCrearTitular.baseDato = baseDato; }
     public ControladorTitular getControladorTitular() { return controladorTitular; }
     public void setControladorTitular(ControladorTitular controladorTitular) { this.controladorTitular = controladorTitular; }
+    public ControladorCuentaBancaria2 getControladorCuentaBancaria2() { return controladorCuentaBancaria2; }
+    public void setControladorCuentaBancaria2(ControladorCuentaBancaria2 controladorCuentaBancaria2) { this.controladorCuentaBancaria2 = controladorCuentaBancaria2; }
 
     private boolean comprobarDatosSeleccionados(){ return Validador.tipoUsuarioCuentaBancariaSeleccionada(getComboBoxTipoTitular(), getComboBoxTipoCuenta()); }
     private String generarCbu(){
@@ -183,21 +188,19 @@ public class ControladorCrearTitular implements Initializable {
      * Metodo que selecciona los elementos de los comboBox tipo de titular y tipo de cuenta.
      */
     @FXML
-    public void accionObtenerCuentaBancariaTitular(){
+    public void accionObtenerCuentaBancariaTitular() throws IOException{
         if (comprobarDatosSeleccionados()) {
             getBotonCrearTitular().setDisable(false);
             Titular titular = getComboBoxTipoTitular().getValue();
             CuentaBancaria cuentaBancaria = getComboBoxTipoCuenta().getValue();
-            try {
+
                 FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource(obtenerFxmlTitular(titular)));
                 Parent root = fxmlLoader.load();
                 AnchorPane panel = (AnchorPane) root;
                 setControladorTitular(fxmlLoader.getController());
                 getPanelTitular().getChildren().clear();
                 getPanelTitular().getChildren().setAll(panel.getChildren());
-            } catch (IOException exception) {
-                System.out.println(exception.getMessage());
-            }
+
             setTitular(titular);
         }
     }
@@ -216,7 +219,6 @@ public class ControladorCrearTitular implements Initializable {
             Organizacion organizacion = crearTitularOrganizacion();
             setTitular(organizacion);
         }
-        System.out.println(getTitular().tipoTitular());
     }
     @FXML
     private void accionBotonCrearTitular() throws SQLException {
@@ -242,6 +244,14 @@ public class ControladorCrearTitular implements Initializable {
                                 getBaseDato().insertarPersona((Persona) getTitular());
                                 if(insertarDatos(getBaseDato(), getCuentaBancaria(), getTitular(), generarCbu())) {
                                     Validador.alertaTitularCreadoExitosamente();
+                                    //actualizo datos de la pagina principal
+                                    //Cuando creo el titular persona, entonces debo actualizar el cuit del usuario asociado a este cuit
+                                    getBaseDato().actualizarNumeroCuitUsuario(getControladorCuentaBancaria2().obtenerNombreUsuario(), getTitular().getNumeroCuit());
+                                    Usuario usuario = getBaseDato().obtenerUsuario(getControladorCuentaBancaria2().obtenerNombreUsuario());
+                                    getControladorCuentaBancaria2().setUsuario(usuario);
+                                    getControladorCuentaBancaria2().cambiarTitularUsuario(getTitular());
+                                    getControladorCuentaBancaria2().setCuentaBancaria(getCuentaBancaria());
+                                    getControladorCuentaBancaria2().actualizarDatosPantalla();
                                     getVentana().close();
                                 }
                             }
@@ -266,6 +276,14 @@ public class ControladorCrearTitular implements Initializable {
                         getBaseDato().insertarOrganizacion((Organizacion) getTitular());
                         if(insertarDatos(getBaseDato(), getCuentaBancaria(), getTitular(), generarCbu())) {
                             Validador.alertaTitularCreadoExitosamente();
+                            //actualizo datos de la pagina principal
+                            //Cuando creo el titular organizacion, entonces debo actualizar el cuit del usuario asociado a este cuit
+                            getBaseDato().actualizarNumeroCuitUsuario(getControladorCuentaBancaria2().obtenerNombreUsuario(), getTitular().getNumeroCuit());
+                            Usuario usuario = getBaseDato().obtenerUsuario(getControladorCuentaBancaria2().obtenerNombreUsuario());
+                            getControladorCuentaBancaria2().setUsuario(usuario);
+                            getControladorCuentaBancaria2().cambiarTitularUsuario(getTitular());
+                            getControladorCuentaBancaria2().setCuentaBancaria(getCuentaBancaria());
+                            getControladorCuentaBancaria2().actualizarDatosPantalla();
                             getVentana().close();
                         }
                     }

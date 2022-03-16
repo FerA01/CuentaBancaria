@@ -7,13 +7,14 @@ public class Usuario {
     private Titular titular;
     private LocalDate fechaCreacion;
     private String cuitTitular;
+    private boolean logeado;
 
-    public Usuario(){}
+    public Usuario(){ }
+    public Usuario(Titular titular){ setTitular(titular);}
     public Usuario(String nombreUsuario, String contrasena){
         setNombreUsuario(nombreUsuario);
         setContrasena(contrasena);
         setFechaCreacion(LocalDate.now());
-        setCuitTitular(cuitTitular);
     }
     public Usuario(String nombreUsuario, String contrasena, String cuitTitular){
         setNombreUsuario(nombreUsuario);
@@ -38,6 +39,10 @@ public class Usuario {
     public void setFechaCreacion(LocalDate fechaCreacion) { this.fechaCreacion = fechaCreacion; }
     public String getCuitTitular(){ return this.cuitTitular; }
     public void setCuitTitular(String cuitTitular){ this.cuitTitular = cuitTitular; }
+    public boolean isLogeado() { return logeado; }
+    public void setLogeado(boolean logeado) { this.logeado = logeado; }
+
+    public boolean existeCuit(){ return !getCuitTitular().isEmpty(); }
 
     @Override
     public String toString(){ return "Usuario { Nombre de usuario: " + getNombreUsuario() + " Contraseña: " + getContrasena() + " Fecha creación: " + getFechaCreacion() + " Cuit del titular: " + getCuitTitular() + " }"; }

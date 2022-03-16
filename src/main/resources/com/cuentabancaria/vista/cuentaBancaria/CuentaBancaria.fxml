@@ -11,9 +11,9 @@
    <children>
       <AnchorPane prefHeight="200.0" prefWidth="600.0" style="-fx-background-color: blue;">
          <children>
-            <Label fx:id="etiquetaNombreUsuario" alignment="CENTER" layoutX="14.0" layoutY="14.0" prefHeight="25.0" prefWidth="160.0" text="Nombre de usuario" AnchorPane.leftAnchor="15.0" AnchorPane.topAnchor="15.0">
+            <Label fx:id="etiquetaNombreUsuario" layoutX="105.0" layoutY="15.0" prefHeight="25.0" prefWidth="160.0" text="Nombre de usuario" AnchorPane.leftAnchor="110.0" AnchorPane.topAnchor="15.0">
                <font>
-                  <Font size="18.0" />
+                  <Font name="System Bold" size="18.0" />
                </font>
             </Label>
             <Label fx:id="etiquetaNumeroCbu" alignment="CENTER" layoutX="426.0" layoutY="14.0" prefHeight="25.0" prefWidth="160.0" text="Número de CBU" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="15.0">
@@ -21,7 +21,7 @@
                   <Font size="18.0" />
                </font>
             </Label>
-            <Text layoutX="15.0" layoutY="73.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Extracciones disponibles" textAlignment="CENTER" wrappingWidth="200.0" AnchorPane.leftAnchor="15.0" AnchorPane.topAnchor="55.0">
+            <Text layoutX="10.0" layoutY="73.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Extracciones disponibles" textAlignment="CENTER" wrappingWidth="200.0" AnchorPane.leftAnchor="15.0" AnchorPane.topAnchor="55.0">
                <font>
                   <Font size="18.0" />
                </font>
@@ -41,16 +41,21 @@
                   <Font size="18.0" />
                </font>
             </Text>
+            <Text layoutX="15.0" layoutY="35.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Bienvenido " textAlignment="RIGHT" wrappingWidth="90.0">
+               <font>
+                  <Font size="18.0" />
+               </font>
+            </Text>
          </children>
       </AnchorPane>
       <AnchorPane layoutY="200.0" prefHeight="200.0" prefWidth="600.0" style="-fx-background-color: red;">
          <children>
-            <Button fx:id="botonRealizarOperacion" layoutX="420.0" layoutY="155.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="160.0" text="Salir" textAlignment="CENTER" AnchorPane.leftAnchor="420.0" AnchorPane.topAnchor="155.0">
+            <Button fx:id="botonCrearTitular" layoutX="420.0" layoutY="155.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="160.0" text="Crear Titular" textAlignment="CENTER" AnchorPane.leftAnchor="420.0" AnchorPane.topAnchor="155.0" onAction="#accionCrearTitular">
                <font>
                   <Font size="15.0" />
                </font>
             </Button>
-            <Button fx:id="botonHistorialTransacciones" layoutX="200.0" layoutY="100.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="200.0" text="Historial Transacciones" textAlignment="CENTER" AnchorPane.leftAnchor="200.0" AnchorPane.topAnchor="100.0">
+            <Button fx:id="botonHistorialTransacciones" layoutX="200.0" layoutY="100.0" mnemonicParsing="false" onAction="#accionHistorialTransacciones" prefHeight="31.0" prefWidth="200.0" text="Historial Transacciones" textAlignment="CENTER" AnchorPane.leftAnchor="200.0" AnchorPane.topAnchor="100.0">
                <font>
                   <Font size="15.0" />
                </font>
@@ -60,12 +65,12 @@
                   <Font size="15.0" />
                </font>
             </Button>
-            <Button fx:id="botonCuentasBancarias" layoutX="20.0" layoutY="155.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="160.0" text="Cuentas Bancarias" textAlignment="CENTER" onAction="#accionBotonCuentasBancarias">
+            <Button fx:id="botonCuentasBancarias" layoutX="20.0" layoutY="155.0" mnemonicParsing="false" onAction="#accionBotonCuentasBancarias" prefHeight="31.0" prefWidth="160.0" text="Cuentas Bancarias" textAlignment="CENTER">
                <font>
                   <Font size="15.0" />
                </font>
             </Button>
-            <Button fx:id="botonCrearCuentaBancaria" layoutX="200.0" layoutY="155.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="200.0" text="Crear Cuenta Bancaria" textAlignment="CENTER" onAction="#accionBotonCrearCuentaBancaria">
+            <Button fx:id="botonCrearCuentaBancaria" layoutX="200.0" layoutY="155.0" mnemonicParsing="false" onAction="#accionBotonCrearCuentaBancaria" prefHeight="31.0" prefWidth="200.0" text="Crear Cuenta Bancaria" textAlignment="CENTER">
                <font>
                   <Font size="15.0" />
                </font>

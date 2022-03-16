@@ -1,12 +1,17 @@
 package com.cuentabancaria.controlador;
+import com.cuentabancaria.controlador.cuentaBancaria.ControladorCuentaBancaria2;
 import com.cuentabancaria.modelo.cuentas.CuentaBancaria;
 import com.cuentabancaria.modelo.titular.Titular;
 import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
+
+import java.io.IOException;
+
 public class Validador {
     public static boolean cuentaBancariaSeleccionada(CuentaBancaria cuentaBancaria){ return cuentaBancaria != null; }
     public static boolean usuarioSeleccionado(Titular titular){ return titular != null; }
-
+    public static boolean existeNumeroCuit(String numeroCuit){ return numeroCuit != null; }
     public static boolean tipoUsuarioCuentaBancariaSeleccionada(ComboBox<Titular> titular, ComboBox<CuentaBancaria> cuentaBancaria){
         return titular.getValue() != null && cuentaBancaria.getValue() != null;
     }
@@ -15,6 +20,13 @@ public class Validador {
         alert.setHeaderText(null);
         alert.setTitle(null);
         alert.setContentText("¡Por favor, seleccione un usuario!");
+        alert.showAndWait();
+    }
+    public static void alertaCuentaBancariaNoSeleccionada(){
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setHeaderText(null);
+        alert.setTitle(null);
+        alert.setContentText("¡Por favor, seleccione una cuenta bancaria!");
         alert.showAndWait();
     }
     public static void alertaCuentaBancariaCreadoExitosamente(){
@@ -114,6 +126,20 @@ public class Validador {
         alert.setTitle(null);
         alert.setContentText("¡Por favor, seleccione un número de cuit valido!");
         alert.showAndWait();
+    }
+    public static void alertaNoExisteTitular(ControladorCuentaBancaria2 controlador){
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setHeaderText(null);
+        alert.setTitle(null);
+        alert.setContentText("Para acceder a las funcionalidades, debes tener un número de cuit asignado. \n¿Desea crear un titular?");
+        alert.showAndWait().ifPresent(respuesta -> {
+            if(respuesta == ButtonType.NO){
+                alert.close();
+            }else{
+                try{ controlador.abrirVentanaCrearTitular(); }
+                catch (IOException excepcion){ System.out.println(excepcion.getMessage()); }
+            }
+        });
     }
     public static void alertaNumeroCuitExistente(){
         Alert alert = new Alert(Alert.AlertType.WARNING);

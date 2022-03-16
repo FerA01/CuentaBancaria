@@ -1,6 +1,5 @@
 package com.cuentabancaria.controlador.login;
 import com.cuentabancaria.basedatos.controlador.ControladorBaseDato;
-import com.cuentabancaria.controlador.InputValidator;
 import com.cuentabancaria.encoder.Encoder;
 import com.cuentabancaria.modelo.usuario.Usuario;
 import javafx.fxml.FXML;
@@ -9,12 +8,10 @@ import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
-
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.sql.SQLException;
 import java.util.ResourceBundle;
-
 public class ControladorRegistrarse implements Initializable {
     @FXML private TextField numeroCuit;
     @FXML private Button botonRegistrarse;
@@ -24,6 +21,7 @@ public class ControladorRegistrarse implements Initializable {
     private ValidadorLoginRegistro validadorLoginRegistro;
     private ControladorLogin controladorLogin;
     private Stage ventana;
+    private Stage ventanaLogin;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -45,6 +43,8 @@ public class ControladorRegistrarse implements Initializable {
     public void setControladorLogin(ControladorLogin controladorLogin) { this.controladorLogin = controladorLogin; }
     public Stage getVentana() { return ventana; }
     public void setVentana(Stage ventana) { this.ventana = ventana; }
+    public Stage getVentanaLogin() { return ventanaLogin; }
+    public void setVentanaLogin(Stage ventanaLogin) { this.ventanaLogin = ventanaLogin; }
 
     @FXML
     private void accionRegistrarse() throws SQLException {
@@ -52,25 +52,23 @@ public class ControladorRegistrarse implements Initializable {
         setBaseDato(new ControladorBaseDato());
         Encoder encoder = new Encoder();
         Usuario usuario = null;
-        if (getValidadorLoginRegistro().nombreUsuarioVacio(getNombreUsuario()) || getValidadorLoginRegistro().contrasenaVacio(getContrasena()) || getValidadorLoginRegistro().nombreUsuarioVacio(getNumeroCuit())){
+        if (getValidadorLoginRegistro().nombreUsuarioVacio(getNombreUsuario()) || getValidadorLoginRegistro().contrasenaVacio(getContrasena())){
             ValidadorLoginRegistro.alertaNombreUsuarioContrasenaVacio();
         }else {
             usuario = new Usuario(getNombreUsuario().getText(), getContrasena().getText());
             if (getValidadorLoginRegistro().existeNombreUsuario(usuario.getNombreUsuario())){
                 ValidadorLoginRegistro.alertaUsuarioExistente();
             }else {
-                if (InputValidator.esNumero(getNumeroCuit().getText())){
-                    usuario.setCuitTitular(getNumeroCuit().getText());
-                    if (!getValidadorLoginRegistro().existeNumeroCuit(usuario.getCuitTitular())) {
-                        byte[] encriptar = encoder.encode(usuario.getContrasena());
-                        String contrasenaEncriptada = new String(encriptar, StandardCharsets.UTF_8);
-                        usuario.setContrasena(contrasenaEncriptada);
-                        getBaseDato().insertarUsuario(usuario);
-                        ValidadorLoginRegistro.alertaUsuarioCreadoExitosamente();
-                        getVentana().close();
-                    } else { ValidadorLoginRegistro.alertaNumeroCuitExistenteInvalido(); }
-                }else{ ValidadorLoginRegistro.alertaNumeroCuitExistenteInvalido(); }
+                byte[] encriptar = encoder.encode(usuario.getContrasena());
+                String contrasenaEncriptada = new String(encriptar, StandardCharsets.UTF_8);
+                usuario.setContrasena(contrasenaEncriptada);
+                getBaseDato().insertarUsuario(usuario);
+                ValidadorLoginRegistro.alertaUsuarioCreadoExitosamente();
+                getVentanaLogin().show();
+                getVentana().close();
             }
         }
     }
+    public void ocultarVentanaLogin(){ getVentanaLogin().hide(); }
+    public void mostrarVentanaLogin(){ getVentanaLogin().show(); }
 }

@@ -69,42 +69,27 @@ public class ControladorBaseDato {
     public void cerrarConexionesInsertar() throws SQLException {
         getConexionBD().cerrarConexion();
         if (getSentencia() != null){
-            try {
-                getSentencia().close();
-            }catch (SQLException excepcion){
-                System.out.println("Error al cerrar la conexión: " + excepcion.getMessage());
-            }
+            try { getSentencia().close(); }
+            catch (SQLException excepcion){ System.out.println("Error al cerrar la conexión: " + excepcion.getMessage()); }
         }
         if (getConexion() != null){
-            try {
-                getConexion().close();
-            }catch (SQLException excepcion){
-                System.out.println("Error al cerrar la conexión: " + excepcion.getMessage());
-            }
+            try { getConexion().close(); }
+            catch (SQLException excepcion){ System.out.println("Error al cerrar la conexión: " + excepcion.getMessage()); }
         }
     }
     public void cerrarConexiones() throws SQLException {
         getConexionBD().cerrarConexion();
         if (getSentencia() != null){
-            try {
-                getSentencia().close();
-            }catch (SQLException excepcion){
-                System.out.println(excepcion.getMessage());
-            }
+            try { getSentencia().close(); }
+            catch (SQLException excepcion){ System.out.println(excepcion.getMessage()); }
         }
         if (getResultado() != null){
-            try{
-                getResultado().close();
-            }catch (SQLException excepcion){
-                System.out.println(excepcion.getMessage());
-            }
+            try{ getResultado().close(); }
+            catch (SQLException excepcion){ System.out.println(excepcion.getMessage()); }
         }
         if (getConexion() != null){
-            try {
-                getConexion().close();
-            }catch (SQLException excepcion){
-                System.out.println(excepcion.getMessage());
-            }
+            try { getConexion().close(); }
+            catch (SQLException excepcion){ System.out.println(excepcion.getMessage()); }
         }
     }
     public void insertarPersona(Persona persona) throws SQLException{ // 1|dni, 2|nombre, 3|segundoNombre, 4|apellido, 5|fechaNacimiento, 6|numeroCuit, 7|tipoTitular
@@ -546,11 +531,8 @@ public class ControladorBaseDato {
 
                 return new Usuario(nombre, contrasena, comprobarCuitNulo(cuit), fecha);
             }
-        }catch (SQLException excepcion){
-            System.out.println(excepcion.getMessage());
-        }finally {
-            cerrarConexiones();
-        }
+        }catch (SQLException excepcion){ System.out.println(excepcion.getMessage()); }
+        finally { cerrarConexiones(); }
         return null;
     }
     private String comprobarCuitNulo(String cuit){
@@ -558,8 +540,9 @@ public class ControladorBaseDato {
         return cuit;
     }
 
-    public Collection<CuentaBancaria> obtenerCuentasBancariasPorCuit(String numeroCuit, ArrayList<CuentaBancaria> cuentasBancarias) throws SQLException{
+    public ArrayList<CuentaBancaria> obtenerCuentasBancariasPorCuit(String numeroCuit) throws SQLException{
         setConexionBD(new ConexionBD());
+        ArrayList<CuentaBancaria> cuentasBancarias = new ArrayList<>();
         try {
             setConexion(getConexionBD().getConexion());
             setSentencia(getConexion().prepareStatement(getQuery().obtenerCuentaBancaria()));
@@ -587,5 +570,17 @@ public class ControladorBaseDato {
             }
         }catch (SQLException excepcion){ System.out.println(excepcion.getMessage()); }
         return cuentasBancarias;
+    }
+
+    public void actualizarNumeroCuitUsuario(String nombreUsuario, String numeroCuit) throws SQLException{
+        setConexionBD(new ConexionBD());
+        try{
+            setConexion(getConexionBD().getConexion());
+            setSentencia(getConexion().prepareStatement(getQuery().actualizarNumeroCuitUsuario()));
+            getSentencia().setString(1, numeroCuit);
+            getSentencia().setString(2, nombreUsuario);
+            getSentencia().executeUpdate();
+        }catch (SQLException excepcion){ System.out.println(excepcion.getMessage()); }
+        finally { cerrarConexionesInsertar(); }
     }
 }

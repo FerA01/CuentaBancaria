@@ -1,6 +1,7 @@
 package com.cuentabancaria.controlador.login;
 import com.cuentabancaria.basedatos.controlador.ControladorBaseDato;
 import com.cuentabancaria.controlador.ControladorCuentaBancaria;
+import com.cuentabancaria.controlador.cuentaBancaria.ControladorCuentaBancaria2;
 import com.cuentabancaria.encoder.Encoder;
 import com.cuentabancaria.modelo.usuario.Usuario;
 import javafx.fxml.FXML;
@@ -27,6 +28,8 @@ public class ControladorLogin {
     @FXML private Button iniciarSesion;
     private ControladorBaseDato baseDato;
     private ValidadorLoginRegistro validadorLoginRegistro;
+    private Stage ventanaLogin;
+    private Usuario usuario;
 
     public TextField getNombreUsuario() { return nombreUsuario; }
     public void setNombreUsuario(TextField nombreUsuario) { this.nombreUsuario = nombreUsuario; }
@@ -40,9 +43,13 @@ public class ControladorLogin {
     public void setBotonRegistrarse(Text botonRegistrarse) { this.botonRegistrarse = botonRegistrarse; }
     public ValidadorLoginRegistro getValidadorLoginRegistro() { return validadorLoginRegistro; }
     public void setValidadorLoginRegistro(ValidadorLoginRegistro validadorLoginRegistro) { this.validadorLoginRegistro = validadorLoginRegistro; }
+    public Stage getVentanaLogin() { return ventanaLogin; }
+    public void setVentanaLogin(Stage ventanaLogin) { this.ventanaLogin = ventanaLogin; }
+    public Usuario getUsuario() { return usuario; }
+    public void setUsuario(Usuario usuario) { this.usuario = usuario; }
 
     @FXML
-    public void accionIniciarSesion() throws SQLException {
+    public void accionIniciarSesion() throws SQLException, IOException {
         setBaseDato(new ControladorBaseDato());
         setValidadorLoginRegistro(new ValidadorLoginRegistro());
         Usuario usuario = null;
@@ -50,28 +57,28 @@ public class ControladorLogin {
             ValidadorLoginRegistro.alertaNombreUsuarioContrasenaVacio();
         }else {
             Usuario nuevo = null;
-            usuario = new Usuario(getNombreUsuario().getText(), getContrasena().getText());
-            if(getValidadorLoginRegistro().existeNombreUsuario(usuario.getNombreUsuario())){
-                if(getValidadorLoginRegistro().validarContrasena(getContrasena().getText(), usuario.getNombreUsuario())){
-                    nuevo = getBaseDato().obtenerUsuario(usuario.getNombreUsuario());
+            setUsuario(new Usuario(getNombreUsuario().getText(), getContrasena().getText()));
+            if(getValidadorLoginRegistro().existeNombreUsuario(getUsuario().getNombreUsuario())){
+                if(getValidadorLoginRegistro().validarContrasena(getContrasena().getText(), getUsuario().getNombreUsuario())){
+                    nuevo = getBaseDato().obtenerUsuario(getUsuario().getNombreUsuario());
                     ValidadorLoginRegistro.alertaUsuarioLogeadoExitosamente();
+                    //cargar ventana principal
+                    abrirVentanaPrincipal();
+                    getVentanaLogin().hide();
                 }else{ ValidadorLoginRegistro.alertaContrasenaIncorrecta(); }
             }else{ ValidadorLoginRegistro.alertaUsuarioInexistente(); }
             if (nuevo != null){ System.out.println(nuevo); }
         }
-        
     }
     @FXML
-    private void accionRegistrarse() throws IOException {
-       cargarVentanaRegistrarse();
-    }
-
-    private void cargarVentanaRegistrarse(){
-        try {
+    private void accionRegistrarse() throws IOException { cargarVentanaRegistrarse(); }
+    private void cargarVentanaRegistrarse() throws IOException {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/cuentabancaria/vista/login/registrarse/Registrarse.fxml"));
             Parent parent = fxmlLoader.load();
             ControladorRegistrarse controladorRegistrarse = fxmlLoader.getController();
             controladorRegistrarse.setControladorLogin(this);
+            controladorRegistrarse.setVentanaLogin(getVentanaLogin());
+            controladorRegistrarse.ocultarVentanaLogin();
             Scene scene = new Scene(parent);
             Stage stage = new Stage();
             controladorRegistrarse.setVentana(stage);
@@ -82,12 +89,30 @@ public class ControladorLogin {
             stage.getIcons().add( new Image(
                     getClass().getResourceAsStream( "/imagenes/icono.png" )));
             stage.showAndWait();
-        }catch (IOException e){
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setHeaderText(null);
-            alert.setTitle("Error");
-            alert.setContentText(e.getMessage());
-            alert.showAndWait();
-        }
+    }
+    public void abrirVentanaPrincipal() throws IOException, SQLException {
+
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/cuentabancaria/vista/cuentaBancaria/CuentaBancaria.fxml"));
+            Parent parent = loader.load();
+            Scene scene = new Scene(parent);
+            Stage ventana = new Stage();
+            ControladorCuentaBancaria2 controlador = loader.getController();
+            controlador.setUsuario(getBaseDato().obtenerUsuario(getUsuario().getNombreUsuario()));
+            controlador.cambiarTextoEtiqueta(controlador.getEtiquetaNombreUsuario(), controlador.obtenerNombreUsuario());
+            controlador.cambiarTextoEtiqueta(controlador.getEtiquetaNumeroCbu(), controlador.obtenerNumeroCuitUsuario());
+            ventana.setTitle("Principal");
+            ventana.setResizable(false);
+            ventana.setScene(scene);
+            ventana.showAndWait();
+
     }
 }
+
+/*  -Si me logueo, abro la ventana principal con los datos del usuario cargados en la base
+    -Al hacer una operación, el usuario debe tener obligatoriamente un número de cuit, caso contrario debo
+    generar una excepción para que el usuario llene datos como titular persona u organización.
+    -Una vez creado el titular debo actualizar el numero de cuit del usuario con el número de cuit creado.
+
+
+
+ */

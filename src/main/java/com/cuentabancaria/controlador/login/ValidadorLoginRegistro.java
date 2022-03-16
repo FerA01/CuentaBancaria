@@ -66,7 +66,7 @@ public class ValidadorLoginRegistro {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setHeaderText(null);
         alert.setTitle(null);
-        alert.setContentText("Usuario logeado exitosamente");
+        alert.setContentText("Usuario logueado exitosamente");
         alert.showAndWait();
     }
     public static void alertaContrasenaIncorrecta(){
