@@ -18,17 +18,20 @@ public abstract class CuentaBancaria implements Accion{
     private String numeroCuit;
     private ControladorBaseDato baseDato;
     private String tipoTransaccion;
+    private String tipoCuentaBancaria;
 
     public CuentaBancaria(){
         setSaldo(0f);
         setLimiteMinimoCuenta(0);
         setCantidadExtraccionesPorMes(0);
+        setTipoCuentaBancaria(tipoCuentaBancaria());
     }
     public CuentaBancaria(String cbu){
         setCbu(cbu);
         setSaldo(0f);
         setLimiteMinimoCuenta(0);
         setCantidadExtraccionesPorMes(0);
+        setTipoCuentaBancaria(tipoCuentaBancaria());
     }
     public CuentaBancaria(String cbu, float saldo, float limiteMinimoCuenta, int cantidadExtraccionesPorMes, Titular titular
                          ,LocalDate fechaApertura){
@@ -38,6 +41,7 @@ public abstract class CuentaBancaria implements Accion{
         setCantidadExtraccionesPorMes(cantidadExtraccionesPorMes);
         setTitular(titular);
         setFechaApertura(fechaApertura);
+        setTipoCuentaBancaria(tipoCuentaBancaria());
     }
     public CuentaBancaria(float saldo, float limiteMinimoCuenta, int cantidadExtraccionesPorMes, Titular titular
             ,LocalDate fechaApertura, Collection<Transaccion> transacciones){
@@ -47,6 +51,7 @@ public abstract class CuentaBancaria implements Accion{
         setTitular(titular);
         setFechaApertura(fechaApertura);
         setTransacciones(transacciones);
+        setTipoCuentaBancaria(tipoCuentaBancaria());
     }
 
     public float getSaldo() { return saldo; }
@@ -69,6 +74,8 @@ public abstract class CuentaBancaria implements Accion{
     public void setBaseDato(ControladorBaseDato baseDato) { this.baseDato = baseDato; }
     public String getTipoTransaccion() { return tipoTransaccion; }
     public void setTipoTransaccion(String tipoTransaccion) { this.tipoTransaccion = tipoTransaccion; }
+    public String getTipoCuentaBancaria() { return tipoCuentaBancaria; }
+    public void setTipoCuentaBancaria(String tipoCuentaBancaria) { this.tipoCuentaBancaria = tipoCuentaBancaria; }
 
     public boolean agregarTransaccion(Transaccion transaccion){ return getTransacciones().add(transaccion); }
     public boolean eliminarTransaccion(Transaccion transaccion){ return getTransacciones().removeIf(trans -> trans.equals(transaccion)); }

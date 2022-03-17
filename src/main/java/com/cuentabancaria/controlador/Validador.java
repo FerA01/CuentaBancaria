@@ -15,11 +15,18 @@ public class Validador {
     public static boolean tipoUsuarioCuentaBancariaSeleccionada(ComboBox<Titular> titular, ComboBox<CuentaBancaria> cuentaBancaria){
         return titular.getValue() != null && cuentaBancaria.getValue() != null;
     }
+    public static void alertaUsuarioSinNumeroCuit(){
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setHeaderText(null);
+        alert.setTitle(null);
+        alert.setContentText("Este usuario no tiene un número de cuit asignado. \nPor favor cree un titular para acceder las operaciones.");
+        alert.showAndWait();
+    }
     public static void alertaNombreUsuarioNoSeleccionado(){
         Alert alert = new Alert(Alert.AlertType.WARNING);
         alert.setHeaderText(null);
         alert.setTitle(null);
-        alert.setContentText("¡Por favor, seleccione un usuario!");
+        alert.setContentText("¡Por favor, seleccione un titular!");
         alert.showAndWait();
     }
     public static void alertaCuentaBancariaNoSeleccionada(){

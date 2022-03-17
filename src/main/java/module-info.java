@@ -19,6 +19,7 @@ module com.cuentabancaria {
     opens com.cuentabancaria.controlador.buscar to javafx.fxml;
     opens com.cuentabancaria.modelo.titular to javafx.base;
     opens com.cuentabancaria.controlador.titular to javafx.fxml;
+    opens com.cuentabancaria.modelo.cuentas to javafx.base;
     opens test to javafx.base ;
     exports com.cuentabancaria.vista to javafx.graphics;
     exports com.cuentabancaria.controlador.test to javafx.fxml;

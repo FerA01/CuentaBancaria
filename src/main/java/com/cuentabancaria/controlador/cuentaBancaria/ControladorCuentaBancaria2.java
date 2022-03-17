@@ -2,6 +2,7 @@ package com.cuentabancaria.controlador.cuentaBancaria;
 import com.cuentabancaria.basedatos.controlador.ControladorBaseDato;
 import com.cuentabancaria.controlador.ControladorCrearTitular;
 import com.cuentabancaria.controlador.Validador;
+import com.cuentabancaria.controlador.login.ControladorLogin;
 import com.cuentabancaria.modelo.cuentas.CuentaBancaria;
 import com.cuentabancaria.modelo.titular.Titular;
 import com.cuentabancaria.modelo.usuario.Usuario;
@@ -39,6 +40,7 @@ public class ControladorCuentaBancaria2 implements Initializable {
     private Titular titular;
     private CuentaBancaria cuentaBancaria;
     private Usuario usuario;
+    private ControladorLogin controladorLogin;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -78,9 +80,11 @@ public class ControladorCuentaBancaria2 implements Initializable {
     public void setBotonCrearCuentaBancaria(Button botonCrearCuentaBancaria) { this.botonCrearCuentaBancaria = botonCrearCuentaBancaria; }
     public Button getBotonCrearTitular() { return botonCrearTitular; }
     public void setBotonCrearTitular(Button botonCrearTitular) { this.botonCrearTitular = botonCrearTitular; }
-
     public Usuario getUsuario() { return usuario; }
     public void setUsuario(Usuario usuario) { this.usuario = usuario; }
+    public ControladorLogin getControladorLogin() { return controladorLogin; }
+    public void setControladorLogin(ControladorLogin controladorLogin) { this.controladorLogin = controladorLogin; }
+
 
     //Metodos
     public void cambiarTextoEtiqueta(Label etiqueta, String texto){ etiqueta.setText(texto); }
@@ -90,22 +94,24 @@ public class ControladorCuentaBancaria2 implements Initializable {
     public void actualizarDatosPantalla(){
         cambiarTextoEtiqueta(getEtiquetaNumeroCbu(), getUsuario().getCuitTitular());
         cambiarTextoEtiqueta(getEtiquetaSaldoDisponible(), String.valueOf(getCuentaBancaria().getSaldo()));
-        cambiarTextoEtiqueta(getEtiquetaExtraccionesDisponibles(), String.valueOf(getCuentaBancaria().getCantidadExtraccionesPorMes()));
+        if (String.valueOf(getCuentaBancaria().getCantidadExtraccionesPorMes()).equals("-1")){ cambiarTextoEtiqueta(getEtiquetaExtraccionesDisponibles(), "Sin Limites"); }
+        else{ cambiarTextoEtiqueta(getEtiquetaExtraccionesDisponibles(), String.valueOf(getCuentaBancaria().getCantidadExtraccionesPorMes())); }
+    }
+    public void ocultarBotonCrearTitular(){
+        if (!(getUsuario().getCuitTitular()).isEmpty()){
+            getBotonCrearTitular().setDisable(true);
+            getBotonCrearTitular().setVisible(false);
+        }
     }
 
     //Eventos
     @FXML
     public void accionCrearTitular() throws IOException{
-        if (obtenerNumeroCuitUsuario() == null){
-            Validador.alertaNoExisteTitular(this);
-            abrirVentanaCrearTitular();
-            getBotonCrearTitular().setDisable(true);
-            getBotonCrearTitular().setVisible(false);
-        }
+
     }
     @FXML
     public void accionHistorialTransacciones(){
-        if (Validador.usuarioSeleccionado(getTitular()) && Validador.cuentaBancariaSeleccionada(getCuentaBancaria())){
+        if (!obtenerNumeroCuitUsuario().isEmpty() && Validador.cuentaBancariaSeleccionada(getCuentaBancaria())){
 
         }else{
             if(!Validador.usuarioSeleccionado(getTitular())){ Validador.alertaNombreUsuarioNoSeleccionado(); }
@@ -113,25 +119,31 @@ public class ControladorCuentaBancaria2 implements Initializable {
         }
     }
     @FXML
-    public void accionVerDatosCuenta(){}
+    public void accionVerDatosCuenta(){
+        if (obtenerNumeroCuitUsuario().isEmpty()){
+            Validador.alertaUsuarioSinNumeroCuit();
+        }else{
+
+        }
+    }
     @FXML
     public void accionBotonCuentasBancarias() throws IOException, SQLException{
-        if(Validador.existeNumeroCuit(obtenerNumeroCuitUsuario())){
-            try{
-                abrirVentanaCuentasBancariasDisponibles();
-            }catch (IOException excepcion){ System.out.println(excepcion.getMessage()); }
-        }else { Validador.alertaNombreUsuarioNoSeleccionado(); }
+        if (obtenerNumeroCuitUsuario().isEmpty()){ Validador.alertaUsuarioSinNumeroCuit(); }
+        else{
+            try{ abrirVentanaCuentasBancariasDisponibles(); }
+            catch (IOException excepcion){ System.out.println(excepcion.getMessage()); }
+        }
     }
     @FXML
     public void accionBotonCrearCuentaBancaria() throws SQLException, IOException{
-        if(Validador.usuarioSeleccionado(getTitular())){
+        if(obtenerNumeroCuitUsuario().isEmpty()){
             try{
                 abrirVentanaSeleccionarCuentaBancaria();
                 getCuentaBancaria().setTitular(getTitular());
                 if(getBaseDato().insertarCuentaBancaria(getCuentaBancaria())){ Validador.alertaCuentaBancariaCreadoExitosamente(); }
                 else{ Validador.alertaCuentaBancariaCreadoFallido(); }
             }catch (IOException | SQLException excepcion){ System.out.println(excepcion.getMessage()); }
-        }else{ Validador.alertaNombreUsuarioNoSeleccionado(); }
+        }else{ Validador.alertaUsuarioSinNumeroCuit(); }
     }
 
     private void abrirVentanaOperacion(String operacion) throws IOException{
@@ -155,19 +167,22 @@ public class ControladorCuentaBancaria2 implements Initializable {
             ventana.showAndWait();
         }catch (IOException excepcion){ System.out.println(excepcion.getMessage()); }
     }
-    private void abrirVentanaCuentasBancariasDisponibles() throws IOException{
+    private void abrirVentanaCuentasBancariasDisponibles() throws IOException, SQLException{
         try{
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/cuentabancaria/vista/cuentaBancaria/CuentasBancariasDisponibles.fxml"));
-            Parent parent = loader.load();
-            Scene scene = new Scene(parent);
-            Stage ventana = new Stage();
-            ControladorCuentasBancariasDisponibles controlador = loader.getController();
-            controlador.setTitular(getTitular());
-            controlador.setNumeroCuit(obtenerNumeroCuitUsuario());
-            ventana.setScene(scene);
-            ventana.setTitle("Cuentas Bancarias");
-            ventana.setResizable(false);
-            ventana.showAndWait();
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/cuentabancaria/vista/cuentaBancaria/CuentasBancariasDisponibles.fxml"));
+                Parent parent = loader.load();
+                Scene scene = new Scene(parent);
+                Stage ventana = new Stage();
+                ControladorCuentasBancariasDisponibles controlador = loader.getController();
+                controlador.setControladorCuentaBancaria(this);
+                controlador.setTitular(getTitular());
+                controlador.setNumeroCuit(obtenerNumeroCuitUsuario());
+                controlador.setNombreUsuario(obtenerNombreUsuario());
+                controlador.mostrarDatos();
+                ventana.setScene(scene);
+                ventana.setTitle("Cuentas Bancarias");
+                ventana.setResizable(false);
+                ventana.showAndWait();
         }catch (IOException excepcion){ System.out.println(excepcion.getMessage()); }
     }
     public void abrirVentanaCrearTitular() throws IOException{

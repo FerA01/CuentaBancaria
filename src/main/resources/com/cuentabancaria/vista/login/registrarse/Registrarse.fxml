@@ -6,6 +6,8 @@
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
 
 <AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.cuentabancaria.controlador.login.ControladorRegistrarse">
    <children>
@@ -18,8 +20,17 @@
          <children>
             <TextField fx:id="nombreUsuario" layoutX="94.0" layoutY="50.0" prefHeight="35.0" prefWidth="150.0" promptText="Nombre Usuario" />
             <Button fx:id="botonRegistrarse" layoutX="94.0" layoutY="196.0" mnemonicParsing="false" onAction="#accionRegistrarse" prefHeight="35.0" prefWidth="150.0" text="Registrarse" />
-            <PasswordField fx:id="contrasena" layoutX="94.0" layoutY="140.0" prefHeight="35.0" prefWidth="150.0" promptText="Contraseña" />
-            <TextField fx:id="numeroCuit" layoutX="94.0" layoutY="95.0" prefHeight="35.0" prefWidth="150.0" promptText="Número de cuit" />
+            <PasswordField fx:id="contrasena" layoutX="94.0" layoutY="123.0" prefHeight="35.0" prefWidth="150.0" promptText="Contraseña" />
+            <Text layoutX="94.0" layoutY="45.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Nombre de usuario">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Text>
+            <Text layoutX="94.0" layoutY="118.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Contraseña">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Text>
          </children>
       </AnchorPane>
    </children>

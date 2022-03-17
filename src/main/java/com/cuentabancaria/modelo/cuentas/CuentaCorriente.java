@@ -1,8 +1,6 @@
 package com.cuentabancaria.modelo.cuentas;
 import com.cuentabancaria.controlador.Validador;
 import com.cuentabancaria.modelo.titular.Titular;
-import javafx.scene.control.Alert;
-
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.Collection;
@@ -11,6 +9,7 @@ public class CuentaCorriente extends CuentaBancaria{
         setSaldo(0);
         setLimiteMinimoCuenta(-150f);
         setCantidadExtraccionesPorMes(-1);
+        setTipoCuentaBancaria(tipoCuentaBancaria());
     }
     public CuentaCorriente(Titular titular){
         setSaldo(0);
@@ -18,6 +17,7 @@ public class CuentaCorriente extends CuentaBancaria{
         setCantidadExtraccionesPorMes(-1);
         setTitular(titular);
         setNumeroCuit(titular.getNumeroCuit());
+        setTipoCuentaBancaria(tipoCuentaBancaria());
     }
     public CuentaCorriente(Titular titular, LocalDate fechaApertura){
         setSaldo(0);
@@ -25,14 +25,17 @@ public class CuentaCorriente extends CuentaBancaria{
         setCantidadExtraccionesPorMes(-1);
         setTitular(titular);
         setFechaApertura(fechaApertura);
+        setTipoCuentaBancaria(tipoCuentaBancaria());
     }
     public CuentaCorriente(String cbu, float saldo, float limiteMinimoCuenta, int cantidadExtraccionesPorMes, Titular titular
                             , LocalDate fechaApertura){
         super(cbu, saldo, limiteMinimoCuenta, cantidadExtraccionesPorMes, titular, fechaApertura);
+        setTipoCuentaBancaria(tipoCuentaBancaria());
     }
     public CuentaCorriente(float saldo, float limiteMinimoCuenta, int cantidadExtraccionesPorMes, Titular titular
                           ,LocalDate fechaApertura, Collection<Transaccion> transacciones){
         super(saldo, limiteMinimoCuenta, cantidadExtraccionesPorMes, titular, fechaApertura, transacciones);
+        setTipoCuentaBancaria(tipoCuentaBancaria());
     }
 
     @Override

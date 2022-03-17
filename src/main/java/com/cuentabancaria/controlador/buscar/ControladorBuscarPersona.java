@@ -54,9 +54,7 @@ public class ControladorBuscarPersona implements Initializable {
             getBaseDato().cerrarConexiones();
             ObservableList<Persona> ol = FXCollections.observableArrayList(personas);
             getTabla().setItems(ol);
-        }catch (SQLException excepcion){
-            System.out.println(excepcion.getMessage());
-        }
+        }catch (SQLException excepcion){ System.out.println(excepcion.getMessage()); }
     }
 
     public Button getBotonBuscar() { return botonBuscar; }

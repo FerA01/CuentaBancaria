@@ -17,6 +17,7 @@ public class CambiarFecha{
     public LocalDate dateToLocalDate(java.sql.Date date){
         return date.toLocalDate();
     }
+    public static LocalDate dateToLocalDate2(java.sql.Date date){ return  date.toLocalDate();}
     public String cambiar(){
         DateTimeFormatter formatterLocalDate = DateTimeFormatter.ofPattern("dd/MM/yyyy");
         return formatterLocalDate.format(getFecha());

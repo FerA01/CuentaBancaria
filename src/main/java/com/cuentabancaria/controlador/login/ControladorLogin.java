@@ -6,6 +6,7 @@ import com.cuentabancaria.encoder.Encoder;
 import com.cuentabancaria.modelo.usuario.Usuario;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
@@ -18,10 +19,12 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.sql.SQLException;
+import java.util.ResourceBundle;
 
-public class ControladorLogin {
+public class ControladorLogin implements Initializable {
     @FXML private Text botonRegistrarse;
     @FXML private TextField nombreUsuario;
     @FXML private PasswordField contrasena;
@@ -30,6 +33,11 @@ public class ControladorLogin {
     private ValidadorLoginRegistro validadorLoginRegistro;
     private Stage ventanaLogin;
     private Usuario usuario;
+
+    @Override
+    public void initialize(URL url, ResourceBundle resourceBundle) {
+
+    }
 
     public TextField getNombreUsuario() { return nombreUsuario; }
     public void setNombreUsuario(TextField nombreUsuario) { this.nombreUsuario = nombreUsuario; }
@@ -91,20 +99,21 @@ public class ControladorLogin {
             stage.showAndWait();
     }
     public void abrirVentanaPrincipal() throws IOException, SQLException {
-
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/cuentabancaria/vista/cuentaBancaria/CuentaBancaria.fxml"));
             Parent parent = loader.load();
             Scene scene = new Scene(parent);
             Stage ventana = new Stage();
             ControladorCuentaBancaria2 controlador = loader.getController();
-            controlador.setUsuario(getBaseDato().obtenerUsuario(getUsuario().getNombreUsuario()));
+            setUsuario(getBaseDato().obtenerUsuario(getUsuario().getNombreUsuario()));
+            controlador.setUsuario(getUsuario());
             controlador.cambiarTextoEtiqueta(controlador.getEtiquetaNombreUsuario(), controlador.obtenerNombreUsuario());
             controlador.cambiarTextoEtiqueta(controlador.getEtiquetaNumeroCbu(), controlador.obtenerNumeroCuitUsuario());
+            controlador.ocultarBotonCrearTitular();
+            controlador.setControladorLogin(this);
             ventana.setTitle("Principal");
             ventana.setResizable(false);
             ventana.setScene(scene);
             ventana.showAndWait();
-
     }
 }
 

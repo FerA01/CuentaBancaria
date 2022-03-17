@@ -39,6 +39,17 @@ public class Query {
     public final String seleccionarOrganizacionPorCuit(){ return "SELECT * FROM organizacion WHERE cuit = ?"; }
     public final String abc(){ return "SELECT * FROM ? WHERE cuit = ? "; }
     public final String obtenerCuentaBancaria(){ return  "SELECT cbu, saldo, limiteMinimoCuenta, cantidadExtraccionesMes, fechaApertura, titularCuenta, tipoCuenta FROM cuentabancaria WHERE titularCuenta = ?"; }
+    public final String obtenerCuentaBancariaPorNombreUsuario(){
+        return "SELECT cbu, tipoCuenta, fechaApertura, saldo FROM cuentaBancaria "
+                + "INNER JOIN usuario ON cuentaBancaria.titularCuenta = usuario.cuitTitular "
+                + "WHERE usuario.nombreUsuario = ?";
+    }
+    public final String obtenerCuentaBancariaPorCbuYNombreUsuario(){
+        return "SELECT cbu, saldo, limiteMinimoCuenta, cantidadExtraccionesMes, fechaApertura, titularCuenta, tipoCuenta FROM cuentabancaria " +
+                "INNER JOIN usuario ON cuentabancaria.titularCuenta = usuario.cuitTitular " +
+                "WHERE cuentabancaria.cbu = ? " +
+                "AND usuario.nombreUsuario = ?";
+    }
     public final String obtenerTransaccionesNumeroCbu(){ return "SELECT * FROM transacciones WHERE cbuAsociado = ?"; }
     public final String obtenerNombreUsuario(){ return "SELECT nombreUsuario FROM usuario WHERE nombreUsuario = ?"; }
     public final String obtenerContrasena(){ return "SELECT contrasena FROM usuario WHERE nombreUsuario = ?"; }

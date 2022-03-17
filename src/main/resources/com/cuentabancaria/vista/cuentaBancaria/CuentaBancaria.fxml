@@ -65,7 +65,7 @@
                   <Font size="15.0" />
                </font>
             </Button>
-            <Button fx:id="botonCuentasBancarias" layoutX="20.0" layoutY="155.0" mnemonicParsing="false" onAction="#accionBotonCuentasBancarias" prefHeight="31.0" prefWidth="160.0" text="Cuentas Bancarias" textAlignment="CENTER">
+            <Button fx:id="botonCuentasBancarias" layoutX="20.0" layoutY="155.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="160.0" text="Cuentas Bancarias" textAlignment="CENTER" onAction="#accionBotonCuentasBancarias">
                <font>
                   <Font size="15.0" />
                </font>

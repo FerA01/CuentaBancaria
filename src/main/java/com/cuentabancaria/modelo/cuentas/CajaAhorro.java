@@ -9,6 +9,7 @@ public class CajaAhorro extends CuentaBancaria{
         setSaldo(0);
         setLimiteMinimoCuenta(10f);
         setCantidadExtraccionesPorMes(5);
+        setTipoCuentaBancaria(tipoCuentaBancaria());
     }
     public CajaAhorro(Titular titular){
         setSaldo(0);
@@ -16,6 +17,7 @@ public class CajaAhorro extends CuentaBancaria{
         setCantidadExtraccionesPorMes(5);
         setTitular(titular);
         setNumeroCuit(titular.getNumeroCuit());
+        setTipoCuentaBancaria(tipoCuentaBancaria());
     }
     public CajaAhorro(Titular titular, LocalDate fechaApertura){
         setSaldo(0);
@@ -23,14 +25,17 @@ public class CajaAhorro extends CuentaBancaria{
         setCantidadExtraccionesPorMes(5);
         setTitular(titular);
         setFechaApertura(fechaApertura);
+        setTipoCuentaBancaria(tipoCuentaBancaria());
     }
     public CajaAhorro(String cbu, float saldo, float limiteMinimoCuenta, int cantidadExtraccionesPorMes, Titular titular
                       , LocalDate fechaApertura){
         super(cbu, saldo, limiteMinimoCuenta, cantidadExtraccionesPorMes, titular, fechaApertura);
+        setTipoCuentaBancaria(tipoCuentaBancaria());
     }
     public CajaAhorro(float saldo, float limiteMinimoCuenta, int cantidadExtraccionesPorMes, Titular titular
             ,LocalDate fechaApertura, Collection<Transaccion> transacciones){
         super(saldo, limiteMinimoCuenta, cantidadExtraccionesPorMes, titular, fechaApertura, transacciones);
+        setTipoCuentaBancaria(tipoCuentaBancaria());
     }
 
     @Override

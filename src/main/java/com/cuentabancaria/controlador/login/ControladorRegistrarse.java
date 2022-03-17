@@ -13,7 +13,6 @@ import java.nio.charset.StandardCharsets;
 import java.sql.SQLException;
 import java.util.ResourceBundle;
 public class ControladorRegistrarse implements Initializable {
-    @FXML private TextField numeroCuit;
     @FXML private Button botonRegistrarse;
     @FXML private TextField nombreUsuario;
     @FXML private PasswordField contrasena;
@@ -33,8 +32,6 @@ public class ControladorRegistrarse implements Initializable {
     public void setNombreUsuario(TextField nombreUsuario) { this.nombreUsuario = nombreUsuario; }
     public PasswordField getContrasena() { return contrasena; }
     public void setContrasena(PasswordField contrasena) { this.contrasena = contrasena; }
-    public TextField getNumeroCuit() { return numeroCuit; }
-    public void setNumeroCuit(TextField numeroCuit) { this.numeroCuit = numeroCuit; }
     public ControladorBaseDato getBaseDato() { return baseDato; }
     public void setBaseDato(ControladorBaseDato baseDato) { this.baseDato = baseDato; }
     public ValidadorLoginRegistro getValidadorLoginRegistro() { return validadorLoginRegistro; }
